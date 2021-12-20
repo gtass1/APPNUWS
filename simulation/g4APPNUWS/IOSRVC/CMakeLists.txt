@@ -1,0 +1,3 @@
+file(GLOB IOSRVC_SOURCES "src/*.cc")
+add_library(IOSRVC SHARED ${IOSRVC_SOURCES})
+
