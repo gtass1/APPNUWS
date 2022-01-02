@@ -33,6 +33,9 @@ void ConstructMaterials::construct() {
   contructGeneralMaterial();
 
 //  if ( cRd->getBool("hasDCH",false) ) contructDCHMaterial();
+
+  if ( cRd->getBool("hasCSMV",false) ) contructMPGMaterial();
+
 }
 
 // Decide if we need to build this material.
@@ -167,7 +170,7 @@ void ConstructMaterials::doGasHeCF4Mix(double frcHe, std::string matName, double
   G4double atomicWeight_C  = 12.0107   *CLHEP::g/CLHEP::mole;
   G4double atomicWeight_F  = 18.9984032 *CLHEP::g/CLHEP::mole;
   G4double pwHe = fractionHe*atomicWeight_He;
-  G4double pwC  = (1.0-fractionHe) *  4.0*atomicWeight_C;
+  G4double pwC  = (1.0-fractionHe) *  1.0*atomicWeight_C;
   G4double pwF  = (1.0-fractionHe) *  4.0*atomicWeight_F;
   G4double atomicWeightMix = pwHe + pwC + pwF ;
 
@@ -179,78 +182,65 @@ void ConstructMaterials::doGasHeCF4Mix(double frcHe, std::string matName, double
 
 }
 
+void ConstructMaterials::doGasArCO2Mix(double frcAr, std::string matName, double pressure, double temperature){
+
+  G4double density;
+  G4int nel;
+
+  G4double densityAr   = 0.001662 *CLHEP::g/CLHEP::cm3;
+  G4double densityCO2  = 0.001842 *CLHEP::g/CLHEP::cm3;
+  G4double fractionAr  = frcAr*CLHEP::perCent;
+
+  density = fractionAr*densityAr + (1.0-fractionAr)*densityCO2;
+  density *= pressure/(1.0*CLHEP::atmosphere);
+
+  G4Material *GasMix = new G4Material( matName, density, nel=3,
+      kStateGas, temperature, pressure);
+
+  G4Element* Ar = getElementOrThrow("Ar");
+  G4Element* C  = getElementOrThrow("C");
+  G4Element* O  = getElementOrThrow("O");
+
+  G4double atomicWeight_Ar =  39.948 *CLHEP::g/CLHEP::mole;
+  G4double atomicWeight_C  = 12.0107 *CLHEP::g/CLHEP::mole;
+  G4double atomicWeight_O  = 15.999  *CLHEP::g/CLHEP::mole;
+  G4double pwAr = fractionAr*atomicWeight_Ar;
+  G4double pwC  = (1.0-fractionAr) *  1.0*atomicWeight_C;
+  G4double pwO  = (1.0-fractionAr) *  2.0*atomicWeight_O;
+  G4double atomicWeightMix = pwAr + pwC + pwO ;
+
+  pwAr/=atomicWeightMix;
+  pwO/=atomicWeightMix;
+  GasMix->AddElement(Ar, pwAr );
+  GasMix->AddElement(O , pwO  );
+  GasMix->AddElement(C , 1.0-pwAr-pwO  );
+
+}
+
 void ConstructMaterials::contructGeneralMaterial() {
 
   // List of requested specific materials from the config file.
   std::vector<std::string> materialsToLoad;
   cRd->getVectorString("appnw.materials",materialsToLoad);
 
-  CheckedG4String mat = isNeeded(materialsToLoad, "GasHe");
-  if ( mat.doit ){
-    doGasHe(mat.name);
-  }
+//  mat = isNeeded(materialsToLoad, "Kapton");
+//  if ( mat.doit ){
+//    //
+//    // Kapton: from NIST: physics.nist.gov/cgi-bin/Star/compos.pl?matno=179
+//    //
+//    G4Material* Kapton = new G4Material(mat.name, 1.42*CLHEP::g/CLHEP::cm3, 4);
+//    Kapton->AddElement( getElementOrThrow("H"), 0.026362);
+//    Kapton->AddElement( getElementOrThrow("C"), 0.691133);
+//    Kapton->AddElement( getElementOrThrow("N"), 0.073270);
+//    Kapton->AddElement( getElementOrThrow("O"), 0.209235);
+//  }
 
-  mat = isNeeded(materialsToLoad, "GasHe_90Isob_10" );
-  if ( mat.doit ) {
-    doGasHeIsobMix(90.0,mat.name);
-  }
-
-  mat = isNeeded(materialsToLoad, "GasHe_85Isob_15" );
-  if ( mat.doit ) {
-    doGasHeIsobMix(85.0,mat.name);
-  }
-
-  mat = isNeeded(materialsToLoad, "Kapton");
-  if ( mat.doit ){
-    //
-    // Kapton: from NIST: physics.nist.gov/cgi-bin/Star/compos.pl?matno=179
-    //
-    G4Material* Kapton = new G4Material(mat.name, 1.42*CLHEP::g/CLHEP::cm3, 4);
-    Kapton->AddElement( getElementOrThrow("H"), 0.026362);
-    Kapton->AddElement( getElementOrThrow("C"), 0.691133);
-    Kapton->AddElement( getElementOrThrow("N"), 0.073270);
-    Kapton->AddElement( getElementOrThrow("O"), 0.209235);
-  }
-
-}
-
-void ConstructMaterials::contructDCHMaterial()
-{
-
-  // List of requested specific materials from the config file.
-  std::vector<std::string> materialsToLoad;
-  cRd->getVectorString("cdch.materials",materialsToLoad);
-
-  CheckedG4String mat = isNeeded(materialsToLoad, "GasHe_90CF4_10");
-  if ( mat.doit ){
-    doGasHeCF4Mix(90.0,mat.name);
-  }
-
-  mat = isNeeded(materialsToLoad, "CarbonFiber_resin");
+  CheckedG4String mat = isNeeded(materialsToLoad, "KptFoam_030");
   if ( mat.doit ){
     G4double density;
     G4int nel;
-    G4Material* CFresin =
-      new G4Material(mat.name, density = 1.1*CLHEP::g/CLHEP::cm3, nel=3);
-    G4int natoms;
-    CFresin->AddElement(getElementOrThrow("H"),natoms=5);
-    CFresin->AddElement(getElementOrThrow("C"),natoms=5);
-    CFresin->AddElement(getElementOrThrow("O"),natoms=2);
-  }
-
-  mat = isNeeded(materialsToLoad, "CarbonFiber");
-  if ( mat.doit ){
-    G4double density, fiberFrac=46.0*CLHEP::perCent;
-    G4int nel, natoms;
-    G4Material* CFresin = findMaterialOrThrow("CarbonFiber_resin");
-    G4Material* CFibers = new G4Material("CFibers",density = 1.8*CLHEP::g/CLHEP::cm3,nel=1);
-    CFibers->AddElement(getElementOrThrow("C"),natoms=1);
-
-    density = fiberFrac*CFibers->GetDensity()+(1.0-fiberFrac)*CFresin->GetDensity();
-    G4Material* CarbonFiber =
-      new G4Material(mat.name, density /*= 1.384*CLHEP::g/CLHEP::cm3*/, nel=2);
-    CarbonFiber->AddMaterial(CFibers, fiberFrac );
-    CarbonFiber->AddMaterial(CFresin, (1.0-fiberFrac) );
+    G4Material *KptFoam = new G4Material(mat.name, density = 0.030*CLHEP::g/CLHEP::cm3, nel=1);
+    KptFoam->AddMaterial(findMaterialOrThrow("G4_KAPTON"), 100.0*CLHEP::perCent );
   }
 
   // http://personalpages.to.infn.it/~tosello/EngMeet/ITSmat/SDD/Epotek-301-1.html
@@ -324,6 +314,115 @@ void ConstructMaterials::contructDCHMaterial()
     G10_FR4->AddMaterial(findMaterialOrThrow("Epotek301"), 0.40);
   }
 
+}
+
+void ConstructMaterials::contructMPGMaterial()
+{
+
+	// List of requested specific materials from the config file.
+	std::vector<std::string> materialsToLoad;
+	cRd->getVectorString("csmv.materials",materialsToLoad);
+
+	CheckedG4String mat = isNeeded(materialsToLoad, "GasAr_70CO2_30");
+	if ( mat.doit ){
+		doGasArCO2Mix(70.0,mat.name);
+	}
+
+	mat = isNeeded(materialsToLoad, "Nomex");
+	if ( mat.doit ){
+		G4Material *nomex = new G4Material(mat.name, 0.98*CLHEP::g/CLHEP::cm3, 4);
+		nomex->AddElement(getElementOrThrow("C"), 14);
+		nomex->AddElement(getElementOrThrow("H"), 10);
+		nomex->AddElement(getElementOrThrow("N"), 2);
+		nomex->AddElement(getElementOrThrow("O"), 2);
+	}
+
+	mat = isNeeded(materialsToLoad, "NomexHC48");
+	if ( mat.doit ){
+		// NOMEX HoneyComb
+		// density from http://www.fibreglast.com/product/Nomex_Honeycomb_1562/Vacuum_Bagging_Sandwich_Core
+		// 1562: 29 kg/m^3 <-- I guess it is this one
+		// 2562: 48 kg/m^3
+		// chemical composition http://ww2.unime.it/cdlchimind/adm/inviofile/uploads/HP_Pols2.b.pdf
+		G4double density = 48e-3 *CLHEP::g/CLHEP::cm3;
+		G4Material* nomex = findMaterialOrThrow("Nomex");
+		G4Material* air = findMaterialOrThrow("G4_AIR");
+		G4double nomexFrac = (density-air->GetDensity())/(nomex->GetDensity()-air->GetDensity());
+		G4Material* nomexHC = new G4Material(mat.name,density,2);
+		nomexHC -> AddMaterial(nomex,nomexFrac);
+		nomexHC -> AddMaterial(air,1.0-nomexFrac);
+	}
+
+	mat = isNeeded(materialsToLoad, "AlHC59");
+	if ( mat.doit ){
+		// Aluminum HoneyComb
+		// density from https://www.honeycombpanels.eu/
+		// 20-112 kg/m^3
+		G4double density = 59e-3 *CLHEP::g/CLHEP::cm3;
+		G4Material* alu = findMaterialOrThrow("G4_Al");
+		G4Material* air = findMaterialOrThrow("G4_AIR");
+		G4double aluFrac = (density-air->GetDensity())/(alu->GetDensity()-air->GetDensity());
+		G4Material* aluHC = new G4Material(mat.name,density,2);
+		aluHC -> AddMaterial(alu,aluFrac);
+		aluHC -> AddMaterial(air,1.0-aluFrac);
+	}
+
+}
+
+void ConstructMaterials::contructDCHMaterial()
+{
+
+  // List of requested specific materials from the config file.
+  std::vector<std::string> materialsToLoad;
+  cRd->getVectorString("cdch.materials",materialsToLoad);
+
+  CheckedG4String mat = isNeeded(materialsToLoad, "GasHe");
+  if ( mat.doit ){
+    doGasHe(mat.name);
+  }
+
+  mat = isNeeded(materialsToLoad, "GasHe_90Isob_10" );
+  if ( mat.doit ) {
+    doGasHeIsobMix(90.0,mat.name);
+  }
+
+  mat = isNeeded(materialsToLoad, "GasHe_85Isob_15" );
+  if ( mat.doit ) {
+    doGasHeIsobMix(85.0,mat.name);
+  }
+
+  mat = isNeeded(materialsToLoad, "GasHe_90CF4_10");
+  if ( mat.doit ){
+    doGasHeCF4Mix(90.0,mat.name);
+  }
+
+  mat = isNeeded(materialsToLoad, "CarbonFiber_resin");
+  if ( mat.doit ){
+    G4double density;
+    G4int nel;
+    G4Material* CFresin =
+      new G4Material(mat.name, density = 1.1*CLHEP::g/CLHEP::cm3, nel=3);
+    G4int natoms;
+    CFresin->AddElement(getElementOrThrow("H"),natoms=5);
+    CFresin->AddElement(getElementOrThrow("C"),natoms=5);
+    CFresin->AddElement(getElementOrThrow("O"),natoms=2);
+  }
+
+  mat = isNeeded(materialsToLoad, "CarbonFiber");
+  if ( mat.doit ){
+    G4double density, fiberFrac=46.0*CLHEP::perCent;
+    G4int nel, natoms;
+    G4Material* CFresin = findMaterialOrThrow("CarbonFiber_resin");
+    G4Material* CFibers = new G4Material("CFibers",density = 1.8*CLHEP::g/CLHEP::cm3,nel=1);
+    CFibers->AddElement(getElementOrThrow("C"),natoms=1);
+
+    density = fiberFrac*CFibers->GetDensity()+(1.0-fiberFrac)*CFresin->GetDensity();
+    G4Material* CarbonFiber =
+      new G4Material(mat.name, density /*= 1.384*CLHEP::g/CLHEP::cm3*/, nel=2);
+    CarbonFiber->AddMaterial(CFibers, fiberFrac );
+    CarbonFiber->AddMaterial(CFresin, (1.0-fiberFrac) );
+  }
+
   mat = isNeeded(materialsToLoad, "PolypropyleneFoam");
   if ( mat.doit ){
     //Polypropylene (CH3)
@@ -379,14 +478,6 @@ void ConstructMaterials::contructDCHMaterial()
     G4Material *CFoam = new G4Material(mat.name, density = 0.030*CLHEP::g/CLHEP::cm3, nel=1);
     G4Element* C  = getElementOrThrow("C");
     CFoam->AddElement(C, 100.0*CLHEP::perCent );
-  }
-
-  mat = isNeeded(materialsToLoad, "KptFoam_030");
-  if ( mat.doit ){
-    G4double density;
-    G4int nel;
-    G4Material *KptFoam = new G4Material(mat.name, density = 0.030*CLHEP::g/CLHEP::cm3, nel=1);
-    KptFoam->AddMaterial(findMaterialOrThrow("G4_KAPTON"), 100.0*CLHEP::perCent );
   }
 
 }

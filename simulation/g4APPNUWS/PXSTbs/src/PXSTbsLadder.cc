@@ -68,6 +68,7 @@ namespace pxstbs {
   }
 
   Ladder::~Ladder(){
+    if (_pos!=nullptr) {delete _pos;}
   }
 
   void Ladder::setPosMatrix( HepGeom::Transform3D &lPos ) {

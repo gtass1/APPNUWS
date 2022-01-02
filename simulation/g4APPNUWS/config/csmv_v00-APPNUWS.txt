@@ -6,8 +6,9 @@ bool hasCSMV      = true;
 string csmv.motherVolMat = "G4_AIR";
 //vector<double> g4.detSysCenter = { 0.0, 0.0, 0.0 };
 
-//vector<string> csmv.materials =
-//  {  };
+vector<string> csmv.materials =
+  { "GasAr_70CO2_30", "Nomex", "NomexHC48", "AlHC59"
+  };
 
 string csmv.extFile          =    "";
 double csmv.z0               =      0;
@@ -20,119 +21,67 @@ int    csmv.geomType         =    00;   //decimal digit:magior version, unit dig
 bool   csmv.doDetailedSurfCheck = false;
 bool   csmv.debugLayer       = false;
 
-// Barrel CSMV parameters
+// Top Vertical Cosmic detecor parameters
 
-int    csmv.Brl.nLayers                    = 3;
-vector<double> csmv.Brl.LayersInRad        = { 2005.0, 2025.0, 2045.0};
-vector<int> csmv.Brl.nPhiSectors           = {80, 80, 80};
-vector<int> csmv.Brl.nLaddersPerSector     = {48, 48, 48};
-vector<double> csmv.Brl.LaddersHalfLength  = {50, 50, 50};  // Per Layer (The ladder are supposed to be equal for one layer)
-vector<double> csmv.Brl.LaddersThickness   = {0.95, 0.95, 0.95}; // Per Layer
-vector<int> csmv.Brl.ROTypes               = {1, 1, 1}; //1: Pixel; 2: Strip // Per Layer
-vector<double> csmv.Brl.ROfirstSideDim     = {0.07, 0.07, 0.07}; // Per Layer
-vector<double> csmv.Brl.ROfirstSideInsul   = {0.0005, 0.0005, 0.0005}; // Per Layer
-vector<double> csmv.Brl.ROSecondSideDim    = {0.07, 0.07, 0.07}; // Per Layer
-vector<double> csmv.Brl.ROSecondSideInsul  = {0.0005, 0.0005, 0.0005}; // Per Layer
-vector<double> csmv.Brl.ROangle            = {0.0, 0.0, 0.0}; // Per Layer
+// The First Side will be placed along the Z axis of the refernce system
+// The Second Side will be placed along the X axis of the refernce system
 
-// Forward CSMV parameters
+int    csmv.nLayers                        = 3;
+vector<double> csmv.LayersVertPos          = { 5000.0, 5025.0, 5050.0 };
+vector<double> csmv.LayersFstSidePos       = { -4000.0, -4000.0, -4000.0 };
+vector<double> csmv.LayersSndSidePos       = { -1500.0, -1500.0, -1500.0 };
+vector<int> csmv.nLaddersPerFstSide        = { 16, 16, 16 };
+vector<int> csmv.nLaddersPerSndSide        = { 8, 8, 8 };
+vector<double> csmv.LaddersFstSideDim      = { 500, 500, 500 };  // First Side dimension of the Ladder per eah Layer
+vector<double> csmv.LaddersDeadZoneFstSide = { 10, 10, 10 }; // Non active area on the ladder, including Support Frames and other services
+vector<double> csmv.SpaceBtwnLadFstSide    = { 0, 0, 0 }; // Per Layer
+vector<double> csmv.LaddersSndSideDim      = { 400, 400, 400 };  // Second Side dimension of the Ladder per eah Layer
+vector<double> csmv.LaddersDeadZoneSndSide = { 10, 10, 10 };  // Non active area on the ladder, including Support Frames and other services
+vector<double> csmv.SpaceBtwnLadSndSide    = { 0, 0, 0 }; // Per Layer
+vector<double> csmv.LaddersTotThickness    = { 16, 16, 16 }; // Per Layer
+vector<int> csmv.ROTypes                   = { 2, 2, 2 }; //1: Pixel; 2: Strip // Per Layer
+vector<double> csmv.ROfirstSideDim         = { 0.08, 0.08, 0.08 }; // Per Layer
+vector<double> csmv.ROfirstSideInsul       = { 0.32, 0.32, 0.32 }; // Per Layer
+vector<double> csmv.ROSecondSideDim        = { 0.34, 0.34, 0.34 }; // Per Layer
+vector<double> csmv.ROSecondSideInsul      = { 0.06, 0.06, 0.06 }; // Per Layer
+vector<double> csmv.ROangle                = { 0.0, 0.0, 0.0 }; // Per Layer
 
-int    csmv.Fwd.nLayers                    = 3;
-vector<double> csmv.Fwd.LayersInRad        = {300.0, 300.0, 300.0};
-vector<double> csmv.Fwd.LayersZPos         = {2300, 2325, 2350};
-vector<int> csmv.Fwd.nPhiSectors           = {80, 80, 80};
-vector<int> csmv.Fwd.nLaddersPerSector     = {9, 9, 9};
-//vector<double> csmv.Fwd.LaddersHeight      = {};  // Per Layer (The ladder are supposed to be equal for one layer)
-vector<double> csmv.Fwd.LaddersThickness   = {0.95, 0.95, 0.95}; // Per Layer
-//vector<double> csmv.Fwd.LaddersThickness   = {10, 10}; // Per Layer
-vector<int> csmv.Fwd.ROTypes               = {1, 1, 1}; //1: Pixel; 2: Strip // Per Layer
-vector<double> csmv.Fwd.ROfirstSideDim     = {0.07, 0.07, 0.07}; // Per Layer
-vector<double> csmv.Fwd.ROfirstSideInsul   = {0.0005, 0.0005, 0.0005}; // Per Layer
-vector<double> csmv.Fwd.ROSecondSideDim    = {0.07, 0.07, 0.07}; // Per Layer
-vector<double> csmv.Fwd.ROSecondSideInsul  = {0.0005, 0.0005, 0.0005}; // Per Layer
-vector<double> csmv.Fwd.ROangle            = {0.0, 0.0, 0.0}; // Per Layer
-
-// First Barrel Layer Ladder description
-int    csmv.Brl.l1.ld.nShells =      2;
-vector<string> csmv.Brl.l1.ld.ShellsMaterial = { "G4_Si", "G4_Si" };
-vector<double> csmv.Brl.l1.ld.ShellsThickness = { 0.10, 0.85 };
-int    csmv.Brl.l1.ro.nShells =      1;
-vector<int> csmv.Brl.l1.ro.ShellIds = { 0 };  //id of the ladder shells
+// First Layer Ladder description
+int    csmv.l1.ld.nShells =      24;
+vector<string> csmv.l1.ld.ShellsMaterial = { "G4_Al", "AlHC59", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "Epotek301", "G10_FR4", "AlHC59", "G4_Al" };
+vector<double> csmv.l1.ld.ShellsThickness = { 0.25, 3.00, 0.05, 0.005, 3.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 0.085, 0.12, 3.00, 0.25 };
+int    csmv.l1.ro.nShells =      2;
+vector<int> csmv.l1.ro.ShellIds = { 17, 19 };  //id of the ladder shells
 
 // Second Barrel Layer Ladder description
-int    csmv.Brl.l2.ld.nShells =      2;
-vector<string> csmv.Brl.l2.ld.ShellsMaterial = { "G4_Si", "G4_Si" };
-vector<double> csmv.Brl.l2.ld.ShellsThickness = { 0.10, 0.85 };
-int    csmv.Brl.l2.ro.nShells =      1;
-vector<int> csmv.Brl.l2.ro.ShellIds = { 0 };  //id of the ladder shells
+int    csmv.l2.ld.nShells =      24;
+vector<string> csmv.l2.ld.ShellsMaterial = { "G4_Al", "AlHC59", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "Epotek301", "G10_FR4", "AlHC59", "G4_Al" };
+vector<double> csmv.l2.ld.ShellsThickness = { 0.25, 3.00, 0.05, 0.005, 3.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 0.085, 0.12, 3.00, 0.25 };
+int    csmv.l2.ro.nShells =      2;
+vector<int> csmv.l2.ro.ShellIds = { 17, 19 };  //id of the ladder shells
 
 // Third Barrel Layer Ladder description
-int    csmv.Brl.l3.ld.nShells =      2;
-vector<string> csmv.Brl.l3.ld.ShellsMaterial = { "G4_Si", "G4_Si" };
-vector<double> csmv.Brl.l3.ld.ShellsThickness = { 0.10, 0.85 };
-int    csmv.Brl.l3.ro.nShells =      1;
-vector<int> csmv.Brl.l3.ro.ShellIds = { 0 };  //id of the ladder shells
+int    csmv.l3.ld.nShells =      24;
+vector<string> csmv.l3.ld.ShellsMaterial = { "G4_Al", "AlHC59", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "Epotek301", "G10_FR4", "AlHC59", "G4_Al" };
+vector<double> csmv.l3.ld.ShellsThickness = { 0.25, 3.00, 0.05, 0.005, 3.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 0.085, 0.12, 3.00, 0.25 };
+int    csmv.l3.ro.nShells =      2;
+vector<int> csmv.l3.ro.ShellIds = { 17, 19 };  //id of the ladder shells
 
-// First Forward Layer Ladder description
-vector<double> csmv.Fwd.l1.ld.LaddersHeight = { 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 180.0 };
-int    csmv.Fwd.l1.ld.nShells =      2;
-vector<string> csmv.Fwd.l1.ld.ShellsMaterial = { "G4_Si", "G4_Si" };
-vector<double> csmv.Fwd.l1.ld.ShellsThickness = { 0.10, 0.85 };
-//vector<double> csmv.Fwd.l1.ld.ShellsThickness = { 2, 8 };
-int    csmv.Fwd.l1.ro.nShells =      1;
-vector<int> csmv.Fwd.l1.ro.ShellIds = { 0 };  //id of the ladder shells
+// CSMV Absorbers
+//int    csmv.nAbsLayers     = 2;
+// First Absorber shell description
+//double csmv.abs.l1.InRad   = 2015.0;
+//double csmv.abs.l1.halfLength = 2400.0;
+//int    csmv.abs.l1.nShells =      1;
+//vector<string> csmv.abs.l1.ShellsMaterial = { "G4_Pb" };
+//vector<double> csmv.abs.l1.ShellsThickness = { 6 };
 
-// Second Forward Layer Ladder description
-vector<double> csmv.Fwd.l2.ld.LaddersHeight = { 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 180.0 };
-int    csmv.Fwd.l2.ld.nShells =      2;
-vector<string> csmv.Fwd.l2.ld.ShellsMaterial = { "G4_Si", "G4_Si" };
-vector<double> csmv.Fwd.l2.ld.ShellsThickness = { 0.10, 0.85 };
-//vector<double> csmv.Fwd.l2.ld.ShellsThickness = { 2, 8 };
-int    csmv.Fwd.l2.ro.nShells =      1;
-vector<int> csmv.Fwd.l2.ro.ShellIds = { 0 };  //id of the ladder shells
-
-// Third Forward Layer Ladder description
-vector<double> csmv.Fwd.l3.ld.LaddersHeight = { 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 190.0, 180.0 };
-int    csmv.Fwd.l3.ld.nShells =      2;
-vector<string> csmv.Fwd.l3.ld.ShellsMaterial = { "G4_Si", "G4_Si" };
-vector<double> csmv.Fwd.l3.ld.ShellsThickness = { 0.10, 0.85 };
-//vector<double> csmv.Fwd.l3.ld.ShellsThickness = { 2, 8 };
-int    csmv.Fwd.l3.ro.nShells =      1;
-vector<int> csmv.Fwd.l3.ro.ShellIds = { 0 };  //id of the ladder shells
-
-// Barrel CSMV Absorbers
-int    csmv.Brl.nAbsLayers                 = 2;
-// First Barrel Absorber shell description
-double csmv.Brl.abs.l1.InRad   = 2015.0;
-double csmv.Brl.abs.l1.halfLength = 2400.0;
-int    csmv.Brl.abs.l1.nShells =      1;
-vector<string> csmv.Brl.abs.l1.ShellsMaterial = { "G4_Pb" };
-vector<double> csmv.Brl.abs.l1.ShellsThickness = { 6 };
-
-// Second Barrel Absorber shell description
-double csmv.Brl.abs.l2.InRad   = 2035.0;
-double csmv.Brl.abs.l2.halfLength = 2400.0;
-int    csmv.Brl.abs.l2.nShells =      1;
-vector<string> csmv.Brl.abs.l2.ShellsMaterial = { "G4_Pb" };
-vector<double> csmv.Brl.abs.l2.ShellsThickness = { 6 };
-
-// Forward CSMV Absorbers
-int    csmv.Fwd.nAbsLayers                 = 2;
-// First Forward Absorber shell description
-double csmv.Fwd.abs.l1.InRad   =  300.0;
-double csmv.Fwd.abs.l1.OutRad  = 2000.0;
-double csmv.Fwd.abs.l1.zPos    = 2310.0; //center of all the shells
-int    csmv.Fwd.abs.l1.nShells =      1;
-vector<string> csmv.Fwd.abs.l1.ShellsMaterial = { "G4_Pb" };
-vector<double> csmv.Fwd.abs.l1.ShellsThickness = { 6 };
-
-// Second Forward Absorber shell description
-double csmv.Fwd.abs.l2.InRad   =  300.0;
-double csmv.Fwd.abs.l2.OutRad  = 2000.0;
-double csmv.Fwd.abs.l2.zPos    = 2335.0; //center of all the shells
-int    csmv.Fwd.abs.l2.nShells =      1;
-vector<string> csmv.Fwd.abs.l2.ShellsMaterial = { "G4_Pb" };
-vector<double> csmv.Fwd.abs.l2.ShellsThickness = { 6 };
+// Second Absorber shell description
+//double csmv.abs.l2.InRad   = 2035.0;
+//double csmv.abs.l2.halfLength = 2400.0;
+//int    csmv.abs.l2.nShells =      1;
+//vector<string> csmv.abs.l2.ShellsMaterial = { "G4_Pb" };
+//vector<double> csmv.abs.l2.ShellsThickness = { 6 };
 
 //
 // This tells emacs to view this file in c++ mode.

@@ -45,8 +45,10 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
 
   VolumeInfo csmvInfo;
 
+  double x0    = CLHEP::mm * csmvtracker->x0();
+  double y0    = CLHEP::mm * csmvtracker->y0();
   double z0    = CLHEP::mm * csmvtracker->z0();
-  G4ThreeVector trackerOffset(0.,0.,z0/*-zOff*/);
+  G4ThreeVector trackerOffset(x0,y0,z0/*-zOff*/);
 
   checkOverlap = config.getBool("g4.doSurfaceCheck",false);
   detailedCheck = checkOverlap&&config.getBool("csmv.doDetailedSurfCheck",false);
@@ -66,17 +68,8 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
 
     G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmv.motherVolMat","G4_AIR") );
 
-    if (csmvtracker->nFwdLayers()>0) {
-      double maxZ = csmvtracker->zPos_FW()+csmvtracker->zHalfLength_Fw();
-      if ( csmvtracker->zHalfLength()>maxZ ) { maxZ = csmvtracker->zHalfLength(); }
-      double maxR = csmvtracker->rOut();
-      if ( csmvtracker->rOut_FW()>maxR ) { maxR = csmvtracker->rOut_FW(); }
-      G4Tubs *mothOut = new G4Tubs("PreShowerOut",csmvtracker->r0_Fw()-0.001 ,maxR+0.001,maxZ+0.001,0.0,360.0*CLHEP::degree);
-      G4Tubs *mothIn = new G4Tubs("PreShowerIn", csmvtracker->r0_Fw()-0.0015,csmvtracker->r0()-0.001,csmvtracker->zPos_FW()-csmvtracker->zHalfLength_Fw()-0.001,0.0,360.0*CLHEP::degree);
-      csmvInfo.solid = new G4SubtractionSolid("PreShower",mothOut,mothIn);
-    } else {
-      csmvInfo.solid = new G4Tubs("PreShower", csmvtracker->r0()-0.001,csmvtracker->rOut()+0.001,csmvtracker->zHalfLength()+0.001,0.0,360.0*CLHEP::degree);
-    }
+    csmvInfo.solid = new G4Box("CSMTrackerTop", csmvtracker->halfWidth()+0.001,csmvtracker->halfThickness()+0.001,csmvtracker->zHalfLength()+0.001);
+
     csmvInfo.logical = new G4LogicalVolume(csmvInfo.solid , matMother, csmvName,0,0,0);
     csmvInfo.logical->SetVisAttributes(visAtt);
 
@@ -99,38 +92,32 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
           cout<<"CSMV Layer: "<<ily->Id()<<endl;
         }
         VolumeInfo LayerInfo;
-        sprintf(shape,"pswly-L%d",iLy);
-        sprintf(vol,"pswlyvol-L%03d",iLy);
+        sprintf(shape,"csmttly-L%d",iLy);
+        sprintf(vol,"csmttlyvol-L%03d",iLy);
 
-        LayerInfo.solid = new G4Tubs(shape, ily->getDetail()->InnerRadius()-0.0005,
-            ily->getDetail()->OuterRadius()+0.0005,
-            ily->getDetail()->halfLength()+0.0005,
-            0.0,360.0*CLHEP::degree);
+//        LayerInfo.solid = new G4Tubs(shape, ily->getDetail()->InnerRadius()-0.0005,
+//            ily->getDetail()->OuterRadius()+0.0005,
+//            ily->getDetail()->halfLength()+0.0005,
+//            0.0,360.0*CLHEP::degree);
+        LayerInfo.solid = new G4Box(shape, csmvtracker->halfWidth()+0.0005,(ily->getDetail()->OuterRadius()-ily->getDetail()->InnerRadius())+0.0005,csmvtracker->zHalfLength()+0.0005);
         LayerInfo.logical = new G4LogicalVolume(LayerInfo.solid,matMother,vol,0,0,0);
         //            if (ily->voxelizationFactor()==0.0) {
         //                    LayerInfo.logical->SetOptimisation(false);
         //            }
         //            else{
-                            LayerInfo.logical->SetSmartless( 1.0/((float)(ily->nPhiSectors() * ily->nLaddersPerSector())) );
+//                            LayerInfo.logical->SetSmartless( 1.0/((float)(ily->nPhiSectors() * ily->nLaddersPerSector())) );
         //            }
         LayerInfo.logical->SetVisAttributes(visAttLay);
 
-        bool isFw = (ily->getLayerZone() == pxstbs::Layer::forward);
-
         boost::shared_ptr<pxstbs::Ladder> ild = ily->getLadder(0);
         VolumeInfo LadderInfo = buildLadder(*ild);
-        sprintf(vol,"pswldvol-L%03dLd%05ld",ild->Id().getLayer(),ild->Id().getLadder());
+        sprintf(vol,"csmttldvol-L%03dLd%05ld",ild->Id().getLayer(),ild->Id().getLadder());
 //        ily->nLaddersPerSector();
 
         for (unsigned long iLd=0; iLd < ily->nLadders(); ++iLd ){
 
 //          boost::shared_ptr<pxstbs::Ladder> ild = ily->getLadder(iLd);
           ild = ily->getLadder(iLd);
-
-          if (isFw && (ild->Id().getLadder()/100)==1 &&(ild->Id().getLadder()%100)>0 ) {
-            LadderInfo = buildLadder(*ild);
-            sprintf(vol,"pswldvol-L%03dLd%05ld",ild->Id().getLayer(),ild->Id().getLadder());
-          }
 
           //if (ild->Id().getLadder()/100>1) continue;
           //if (ild->Id().getLadder()%100>1) continue;
@@ -148,11 +135,8 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
 
             int copyNum = iLd;
             HepGeom::Transform3D absLadTransf = ild->get3DTransfrom();
-            if (isFw) {
-              copyNum=ild->Id().getLadder()/100 -1;
-              absLadTransf=HepGeom::TranslateZ3D(-ily->getDetail()->zPosition())*absLadTransf;
-            }
-//            CLHEP::HepRotation ldRot = ild->get3DTransfrom().getRotation();
+
+            //            CLHEP::HepRotation ldRot = ild->get3DTransfrom().getRotation();
             LadderInfo.physical = new G4PVPlacement(absLadTransf,//ild->get3DTransfrom(),
                 LadderInfo.logical,      // its logical volume
                 vol,                     // its name
@@ -161,7 +145,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
                 copyNum,                 // copy number
                 checkOverlap);
 
-            if (ild->getLadderType() == pxstbs::Ladder::pixel) {
+            if (ild->getLadderType() == pxstbs::Ladder::pixel || ild->getLadderType() == pxstbs::Ladder::strip) {
               G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::CSMTrackerRO());
               if(sd) {
                 if (ild->getDetail()->nShells()>1) {
@@ -187,7 +171,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
         } // Ladder loop
 
         LayerInfo.physical = new G4PVPlacement(0,               // no rotation
-            G4ThreeVector(0,0,ily->getDetail()->zPosition()),         // at (x,y,z)
+            G4ThreeVector(0,ily->getDetail()->yPosition(),ily->getDetail()->zPosition()),         // at (x,y,z)
             LayerInfo.logical,       // its logical volume
             vol,                     // its name
             csmvInfo.logical,     // its mother  volume
@@ -238,8 +222,8 @@ VolumeInfo CSMVBuilder::buildLadder(pxstbs::Ladder &tld){
   VolumeInfo LadderInfo;
   char shapeName[50],volName[50];
 //  sprintf(shapeName,"%ld",tld.Id().getLadder());
-  sprintf(shapeName,"pswld-L%dLd%ld",tld.Id().getLayer(),tld.Id().getLadder());
-  sprintf(volName,"pswldvol-L%03dLd%05ld",tld.Id().getLayer(),tld.Id().getLadder());
+  sprintf(shapeName,"csmttld-L%dLd%ld",tld.Id().getLayer(),tld.Id().getLadder());
+  sprintf(volName,"csmttldvol-L%03dLd%05ld",tld.Id().getLayer(),tld.Id().getLadder());
 
 //  if (debugLayer ) {
 //    cout<<"Ladder "<< tld.Id()<<" geom type "<<tld.getLadderGeomType()<<" type "<<tld.getLadderType()<<" nROs "<<tld.nReadOuts()<<endl;
@@ -364,8 +348,8 @@ void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*
       for (int iLy = 0; iLy < csmvabsorber->getAbsorbLayers(); ++iLy){
 
         VolumeInfo LayerInfo;
-        sprintf(shape,"pswradly-L%d",iLy);
-        sprintf(vol,"pswradlyvol-L%02d",iLy);
+        sprintf(shape,"csmttradly-L%d",iLy);
+        sprintf(vol,"csmttradlyvol-L%02d",iLy);
         if (csmvabsorber->getAbsorbType()[iLy]==0) { //Barrel layers
 
           LayerInfo.solid = new G4Tubs(shape,csmvabsorber->getAbsorbInRasius()[iLy],

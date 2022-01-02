@@ -51,6 +51,7 @@ public:
 private:
   void contructGeneralMaterial();
   void contructDCHMaterial();
+  void contructMPGMaterial();
 
   // Wrapper around FindOrBuildElement.
   G4Element* getElementOrThrow( G4String const& name);
@@ -69,6 +70,7 @@ private:
   void doGasHe(std::string matName, double pressure=1.0*CLHEP::atmosphere, double temperature=293.15*CLHEP::kelvin);
   void doGasHeIsobMix(double frcHe, std::string matName, double pressure=1.0*CLHEP::atmosphere, double temperature=293.15*CLHEP::kelvin);
   void doGasHeCF4Mix(double frcHe, std::string matName, double pressure=1.0*CLHEP::atmosphere, double temperature=293.15*CLHEP::kelvin);
+  void doGasArCO2Mix(double frcAr, std::string matName, double pressure=1.0*CLHEP::atmosphere, double temperature=293.15*CLHEP::kelvin);
 
 };
 

@@ -40,7 +40,7 @@ public:
       _materialNames.at(idx);
     } catch (std::exception &ex) {
       exc::exceptionG4 e("GEOM","Fatal Error in Arguments",1);
-      e<< "No material defined for the wire \n";
+      e<< "No material defined for the ladder: "<< idx<<"\n";
       e.error();
     }
     return _materialNames.at(idx); //just to remove warning

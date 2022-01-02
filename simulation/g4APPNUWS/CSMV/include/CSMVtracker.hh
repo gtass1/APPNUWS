@@ -32,21 +32,20 @@ public:
         CSMVtracker(std::string name="CSMVtracker");
         ~CSMVtracker() {}
 
-        double r0()            const { return _r0;}
+        double x0()            const { return _x0;}
+        double y0()            const { return _y0;}
         double z0()            const { return _z0;}
-        double rOut()          const { return _rOut;}
-        double r0_Fw()            const { return _r0_fwd;}
-        double zHalfLength_Fw()   const { return _halfLength_fwd;}
-        double rOut_FW()          const { return _rOut_fwd;}
-        double zPos_FW()          const { return _zPos_fwd;}
+        double distIn()          const { return _distIn;}
+        double distOut()          const { return _distOut;}
 
         std::string extFile()  const { return _extFile; }
         bool isExternal()      const { return _isExternal; }
 
         int nLayers()          const { return _nLayers; }
-        int nFwdLayers()       const { return _nFwdLayers; }
 
         double zHalfLength()   const { return _zHalfLength;}
+        double halfWidth()   const { return _halfWidth;}
+        double halfThickness()   const { return _halfThickness;}
 
         int geomType()         const { return _geomType; }
 
@@ -63,27 +62,28 @@ public:
 
 protected:
         // Nominal values.
-        // _r0 = Nominal radius of the center of the sector.
+        // _x0 = position of the center of the tracker relative to the origin
+        // _y0 = position of the center of the tracker relative to the origin
         // _z0 = position of the center of the tracker relative to the origin
-        double _r0;
+        double _x0;
+        double _y0;
         double _z0;
 
-        // Outer radius of a logical volume that will just contain the entire tracker.
-        double _rOut;
+        // distance from the center of the closer face of the logical volume that will just contain the entire tracker.
+        double _distIn;
 
-        double _r0_fwd;
-        double _halfLength_fwd;
-        double _rOut_fwd;
-        double _zPos_fwd;
+        // distance from the center of the farther face of the logical volume that will just contain the entire tracker.
+        double _distOut;
 
         // Name of external gdml geometry file description.
         std::string _extFile;
         bool _isExternal;
 
         int _nLayers;
-        int _nFwdLayers;
 
-        double _zHalfLength;
+        double _zHalfLength;           //Nominal Half-Length of the tracker along the z axis
+        double _halfWidth;             //Nominal Half-Width of the tracker along the second axis
+        double _halfThickness;         //Nominal Half-Thickness of the tracker along the third axis
 
         //decimal digit:magior version, unit digit:minor version  00: Dummy (Simplified Si tracker, just cylindrical shell for layer)
 

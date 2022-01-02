@@ -15,13 +15,11 @@
 namespace csmv {
 
 CSMVtracker::CSMVtracker(std::string name) : Detector(name) {
-        _r0              =0.0;
+        _x0              =0.0;
+        _y0              =0.0;
         _z0              =0.0;
-        _rOut            =0.0;
-       _r0_fwd           =0.0;
-       _halfLength_fwd   =0.0;
-       _rOut_fwd         =0.0;
-       _zPos_fwd         =0.0;
+        _distIn          =0.0;
+        _distOut         =0.0;
 
         _extFile         ="";
         _isExternal      =false;

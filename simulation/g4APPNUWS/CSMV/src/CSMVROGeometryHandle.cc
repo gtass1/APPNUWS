@@ -37,7 +37,10 @@ void CSMVROGeometryHandle::SelectLadder(int Layer, int PhiSec, int Ladder) {
     else { _fLadderID = _fPhiSec*_lay->nLaddersPerSector() + _fLadder; }
     _lad = _lay->getLadder(_fLadderID);
 
-    _matrx = _lad->get3DTransfrom();
+    HepGeom::Translate3D trackerCenter (_csmv->x0(), _csmv->y0(), _csmv->z0());
+    HepGeom::Translate3D layerCenter (0.0, _lay->getDetail()->yPosition(), _lay->getDetail()->zPosition());
+    _matrx = trackerCenter * layerCenter * _lad->get3DTransfrom();
+//    _matrx = _lad->get3DTransfrom();
     _invmatrx = _lad->get3DInvTransfrom();
   }
 
@@ -85,7 +88,10 @@ void CSMVROGeometryHandle::SelectRO(int Layer, int PhiSec, int Ladder, int fChFs
 //std::cout<<"Layer "<<Layer<<" PhiSec "<<PhiSec<<" Ladder "<<Ladder<<" fChFstSd "<<fChFstSd<<" fChSndSd "<<fChSndSd<<std::endl;
 //std::cout<<"nReadOutsSndSd "<<_lad->nReadOutsSndSd()<<std::endl;
 //std::cout<<"_fROChanID "<<_fROChanID<<std::endl;
-    _matrx = _lad->get3DTransfrom();
+    HepGeom::Translate3D trackerCenter (_csmv->x0(), _csmv->y0(), _csmv->z0());
+    HepGeom::Translate3D layerCenter (0.0, _lay->getDetail()->yPosition(), _lay->getDetail()->zPosition());
+    _matrx = trackerCenter * layerCenter * _lad->get3DTransfrom();
+    //    _matrx = _lad->get3DTransfrom();
     _invmatrx = _lad->get3DInvTransfrom();
     _fROChMidLcl = _lad->getROChLoclMidPoint(_fROChanID);
     Local2Global(_fROChMidLcl,_fROChMidGbl);
