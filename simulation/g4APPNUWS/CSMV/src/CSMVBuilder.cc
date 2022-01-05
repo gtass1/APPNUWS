@@ -92,8 +92,8 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
           cout<<"CSMV Layer: "<<ily->Id()<<endl;
         }
         VolumeInfo LayerInfo;
-        sprintf(shape,"csmttly-L%d",iLy);
-        sprintf(vol,"csmttlyvol-L%03d",iLy);
+        sprintf(shape,"cttly-L%d",iLy);
+        sprintf(vol,"cttlyvol-L%03d",iLy);
 
 //        LayerInfo.solid = new G4Tubs(shape, ily->getDetail()->InnerRadius()-0.0005,
 //            ily->getDetail()->OuterRadius()+0.0005,
@@ -111,7 +111,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
 
         boost::shared_ptr<pxstbs::Ladder> ild = ily->getLadder(0);
         VolumeInfo LadderInfo = buildLadder(*ild);
-        sprintf(vol,"csmttldvol-L%03dLd%05ld",ild->Id().getLayer(),ild->Id().getLadder());
+        sprintf(vol,"cttldvol-L%03dLd%05ld",ild->Id().getLayer(),ild->Id().getLadder());
 //        ily->nLaddersPerSector();
 
         for (unsigned long iLd=0; iLd < ily->nLadders(); ++iLd ){
@@ -222,8 +222,8 @@ VolumeInfo CSMVBuilder::buildLadder(pxstbs::Ladder &tld){
   VolumeInfo LadderInfo;
   char shapeName[50],volName[50];
 //  sprintf(shapeName,"%ld",tld.Id().getLadder());
-  sprintf(shapeName,"csmttld-L%dLd%ld",tld.Id().getLayer(),tld.Id().getLadder());
-  sprintf(volName,"csmttldvol-L%03dLd%05ld",tld.Id().getLayer(),tld.Id().getLadder());
+  sprintf(shapeName,"cttld-L%dLd%ld",tld.Id().getLayer(),tld.Id().getLadder());
+  sprintf(volName,"cttldvol-L%03dLd%05ld",tld.Id().getLayer(),tld.Id().getLadder());
 
 //  if (debugLayer ) {
 //    cout<<"Ladder "<< tld.Id()<<" geom type "<<tld.getLadderGeomType()<<" type "<<tld.getLadderType()<<" nROs "<<tld.nReadOuts()<<endl;
@@ -348,8 +348,8 @@ void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*
       for (int iLy = 0; iLy < csmvabsorber->getAbsorbLayers(); ++iLy){
 
         VolumeInfo LayerInfo;
-        sprintf(shape,"csmttradly-L%d",iLy);
-        sprintf(vol,"csmttradlyvol-L%02d",iLy);
+        sprintf(shape,"cttradly-L%d",iLy);
+        sprintf(vol,"cttradlyvol-L%02d",iLy);
         if (csmvabsorber->getAbsorbType()[iLy]==0) { //Barrel layers
 
           LayerInfo.solid = new G4Tubs(shape,csmvabsorber->getAbsorbInRasius()[iLy],

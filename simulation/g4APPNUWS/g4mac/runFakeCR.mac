@@ -15,16 +15,27 @@
 /gps/verbose 0
 /gps/particle mu-
 /gps/number 1
+/gps/pos/type Plane
+/gps/pos/shape Rectangle
 /gps/pos/centre 0 700 0 cm
+/gps/pos/halfx 100 cm
+/gps/pos/halfy 200 cm
+/gps/pos/rot1 1 0 0
+/gps/pos/rot2 0 0 -1
+#/gps/pos/rot1 0 0 1
+#/gps/pos/rot2 1 0 0
+#/gps/direction 0 -1 0
+
 #/gps/pos/sigma_r 50 um
-/gps/pos/sigma_x 50 cm
-#/gps/pos/sigma_z 100 cm
+#/gps/pos/sigma_x 50 cm
 #/gps/pos/sigma_yx 50 um
 /gps/ang/type iso
-/gps/ang/mintheta -110 deg
-/gps/ang/maxtheta -70 deg
-#/gps/ang/minphi 0 deg
-#/gps/ang/maxphi 360 deg
+/gps/ang/mintheta -1.6 rad
+/gps/ang/maxtheta -1.4 rad
+/gps/ang/minphi 1.4 rad
+/gps/ang/maxphi 1.6 rad
+/gps/ang/user_coor true
+#/gps/ang/surfnorm true
 /gps/ene/type Lin
 /gps/ene/min 1000 MeV
 /gps/ene/max 10000 MeV

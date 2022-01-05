@@ -39,33 +39,34 @@ vector<double> csmv.LaddersSndSideDim      = { 400, 400, 400 };  // Second Side 
 vector<double> csmv.LaddersDeadZoneSndSide = { 10, 10, 10 };  // Non active area on the ladder, including Support Frames and other services
 vector<double> csmv.SpaceBtwnLadSndSide    = { 0, 0, 0 }; // Per Layer
 vector<double> csmv.LaddersTotThickness    = { 16, 16, 16 }; // Per Layer
-vector<int> csmv.ROTypes                   = { 2, 2, 2 }; //1: Pixel; 2: Strip // Per Layer
+vector<int> csmv.ROTypes                   = { 1, 1, 1 }; //1: Pixel; 2: Strip // Per Layer
 vector<double> csmv.ROfirstSideDim         = { 0.08, 0.08, 0.08 }; // Per Layer
 vector<double> csmv.ROfirstSideInsul       = { 0.32, 0.32, 0.32 }; // Per Layer
 vector<double> csmv.ROSecondSideDim        = { 0.34, 0.34, 0.34 }; // Per Layer
 vector<double> csmv.ROSecondSideInsul      = { 0.06, 0.06, 0.06 }; // Per Layer
 vector<double> csmv.ROangle                = { 0.0, 0.0, 0.0 }; // Per Layer
 
+bool csmv.InvertLadderShellOrder = true;
 // First Layer Ladder description
 int    csmv.l1.ld.nShells =      24;
 vector<string> csmv.l1.ld.ShellsMaterial = { "G4_Al", "AlHC59", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "Epotek301", "G10_FR4", "AlHC59", "G4_Al" };
 vector<double> csmv.l1.ld.ShellsThickness = { 0.25, 3.00, 0.05, 0.005, 3.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 0.085, 0.12, 3.00, 0.25 };
-int    csmv.l1.ro.nShells =      2;
-vector<int> csmv.l1.ro.ShellIds = { 17, 19 };  //id of the ladder shells
+int    csmv.l1.ro.nShells =      1; //2;
+vector<int> csmv.l1.ro.ShellIds = { 4 }; //{ 17, 19 };  //id of the ladder shells
 
 // Second Barrel Layer Ladder description
 int    csmv.l2.ld.nShells =      24;
 vector<string> csmv.l2.ld.ShellsMaterial = { "G4_Al", "AlHC59", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "Epotek301", "G10_FR4", "AlHC59", "G4_Al" };
 vector<double> csmv.l2.ld.ShellsThickness = { 0.25, 3.00, 0.05, 0.005, 3.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 0.085, 0.12, 3.00, 0.25 };
-int    csmv.l2.ro.nShells =      2;
-vector<int> csmv.l2.ro.ShellIds = { 17, 19 };  //id of the ladder shells
+int    csmv.l2.ro.nShells =      1;
+vector<int> csmv.l2.ro.ShellIds = { 4 };  //id of the ladder shells
 
 // Third Barrel Layer Ladder description
 int    csmv.l3.ld.nShells =      24;
 vector<string> csmv.l3.ld.ShellsMaterial = { "G4_Al", "AlHC59", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "GasAr_70CO2_30", "G4_Cu", "G4_KAPTON", "G4_Cu", "Epotek301", "G10_FR4", "AlHC59", "G4_Al" };
 vector<double> csmv.l3.ld.ShellsThickness = { 0.25, 3.00, 0.05, 0.005, 3.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 2.00, 0.005, 0.05, 0.005, 0.085, 0.12, 3.00, 0.25 };
-int    csmv.l3.ro.nShells =      2;
-vector<int> csmv.l3.ro.ShellIds = { 17, 19 };  //id of the ladder shells
+int    csmv.l3.ro.nShells =      1;
+vector<int> csmv.l3.ro.ShellIds = { 4 };  //id of the ladder shells
 
 // CSMV Absorbers
 //int    csmv.nAbsLayers     = 2;

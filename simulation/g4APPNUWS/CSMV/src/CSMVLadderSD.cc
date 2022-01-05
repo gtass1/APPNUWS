@@ -88,7 +88,7 @@ namespace csmv {
 //            volCpNum = aTouch->GetCopyNumber(1);
             G4TouchableHandle touch1 = aStep->GetPreStepPoint()->GetTouchableHandle();
             volCpNum = touch1->GetCopyNumber(1);
-            _roSubShell = atoi(volName.substr(24,1).c_str());
+            _roSubShell = atoi(volName.substr(24/*,1*/).c_str());
           } else {
             volCpNum = aStep->GetTrack()->GetVolume()->GetCopyNo();
           }

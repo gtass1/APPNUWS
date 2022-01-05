@@ -126,6 +126,8 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
     double maxLength=0.0, minLength=1e+6;
     double maxWidth=0.0, minWidth=1e+6;
 
+    _InvertLadderShellOrder = config.getBool("csmv.InvertLadderShellOrder",false);
+
     for (int il=0; il<_nLayers; ++il) {
 
       if (_LayersVertPos[il]<_distIn) { _distIn=_LayersVertPos[il]; }
@@ -149,13 +151,29 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
       const std::string ShlMatVarName(tmpVarName);
       std::vector< std::string > tmpldMat;
       config.getVectorString(ShlMatVarName,tmpldMat,_LaddersNmShells[il]);
-      _LaddersShellsMaterial.push_back( tmpldMat );
+      if (!_InvertLadderShellOrder) {
+        _LaddersShellsMaterial.push_back( tmpldMat );
+      } else {
+        std::vector< std::string > tmpldMatInv(_LaddersNmShells[il]);
+        for (int ish=0; ish<_LaddersNmShells[il]; ++ish) {
+          tmpldMatInv[ish]=tmpldMat[_LaddersNmShells[il]-1-ish];
+        }
+        _LaddersShellsMaterial.push_back( tmpldMatInv );
+      }
 
       sprintf(tmpVarName,"csmv.l%d.ld.ShellsThickness",il+1);
       const std::string ShlThickVarName(tmpVarName);
       std::vector<double> tmpldThick;
       config.getVectorDouble(ShlThickVarName,tmpldThick,_LaddersNmShells[il]);
-      _LaddersShellsThick.push_back( tmpldThick );
+      if (!_InvertLadderShellOrder) {
+        _LaddersShellsThick.push_back( tmpldThick );
+      } else {
+        std::vector<double> tmpldThickInv(_LaddersNmShells[il]);
+        for (int ish=0; ish<_LaddersNmShells[il]; ++ish) {
+          tmpldThickInv[ish]=tmpldThick[_LaddersNmShells[il]-1-ish];
+        }
+        _LaddersShellsThick.push_back( tmpldThickInv );
+      }
 
       //readOuts Parameters
       sprintf(tmpVarName,"csmv.l%d.ro.nShells",il+1);
@@ -166,7 +184,15 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
       const std::string ROShlIdsVarName(tmpVarName);
       std::vector<int> tmproIds;
       config.getVectorInt(ROShlIdsVarName,tmproIds,_ReadoutsNmShells[il]);
-      _ReadOutsShellIds.push_back( tmproIds );
+      if (!_InvertLadderShellOrder) {
+        _ReadOutsShellIds.push_back( tmproIds );
+      } else {
+        std::vector<int> tmproIdsInv(_ReadoutsNmShells[il]);
+        for (int ish=0; ish<_ReadoutsNmShells[il]; ++ish) {
+          tmproIdsInv[ish]=_LaddersNmShells[il]-1-tmproIds[ish];
+        }
+        _ReadOutsShellIds.push_back( tmproIdsInv );
+      }
 
     }
     _halfLength = (maxLength-minLength)*0.5;

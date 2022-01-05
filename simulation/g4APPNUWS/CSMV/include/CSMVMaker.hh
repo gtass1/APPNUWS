@@ -89,6 +89,7 @@ private:
   std::vector<unsigned int> _nROsSndSdPerLadder;
   std::vector<unsigned long> _nROsPerLadder;
 
+  bool                _InvertLadderShellOrder;
   std::vector<int>    _LaddersNmShells;
   std::vector< std::vector<std::string> > _LaddersShellsMaterial;
   std::vector< std::vector<double> > _LaddersShellsThick;
