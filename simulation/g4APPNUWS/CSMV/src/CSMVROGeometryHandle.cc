@@ -102,18 +102,18 @@ void CSMVROGeometryHandle::SelectRO(int Layer, int PhiSec, int Ladder, int fChFs
 void CSMVROGeometryHandle::SelectRODet(unsigned long det) {
   if (det<1e+17) {
         // Return the Layer
-        int fLayer = det/1e+13;
-        det -= ((fLayer)*1e+13);
+        int fLayer = det/1e+14;
+        det -= ((fLayer)*1e+14);
         --fLayer;
 //                _lay = pxstdetector->getLayer(fLayer);
 
         //Return the Ladder
-        int fPhiSec = det/1e+11;
-        det -= fPhiSec*1e+11;
+        int fPhiSec = det/1e+12;
+        det -= fPhiSec*1e+12;
         --fPhiSec;
 
-        int fLadder = det/1e+9;
-        det -= fLadder*1e+9;
+        int fLadder = det/1e+10;
+        det -= fLadder*1e+10;
         --fLadder;
 //                fLadder += fPhiSec*(_lay->nLaddersPerSector());
 
@@ -171,5 +171,32 @@ void CSMVROGeometryHandle::SelectRO(int chambID, int channelID) {
   /*ROGeometryHandle::*/SelectRO(fLayer,fPhiSec,fLadder,fChFstSd,fChSndSd,fSubShell);
 }
 
+unsigned long CSMVROGeometryHandle::computeDet(int Layer, int PhiSec, int Ladder, int ChFstSd,int ChSndSd, int subShell) {
+        unsigned long det = 0;
+        if (subShell>98) {
+          exc::exceptionG4 e("GEOM","Error",4);
+          e<<"Requestesd Sub Ladder Shell ID exceed the maximum allowed number (99)\n";
+          e.error();
+        }
+        det = ((Layer+1)*1e+14) + ((PhiSec+1)*1e+12) + ((Ladder+1)*1e+10) + ((subShell+1)*1e+8) + ((ChFstSd+1)*1e+4) + ChSndSd ;
+        return det;
+}
+
+unsigned long CSMVROGeometryHandle::computeDet(int chambID, int channelID) {
+        unsigned long det = 0;
+        det = ((chambID/*+1*/)*1e+10) + channelID ;
+        return det;
+}
+
+int CSMVROGeometryHandle::computeChannelID(int ChFstSd,int ChSndSd, int subShell) {
+        int channelID = 0;
+        if (subShell>98) {
+          exc::exceptionG4 e("GEOM","Error",4);
+          e<<"Requestesd Sub Ladder Shell ID exceed the maximum allowed number (99)\n";
+          e.error();
+        }
+        channelID = (subShell+1)*1e+8 + (ChFstSd+1)*10000 + ChSndSd;
+        return channelID;
+}
 
 }

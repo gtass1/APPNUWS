@@ -28,6 +28,9 @@ public:
     void  SelectRO(int Layer, int PhiSec, int Ladder, int fChFstSd, int fChSndSd, int fSubShell=0) override;
     void  SelectRODet(unsigned long det) override;
     void  SelectRO(int chambID, int channelID) override;
+    unsigned long computeDet(int Layer, int PhiSec, int Ladder, int ChFstSd,int ChSndSd, int subShell=0) override;
+    unsigned long computeDet(int chambID, int channelID) override;
+    int computeChannelID(int ChFstSd,int ChSndSd, int subShell=0) override;
 
 protected:
     const CSMVtracker *_csmv;
