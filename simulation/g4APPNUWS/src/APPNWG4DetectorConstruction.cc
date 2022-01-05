@@ -42,11 +42,11 @@
 #include "SimG4TrackerSD.hh"
 #include "RootIO.hh"
 
-// CSMV includes
-#include "CSMVMaker.hh"
-//#include "CSMVtracker.hh"
-#include "CSMVBuilder.hh"
-//#include "CSMVAbsorber.hh"
+// CSMTT includes
+#include "CSMTTMaker.hh"
+//#include "CSMTtracker.hh"
+#include "CSMTTBuilder.hh"
+//#include "CSMTTAbsorber.hh"
 
 // G4 includes
 #include "G4Material.hh"
@@ -201,18 +201,18 @@ void APPNWG4DetectorConstruction::DefineVolumes() {
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void APPNWG4DetectorConstruction::ConstructCosmicRayTracker() {
 
-  if (cRd->getBool("hasCSMV",false)) {
+  if (cRd->getBool("hasCSMTT",false)) {
 
-    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::CSMTrackerRO(),"CSMVHitsStepCh");
+    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::MPGDTrackerRO(),"CSMTTHitsStepCh");
 
-    csmv::CSMVMaker csmvtm( *cRd );
-    GeomService::Instance()->addDetector( csmvtm.getCSMVtrackerPtr() );
+    csmtt::CSMTTMaker csmttm( *cRd );
+    GeomService::Instance()->addDetector( csmttm.getCSMTTrackerPtr() );
 
-    csmv::CSMVBuilder::instantiateSensitiveDetectors("CSMVTrackerHitsCollection");
-    VolumeInfo csmvvolinf = csmv::CSMVBuilder::constructTracker( fTheWorld->GetLogicalVolume() );
+    csmtt::CSMTTBuilder::instantiateSensitiveDetectors("CSMTTrackerHitsCollection");
+    VolumeInfo csmttvolinf = csmtt::CSMTTBuilder::constructTracker( fTheWorld->GetLogicalVolume() );
 
-    GeomService::Instance()->addDetector( csmvtm.getCSMVabsorberPtr() );
-    csmv::CSMVBuilder::constructAbsorber( csmvvolinf.logical );
+    GeomService::Instance()->addDetector( csmttm.getCSMTTabsorberPtr() );
+    csmtt::CSMTTBuilder::constructAbsorber( csmttvolinf.logical );
 
   }
 

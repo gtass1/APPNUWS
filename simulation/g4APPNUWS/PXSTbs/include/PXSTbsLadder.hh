@@ -19,8 +19,8 @@
 #include "PXSTbsReadOut.hh"
 
 
-namespace csmv {
-class CSMVMaker;
+namespace csmtt {
+class CSMTTMaker;
 }
 
 namespace pxstbs {
@@ -30,7 +30,7 @@ class Ladder{
   friend class Layer;
   friend class PXSTdetector;
 
-  friend class csmv::CSMVMaker;
+  friend class csmtt::CSMTTMaker;
 
 public:
 

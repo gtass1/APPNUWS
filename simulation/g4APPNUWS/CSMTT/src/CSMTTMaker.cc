@@ -1,4 +1,4 @@
-// CSMV geometry maker
+// CSMTT geometry maker
 //
 // Original author G. Tassielli
 //
@@ -15,14 +15,14 @@
 #include <iomanip>
 #include <iostream>
 
+#include "CSMTTMaker.hh"
+#include "CSMTTROGeometryHandle.hh"
 
 #include "PXSTbsLayer.hh"
 #include "PXSTbsLadderId.hh"
 
-#include "CSMVROGeometryHandle.hh"
-#include "CSMVMaker.hh"
-//#include "CSMVAbsorber.hh"
-//#include "CSMVtracker.hh"
+//#include "CSMTTAbsorber.hh"
+//#include "CSMTtracker.hh"
 
 //#ifndef __CINT__
 
@@ -33,7 +33,7 @@ using CLHEP::HepRotationZ;
 using namespace std;
 //using namespace svx;
 
-namespace csmv {
+namespace csmtt {
 
 //void cellPrinter( const Cell& s){
 //        cout << s.Id() << endl;
@@ -55,15 +55,15 @@ namespace csmv {
 //
 // Constructor that gets information from the config file instead of
 // from arguments.
-CSMVMaker::CSMVMaker( crd::SimpleConfig const& config):
+CSMTTMaker::CSMTTMaker( crd::SimpleConfig const& config):
                                                     _center(){
 
         _isExternal     = false;
-        _extFile        = config.getString("csmv.extFile");
+        _extFile        = config.getString("csmtt.extFile");
         if ( _extFile.size()>1 && ( _extFile.find_last_of(".gdml") || _extFile.find_last_of(".GDML") )!=0 ) _isExternal = true;
 
-//        _z0             = config.getDouble("csmv.z0");
-        _geomType       = config.getInt("csmv.geomType");
+//        _z0             = config.getDouble("csmtt.z0");
+        _geomType       = config.getInt("csmtt.geomType");
 
         _distIn=1.0e+6;
         _distOut=0.0;
@@ -74,7 +74,7 @@ CSMVMaker::CSMVMaker( crd::SimpleConfig const& config):
 
         loadAbsorber(config);
 
-        cout<<"------------------- CSMV -------------------"<<endl;
+        cout<<"------------------- CCSMTT-------------------"<<endl;
         cout<<"distIn "<<_distIn<<" distOut "<<_distOut<<" leng "<<2.0*_halfLength<<endl;
         cout<<"nLayers "<<_nLayers<<endl;
         unsigned long totNumRO = 0;
@@ -93,31 +93,31 @@ CSMVMaker::CSMVMaker( crd::SimpleConfig const& config):
         BuildAbsorber();
 }
 
-CSMVMaker::~CSMVMaker (){}
+CSMTTMaker::~CSMTTMaker (){}
 
-void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
+void CSMTTMaker::loadTracker( crd::SimpleConfig const& config ){
 
-  _nLayers        = config.getInt("csmv.nLayers");
+  _nLayers        = config.getInt("csmtt.nLayers");
 
-  config.getVectorDouble("csmv.LayersVertPos", _LayersVertPos, _nLayers);
-  config.getVectorDouble("csmv.LayersFstSidePos", _LayersFstSidePos, _nLayers);
-  config.getVectorDouble("csmv.LayersSndSidePos", _LayersSndSidePos, _nLayers);
-  config.getVectorInt("csmv.nLaddersPerFstSide", _nLaddersPerFstSide, _nLayers);
-  config.getVectorInt("csmv.nLaddersPerSndSide",_nLaddersPerSndSide,_nLayers);
-  config.getVectorDouble("csmv.LaddersFstSideDim", _LaddersFstSideDim, _nLayers);
-  config.getVectorDouble("csmv.LaddersDeadZoneFstSide", _LaddersDeadZoneFstSide, _nLayers);
-  config.getVectorDouble("csmv.SpaceBtwnLadFstSide", _SpaceBtwnLadFstSide, _nLayers);
-  config.getVectorDouble("csmv.LaddersSndSideDim", _LaddersSndSideDim, _nLayers);
-  config.getVectorDouble("csmv.LaddersDeadZoneSndSide", _LaddersDeadZoneSndSide, _nLayers);
-  config.getVectorDouble("csmv.SpaceBtwnLadSndSide", _SpaceBtwnLadSndSide, _nLayers);
+  config.getVectorDouble("csmtt.LayersVertPos", _LayersVertPos, _nLayers);
+  config.getVectorDouble("csmtt.LayersFstSidePos", _LayersFstSidePos, _nLayers);
+  config.getVectorDouble("csmtt.LayersSndSidePos", _LayersSndSidePos, _nLayers);
+  config.getVectorInt("csmtt.nLaddersPerFstSide", _nLaddersPerFstSide, _nLayers);
+  config.getVectorInt("csmtt.nLaddersPerSndSide",_nLaddersPerSndSide,_nLayers);
+  config.getVectorDouble("csmtt.LaddersFstSideDim", _LaddersFstSideDim, _nLayers);
+  config.getVectorDouble("csmtt.LaddersDeadZoneFstSide", _LaddersDeadZoneFstSide, _nLayers);
+  config.getVectorDouble("csmtt.SpaceBtwnLadFstSide", _SpaceBtwnLadFstSide, _nLayers);
+  config.getVectorDouble("csmtt.LaddersSndSideDim", _LaddersSndSideDim, _nLayers);
+  config.getVectorDouble("csmtt.LaddersDeadZoneSndSide", _LaddersDeadZoneSndSide, _nLayers);
+  config.getVectorDouble("csmtt.SpaceBtwnLadSndSide", _SpaceBtwnLadSndSide, _nLayers);
 
-  config.getVectorDouble("csmv.LaddersTotThickness",_LaddersThickness,_nLayers);
-  config.getVectorInt("csmv.ROTypes",_ROTypes,_nLayers);
-  config.getVectorDouble("csmv.ROfirstSideDim",_ROfirstSideDim,_nLayers);
-  config.getVectorDouble("csmv.ROfirstSideInsul",_ROfirstSideInsul,_nLayers);
-  config.getVectorDouble("csmv.ROSecondSideDim",_ROSecondSideDim,_nLayers);
-  config.getVectorDouble("csmv.ROSecondSideInsul",_ROSecondSideInsul,_nLayers);
-  config.getVectorDouble("csmv.ROangle",_ROangle,_nLayers);
+  config.getVectorDouble("csmtt.LaddersTotThickness",_LaddersThickness,_nLayers);
+  config.getVectorInt("csmtt.ROTypes",_ROTypes,_nLayers);
+  config.getVectorDouble("csmtt.ROfirstSideDim",_ROfirstSideDim,_nLayers);
+  config.getVectorDouble("csmtt.ROfirstSideInsul",_ROfirstSideInsul,_nLayers);
+  config.getVectorDouble("csmtt.ROSecondSideDim",_ROSecondSideDim,_nLayers);
+  config.getVectorDouble("csmtt.ROSecondSideInsul",_ROSecondSideInsul,_nLayers);
+  config.getVectorDouble("csmtt.ROangle",_ROangle,_nLayers);
 
   char tmpVarName[50];
 
@@ -126,7 +126,7 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
     double maxLength=0.0, minLength=1e+6;
     double maxWidth=0.0, minWidth=1e+6;
 
-    _InvertLadderShellOrder = config.getBool("csmv.InvertLadderShellOrder",false);
+    _InvertLadderShellOrder = config.getBool("csmtt.InvertLadderShellOrder",false);
 
     for (int il=0; il<_nLayers; ++il) {
 
@@ -143,11 +143,11 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
       if (_LayersSndSidePos[il]<minWidth) { minWidth=_LayersSndSidePos[il]; }
 
       //Ladders Parameters
-      sprintf(tmpVarName,"csmv.l%d.ld.nShells",il+1);
+      sprintf(tmpVarName,"csmtt.l%d.ld.nShells",il+1);
       const std::string nShlVarName(tmpVarName);
       _LaddersNmShells.push_back( config.getInt(nShlVarName) );
 
-      sprintf(tmpVarName,"csmv.l%d.ld.ShellsMaterial",il+1);
+      sprintf(tmpVarName,"csmtt.l%d.ld.ShellsMaterial",il+1);
       const std::string ShlMatVarName(tmpVarName);
       std::vector< std::string > tmpldMat;
       config.getVectorString(ShlMatVarName,tmpldMat,_LaddersNmShells[il]);
@@ -161,7 +161,7 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
         _LaddersShellsMaterial.push_back( tmpldMatInv );
       }
 
-      sprintf(tmpVarName,"csmv.l%d.ld.ShellsThickness",il+1);
+      sprintf(tmpVarName,"csmtt.l%d.ld.ShellsThickness",il+1);
       const std::string ShlThickVarName(tmpVarName);
       std::vector<double> tmpldThick;
       config.getVectorDouble(ShlThickVarName,tmpldThick,_LaddersNmShells[il]);
@@ -176,11 +176,11 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
       }
 
       //readOuts Parameters
-      sprintf(tmpVarName,"csmv.l%d.ro.nShells",il+1);
+      sprintf(tmpVarName,"csmtt.l%d.ro.nShells",il+1);
       const std::string nROShlVarName(tmpVarName);
       _ReadoutsNmShells.push_back( config.getInt(nROShlVarName) );
 
-      sprintf(tmpVarName,"csmv.l%d.ro.ShellIds",il+1);
+      sprintf(tmpVarName,"csmtt.l%d.ro.ShellIds",il+1);
       const std::string ROShlIdsVarName(tmpVarName);
       std::vector<int> tmproIds;
       config.getVectorInt(ROShlIdsVarName,tmproIds,_ReadoutsNmShells[il]);
@@ -214,7 +214,7 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
       if (nROFstSdperLad>10000 || nROSndSdperLad>10000) {
         //                throw cet::exception("GEOM") <<"Using GDML file option is temporarily disabled\n";
         exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-        e<<"CSMV: Maximum number of Channels allowed per X or Y per Ladder is 10000!\n";
+        e<<"CSMTT: Maximum number of Channels allowed per X or Y per Ladder is 10000!\n";
         e.error();
 
       }
@@ -223,22 +223,22 @@ void CSMVMaker::loadTracker( crd::SimpleConfig const& config ){
 
 }
 
-void CSMVMaker::Build(){
+void CSMTTMaker::Build(){
 
-  _lpst = unique_ptr<CSMVtracker>(new CSMVtracker());
+  _lpst = unique_ptr<CSMTtracker>(new CSMTtracker());
   _lpst->_isExternal = _isExternal;
   _lpst->_geomType=_geomType;
 
   if (_nLayers<1) {
     exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-    e<<"CSMV: Number of Layer is not acceptable\n";
+    e<<"CSMTT: Number of Layer is not acceptable\n";
     e.error();
   }
 
   if (_isExternal) {
     //                throw cet::exception("GEOM") <<"Using GDML file option is temporarily disabled\n";
     exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-    e<<"CSMV: Using GDML file option is temporarily disabled\n";
+    e<<"CSMTT: Using GDML file option is temporarily disabled\n";
     e.error();
 
   } else {
@@ -253,7 +253,7 @@ void CSMVMaker::Build(){
     _lpst->_halfWidth = _halfWidth;
     _lpst->_halfThickness = _halfThickness;
 
-    _lpst->_roChhnd.reset( new CSMVROGeometryHandle(_lpst.get()) );
+    _lpst->_roChhnd.reset( new CSMTTROGeometryHandle(_lpst.get()) );
 
     pxstbs::Layer *_lr     = new pxstbs::Layer[_nLayers];
 
@@ -262,7 +262,7 @@ void CSMVMaker::Build(){
     //         -----------------------------
 
     for ( int ily=0; ily<_nLayers; ++ily ) {
-      std::cout <<"Building CSMV layer: "<<ily+1<<std::endl;
+      std::cout <<"Building CSMTT layer: "<<ily+1<<std::endl;
 
       _lr[ily]._id = pxstbs::LayerId(ily);
       double layHalfLength = _halfLength;
@@ -338,36 +338,36 @@ void CSMVMaker::Build(){
 
 }
 
-void CSMVMaker::loadAbsorber( crd::SimpleConfig const& config ){
+void CSMTTMaker::loadAbsorber( crd::SimpleConfig const& config ){
 
   char tmpVarName[50];
 
-  _nAbsorbLayers   = config.getInt("csmv.nAbsLayers",0);
+  _nAbsorbLayers   = config.getInt("csmtt.nAbsLayers",0);
   for (int il=0; il<_nAbsorbLayers; ++il) {
     //Absorber Layers Parameters
-    sprintf(tmpVarName,"csmv.abs.l%d.InRad",il+1);
+    sprintf(tmpVarName,"csmtt.abs.l%d.InRad",il+1);
     const std::string inRadVarName(tmpVarName);
     _AbsorbInRasius.push_back(config.getDouble(inRadVarName));
 
     if (_AbsorbInRasius[il]<_distIn) { _distIn=_AbsorbInRasius[il]; }
 
-    sprintf(tmpVarName,"csmv.abs.l%d.halfLength",il+1);
+    sprintf(tmpVarName,"csmtt.abs.l%d.halfLength",il+1);
     const std::string halflVarName(tmpVarName);
     _AbsorbHalfLengths.push_back(config.getDouble(halflVarName));
 
     if (_AbsorbHalfLengths[il]>_halfLength) { _halfLength=_AbsorbHalfLengths[il]; }
 
-    sprintf(tmpVarName,"csmv.abs.l%d.nShells",il+1);
+    sprintf(tmpVarName,"csmtt.abs.l%d.nShells",il+1);
     const std::string nShlVarName(tmpVarName);
     _AbsorbNmShells.push_back(config.getInt(nShlVarName));
 
-    sprintf(tmpVarName,"csmv.abs.l%d.ShellsMaterial",il+1);
+    sprintf(tmpVarName,"csmtt.abs.l%d.ShellsMaterial",il+1);
     const std::string AbShlMatVarName(tmpVarName);
     std::vector< std::string > tmpabMat;
     config.getVectorString(AbShlMatVarName,tmpabMat,_AbsorbNmShells[il]);
     _AbsorbShellsMaterial.push_back( tmpabMat );
 
-    sprintf(tmpVarName,"csmv.abs.l%d.ShellsThickness",il+1);
+    sprintf(tmpVarName,"csmtt.abs.l%d.ShellsThickness",il+1);
     const std::string AbShlThickVarName(tmpVarName);
     std::vector<double> tmpabThick;
     config.getVectorDouble(AbShlThickVarName,tmpabThick,_AbsorbNmShells[il]);
@@ -385,20 +385,20 @@ void CSMVMaker::loadAbsorber( crd::SimpleConfig const& config ){
 
 }
 
-void CSMVMaker::BuildAbsorber(){
+void CSMTTMaker::BuildAbsorber(){
 
-  _lpsabs = unique_ptr<CSMVAbsorber>(new CSMVAbsorber());
+  _lpsabs = unique_ptr<CSMTTAbsorber>(new CSMTTAbsorber());
 
   if (_nAbsorbLayers<1) {
     exc::exceptionG4 e("GEOM","Warning in Argument",4);
-    e<<"CSMV: Number of Absorber Shell is 0\n";
+    e<<"CSMTT: Number of Absorber Shell is 0\n";
     e.error();
   }
 
   if (_isExternal) {
     //                throw cet::exception("GEOM") <<"Using GDML file option is temporarily disabled\n";
     exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-    e<<"CSMV: Using GDML file option is temporarily disabled\n";
+    e<<"CSMTT: Using GDML file option is temporarily disabled\n";
     e.error();
 
   } else {
@@ -416,6 +416,6 @@ void CSMVMaker::BuildAbsorber(){
   }
 }
 
-} // namespace csmv
+} // namespace csmtt
 
 //#endif

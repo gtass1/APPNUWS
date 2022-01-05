@@ -1,10 +1,10 @@
-// CSMVtracker manager class
+// CSMTTracker manager class
 //
 // Original author G. Tassielli
 //
 
-#ifndef CSMVtracker_hh
-#define CSMVtracker_hh
+#ifndef CSMTtracker_hh
+#define CSMTtracker_hh
 
 #include <deque>
 #include <vector>
@@ -16,21 +16,20 @@
 #include <boost/shared_array.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "CSMTTROGeometryHandle.hh"
 #include "PXSTbsLayer.hh"
-
-#include "CSMVROGeometryHandle.hh"
 
 #include "Detector.hh"
 
-namespace csmv {
+namespace csmtt {
 
-class CSMVtracker: public Detector {
+class CSMTtracker: public Detector {
 
-        friend class CSMVMaker;
+        friend class CSMTTMaker;
 
 public:
-        CSMVtracker(std::string name="CSMVtracker");
-        ~CSMVtracker() {}
+        CSMTtracker(std::string name="CSMTtracker");
+        ~CSMTtracker() {}
 
         double x0()            const { return _x0;}
         double y0()            const { return _y0;}
@@ -52,7 +51,7 @@ public:
 //        SensorType sensType()  const { return _sensType; }
 
 //        pxstbs::ROGeometryHandle* getROGeometryHandle() const;
-        CSMVROGeometryHandle* getROGeometryHandle() const;
+        CSMTTROGeometryHandle* getROGeometryHandle() const;
 
         pxstbs::Layer* getLayer(int n) const /*throw(cet::exception)*/;
 
@@ -95,10 +94,10 @@ protected:
         boost::shared_array<pxstbs::Layer> _lr;
 
 //        std::unique_ptr<pxstbs::ROGeometryHandle> _roChhnd;
-        boost::shared_ptr<CSMVROGeometryHandle> _roChhnd;
+        boost::shared_ptr<CSMTTROGeometryHandle> _roChhnd;
 
 };
 
-} //namespace csmv
+} //namespace csmtt
 
-#endif /* CSMVtracker_hh */
+#endif /* CSMTTtracker_hh */

@@ -34,7 +34,7 @@ void ConstructMaterials::construct() {
 
 //  if ( cRd->getBool("hasDCH",false) ) contructDCHMaterial();
 
-  if ( cRd->getBool("hasCSMV",false) ) contructMPGMaterial();
+  if ( cRd->getBool("hasCSMTT",false) ) contructMPGMaterial();
 
 }
 
@@ -321,7 +321,7 @@ void ConstructMaterials::contructMPGMaterial()
 
 	// List of requested specific materials from the config file.
 	std::vector<std::string> materialsToLoad;
-	cRd->getVectorString("csmv.materials",materialsToLoad);
+	cRd->getVectorString("csmtt.materials",materialsToLoad);
 
 	CheckedG4String mat = isNeeded(materialsToLoad, "GasAr_70CO2_30");
 	if ( mat.doit ){

@@ -11,17 +11,17 @@
 
 #include <string>
 
+#include "CSMTTLadderSD.hh"
+#include "CSMTTROGeometryHandle.hh"
 #include "PXSTbsLayer.hh"
 
-#include "CSMVROGeometryHandle.hh"
-#include "CSMVLadderSD.hh"
 
 using namespace std;
 //using namespace svx;
 
-namespace csmv {
+namespace csmtt {
 
-  CSMVLadderSD::CSMVLadderSD(const G4String &name, const G4String& hitsCollectionName, const crd::SimpleConfig& config) :
+  CSMTTLadderSD::CSMTTLadderSD(const G4String &name, const G4String& hitsCollectionName, const crd::SimpleConfig& config) :
                   SensitiveDetector(name,hitsCollectionName,config)
                   ,_layer(0)
                   ,_phiSec(0)
@@ -32,21 +32,21 @@ namespace csmv {
   {
 //          art::ServiceHandle<GeometryService> geom;
 //
-//          if ( !geom->hasElement<CSMVtracker>() ) {
+//          if ( !geom->hasElement<CSMTtracker>() ) {
 //                  throw cet::exception("GEOM")
 //                  << "Expected I Trackers but found neither.\n";
 //          }
 
-    if ( !GeomService::Instance()->hasElement<CSMVtracker>() ) {
+    if ( !GeomService::Instance()->hasElement<CSMTtracker>() ) {
       exc::exceptionG4 e("GEOM","Fatal Error",0);
-      e<< "Expected CSMV Trackers but found neither.\n";
+      e<< "Expected CSMTT Trackers but found neither.\n";
       e.error();
     }
   }
 
-  CSMVLadderSD::~CSMVLadderSD(){ }
+  CSMTTLadderSD::~CSMTTLadderSD(){ }
 
-  G4bool CSMVLadderSD::ProcessHits(G4Step* aStep, G4TouchableHistory* ){
+  G4bool CSMTTLadderSD::ProcessHits(G4Step* aStep, G4TouchableHistory* ){
 
           _currentSize += 1;
 
@@ -57,7 +57,7 @@ namespace csmv {
 //                                          << ": "
 //                                          << _currentSize << endl;
                           exc::exceptionG4 e("G4","Warning",4);
-                          e<< "CSMV: Maximum number of particles reached "
+                          e<< "CSMTT: Maximum number of particles reached "
                               << SensitiveDetectorName
                               << ": "
                               << _currentSize << endl;
@@ -83,7 +83,7 @@ namespace csmv {
 //          string volName = aStep->GetTrack()->GetVolume()->GetName();
           int volCpNum = 0;
           _roSubShell = 0;
-          pxstbs::Layer* tmpLayer = csmvtracker->getLayer(_layer);
+          pxstbs::Layer* tmpLayer = csmttracker->getLayer(_layer);
           if (tmpLayer->getLadder(0)->getDetail()->nShells()>1) {
 //            volCpNum = aTouch->GetCopyNumber(1);
             G4TouchableHandle touch1 = aStep->GetPreStepPoint()->GetTouchableHandle();
@@ -112,14 +112,14 @@ namespace csmv {
           // Position at start of step point, in world system and in
           // a system in which the center of the tracking detector is the origin.
           G4ThreeVector prePosWorld = aStep->GetPreStepPoint()->GetPosition();
-          if ( verboseLevel>=2 )  std::cout<<"CSMV: G4 hit pos in World "<<prePosWorld[0]<<" "<<prePosWorld[1]<<" "<<prePosWorld[2]<<std::endl;
-          G4ThreeVector prePosTracker = prePosWorld - _csmvDetCenter;
-          G4ThreeVector postPosTracker = aStep->GetPostStepPoint()->GetPosition() - _csmvDetCenter;
+          if ( verboseLevel>=2 )  std::cout<<"CSMTT: G4 hit pos in World "<<prePosWorld[0]<<" "<<prePosWorld[1]<<" "<<prePosWorld[2]<<std::endl;
+          G4ThreeVector prePosTracker = prePosWorld - _csmttDetCenter;
+          G4ThreeVector postPosTracker = aStep->GetPostStepPoint()->GetPosition() - _csmttDetCenter;
 
           G4ThreeVector preMomWorld = aStep->GetPreStepPoint()->GetMomentum();
           HepGeom::Point3D<double> prePosGbl(prePosTracker);
           HepGeom::Point3D<double> prePosLoc;
-          CSMVROGeometryHandle *roghndl = csmvtracker->getROGeometryHandle();
+          CSMTTROGeometryHandle *roghndl = csmttracker->getROGeometryHandle();
           roghndl->SelectLadder(_layer,_phiSec,_ladder);
           roghndl->Global2Local(prePosGbl,prePosLoc);
 
@@ -222,4 +222,4 @@ namespace csmv {
 
   }
 
-} //namespace csmv
+} //namespace csmtt

@@ -1,20 +1,20 @@
-// CSMVAbsorber manager class
+// CSMTTAbsorber manager class
 
-#ifndef CSMVAbsorber_hh
-#define CSMVAbsorber_hh
+#ifndef CSMTTAbsorber_hh
+#define CSMTTAbsorber_hh
 
 #include <vector>
 #include "Detector.hh"
 
-namespace csmv {
+namespace csmtt {
 
-class CSMVAbsorber : public Detector {
+class CSMTTAbsorber : public Detector {
 
-  friend class CSMVMaker;
+  friend class CSMTTMaker;
 
 public:
-  CSMVAbsorber();
-  ~CSMVAbsorber() {}
+  CSMTTAbsorber();
+  ~CSMTTAbsorber() {}
 
   std::vector<double> getAbsorbersThickness() const {
     return _AbsorbersThickness;
@@ -66,6 +66,6 @@ protected:
 
 };
 
-} //namespace csmv
+} //namespace csmtt
 
-#endif /* CSMVAbsorber_hh */
+#endif /* CSMTTAbsorber_hh */

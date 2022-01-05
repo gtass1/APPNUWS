@@ -1,9 +1,9 @@
-// CSMV tracker manager class
+// CSMTT tracker manager class
 //
 // Original author G. Tassielli
 //
 
-#include "CSMVtracker.hh"
+#include "CSMTtracker.hh"
 
 #include "manageException.hh"
 
@@ -12,9 +12,9 @@
 
 //using namespace std;
 
-namespace csmv {
+namespace csmtt {
 
-CSMVtracker::CSMVtracker(std::string name) : Detector(name) {
+CSMTtracker::CSMTtracker(std::string name) : Detector(name) {
         _x0              =0.0;
         _y0              =0.0;
         _z0              =0.0;
@@ -26,16 +26,16 @@ CSMVtracker::CSMVtracker(std::string name) : Detector(name) {
         _nLayers         =0;
         _zHalfLength     =0.0;
         _geomType        =00;
-//        _sensType        =CSMVtracker::Pixel;
+//        _sensType        =CSMTtracker::Pixel;
 }
 
-//pxstbs::ROGeometryHandle* CSMVtracker::getROGeometryHandle() const {
-CSMVROGeometryHandle* CSMVtracker::getROGeometryHandle() const {
+//pxstbs::ROGeometryHandle* CSMTtracker::getROGeometryHandle() const {
+CSMTTROGeometryHandle* CSMTtracker::getROGeometryHandle() const {
   return _roChhnd.get();
 }
 
 
-pxstbs::Layer* CSMVtracker::getLayer(int n) const /*throw(cet::exception)*/ {
+pxstbs::Layer* CSMTtracker::getLayer(int n) const /*throw(cet::exception)*/ {
 //        if (n>=0 && n< _nSuperLayers){
 //                return &(_sprlr[n]);
 //        } else {
@@ -48,4 +48,4 @@ pxstbs::Layer* CSMVtracker::getLayer(int n) const /*throw(cet::exception)*/ {
         return &(_lr[n]);
 }
 
-} // namespace csmv
+} // namespace csmtt

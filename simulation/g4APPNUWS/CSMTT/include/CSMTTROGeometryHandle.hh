@@ -1,28 +1,28 @@
-// interface to manage the geometries of the CSMV readout
+// interface to manage the geometries of the CSMTT readout
 //
 // Original author G. Tassielli
 //
 
-#ifndef CSMVROGeometryHandle_hh
-#define CSMVROGeometryHandle_hh
+#ifndef CSMTTROGeometryHandle_hh
+#define CSMTTROGeometryHandle_hh
 
 #include "PXSTbsROGeometryHandle.hh"
 
-//#include "CSMVtracker.hh"
+//#include "CSMTtracker.hh"
 
-namespace csmv {
+namespace csmtt {
 
-class CSMVtracker;
+class CSMTtracker;
 
-class CSMVROGeometryHandle : public pxstbs::ROGeometryHandle {
+class CSMTTROGeometryHandle : public pxstbs::ROGeometryHandle {
 
-	friend class CSMVMaker;
+	friend class CSMTTMaker;
 
 protected:
-	CSMVROGeometryHandle(CSMVtracker *csmv=0x0);
+	CSMTTROGeometryHandle(CSMTtracker *csmtt=0x0);
 
 public:
-	~CSMVROGeometryHandle() {}
+	~CSMTTROGeometryHandle() {}
 
 	void  SelectLadder(int Layer, int PhiSec, int Ladder) override;
     void  SelectRO(int Layer, int PhiSec, int Ladder, int fChFstSd, int fChSndSd, int fSubShell=0) override;
@@ -33,7 +33,7 @@ public:
     int computeChannelID(int ChFstSd,int ChSndSd, int subShell=0) override;
 
 protected:
-    const CSMVtracker *_csmv;
+    const CSMTtracker *_csmtt;
 
 };
 

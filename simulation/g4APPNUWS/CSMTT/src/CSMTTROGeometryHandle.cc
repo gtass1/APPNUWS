@@ -1,26 +1,25 @@
-// interface to manage the geometries of the CSMV readout
+// interface to manage the geometries of the CSMTT readout
 //
 // Original author G. Tassielli
 //
 
-#include "CSMVROGeometryHandle.hh"
+#include "CSMTTROGeometryHandle.hh"
+#include "CSMTtracker.hh"
 
-#include "CSMVtracker.hh"
+namespace csmtt {
 
-namespace csmv {
-
-CSMVROGeometryHandle::CSMVROGeometryHandle(CSMVtracker *csmv) :
-    _csmv(csmv)
+CSMTTROGeometryHandle::CSMTTROGeometryHandle(CSMTtracker *csmtt) :
+    _csmtt(csmtt)
 {
 }
 
-void CSMVROGeometryHandle::SelectLadder(int Layer, int PhiSec, int Ladder) {
+void CSMTTROGeometryHandle::SelectLadder(int Layer, int PhiSec, int Ladder) {
   bool change = false;
   bool isFw = false;
 
   if (Layer!=_fLayer) {
     _fLayer = Layer;
-    _lay = _csmv->getLayer(_fLayer);
+    _lay = _csmtt->getLayer(_fLayer);
     change = true;
   }
   if (PhiSec!=_fPhiSec) {
@@ -37,7 +36,7 @@ void CSMVROGeometryHandle::SelectLadder(int Layer, int PhiSec, int Ladder) {
     else { _fLadderID = _fPhiSec*_lay->nLaddersPerSector() + _fLadder; }
     _lad = _lay->getLadder(_fLadderID);
 
-    HepGeom::Translate3D trackerCenter (_csmv->x0(), _csmv->y0(), _csmv->z0());
+    HepGeom::Translate3D trackerCenter (_csmtt->x0(), _csmtt->y0(), _csmtt->z0());
     HepGeom::Translate3D layerCenter (0.0, _lay->getDetail()->yPosition(), _lay->getDetail()->zPosition());
     _matrx = trackerCenter * layerCenter * _lad->get3DTransfrom();
 //    _matrx = _lad->get3DTransfrom();
@@ -47,12 +46,12 @@ void CSMVROGeometryHandle::SelectLadder(int Layer, int PhiSec, int Ladder) {
 }
 
 
-void CSMVROGeometryHandle::SelectRO(int Layer, int PhiSec, int Ladder, int fChFstSd, int fChSndSd, int fSubShell) {
+void CSMTTROGeometryHandle::SelectRO(int Layer, int PhiSec, int Ladder, int fChFstSd, int fChSndSd, int fSubShell) {
   bool change = false;
   bool isFw = false;
   if (Layer!=_fLayer) {
     _fLayer = Layer;
-    _lay = _csmv->getLayer(_fLayer);
+    _lay = _csmtt->getLayer(_fLayer);
     change = true;
   }
   if (PhiSec!=_fPhiSec) {
@@ -88,7 +87,7 @@ void CSMVROGeometryHandle::SelectRO(int Layer, int PhiSec, int Ladder, int fChFs
 //std::cout<<"Layer "<<Layer<<" PhiSec "<<PhiSec<<" Ladder "<<Ladder<<" fChFstSd "<<fChFstSd<<" fChSndSd "<<fChSndSd<<std::endl;
 //std::cout<<"nReadOutsSndSd "<<_lad->nReadOutsSndSd()<<std::endl;
 //std::cout<<"_fROChanID "<<_fROChanID<<std::endl;
-    HepGeom::Translate3D trackerCenter (_csmv->x0(), _csmv->y0(), _csmv->z0());
+    HepGeom::Translate3D trackerCenter (_csmtt->x0(), _csmtt->y0(), _csmtt->z0());
     HepGeom::Translate3D layerCenter (0.0, _lay->getDetail()->yPosition(), _lay->getDetail()->zPosition());
     _matrx = trackerCenter * layerCenter * _lad->get3DTransfrom();
     //    _matrx = _lad->get3DTransfrom();
@@ -99,7 +98,7 @@ void CSMVROGeometryHandle::SelectRO(int Layer, int PhiSec, int Ladder, int fChFs
 
 }
 
-void CSMVROGeometryHandle::SelectRODet(unsigned long det) {
+void CSMTTROGeometryHandle::SelectRODet(unsigned long det) {
   if (det<1e+17) {
         // Return the Layer
         int fLayer = det/1e+14;
@@ -138,7 +137,7 @@ void CSMVROGeometryHandle::SelectRODet(unsigned long det) {
 
 }
 
-void CSMVROGeometryHandle::SelectRO(int chambID, int channelID) {
+void CSMTTROGeometryHandle::SelectRO(int chambID, int channelID) {
 
 //          _chambID=chambID;
 
@@ -171,7 +170,7 @@ void CSMVROGeometryHandle::SelectRO(int chambID, int channelID) {
   /*ROGeometryHandle::*/SelectRO(fLayer,fPhiSec,fLadder,fChFstSd,fChSndSd,fSubShell);
 }
 
-unsigned long CSMVROGeometryHandle::computeDet(int Layer, int PhiSec, int Ladder, int ChFstSd,int ChSndSd, int subShell) {
+unsigned long CSMTTROGeometryHandle::computeDet(int Layer, int PhiSec, int Ladder, int ChFstSd,int ChSndSd, int subShell) {
         unsigned long det = 0;
         if (subShell>98) {
           exc::exceptionG4 e("GEOM","Error",4);
@@ -182,13 +181,13 @@ unsigned long CSMVROGeometryHandle::computeDet(int Layer, int PhiSec, int Ladder
         return det;
 }
 
-unsigned long CSMVROGeometryHandle::computeDet(int chambID, int channelID) {
+unsigned long CSMTTROGeometryHandle::computeDet(int chambID, int channelID) {
         unsigned long det = 0;
         det = ((chambID/*+1*/)*1e+10) + channelID ;
         return det;
 }
 
-int CSMVROGeometryHandle::computeChannelID(int ChFstSd,int ChSndSd, int subShell) {
+int CSMTTROGeometryHandle::computeChannelID(int ChFstSd,int ChSndSd, int subShell) {
         int channelID = 0;
         if (subShell>98) {
           exc::exceptionG4 e("GEOM","Error",4);

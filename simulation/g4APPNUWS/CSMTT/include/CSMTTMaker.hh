@@ -1,10 +1,10 @@
-// CSMV geometry maker
+// CSMTT geometry maker
 //
 // Original author G. Tassielli
 //
 
-#ifndef CSMVMaker_hh
-#define CSMVMaker_hh
+#ifndef CSMTTMaker_hh
+#define CSMTTMaker_hh
 
 #include <map>
 #include <memory>
@@ -14,31 +14,31 @@
 //#include <boost/shared_array.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "CSMTtracker.hh"
+#include "CSMTTAbsorber.hh"
 #include "CLHEP/Vector/ThreeVector.h"
-#include "CSMVAbsorber.hh"
 
-#include "CSMVtracker.hh"
 
 namespace crd {
 class SimpleConfig;
 }
 
-namespace csmv {
+namespace csmtt {
 
-//class CSMVtracker;
-//class CSMVAbsorber;
+//class CSMTtracker;
+//class CSMTTAbsorber;
 //class Wall;
 
-class CSMVMaker{
+class CSMTTMaker{
 
 public:
 
-  CSMVMaker( crd::SimpleConfig const& config );
-  ~CSMVMaker ();
+  CSMTTMaker( crd::SimpleConfig const& config );
+  ~CSMTTMaker ();
 
   // This is the accessor that will remain.
-  std::unique_ptr<CSMVtracker> getCSMVtrackerPtr() { return std::move(_lpst); }
-  std::unique_ptr<CSMVAbsorber> getCSMVabsorberPtr() { return std::move(_lpsabs); }
+  std::unique_ptr<CSMTtracker> getCSMTTrackerPtr() { return std::move(_lpst); }
+  std::unique_ptr<CSMTTAbsorber> getCSMTTabsorberPtr() { return std::move(_lpsabs); }
 
 private:
 
@@ -59,7 +59,7 @@ private:
   double _halfWidth;            //Nominal Half-Width of the tracker along the second axis
   double _halfThickness;        //Nominal Half-Thickness of the tracker along the third axis
 
-  int _geomType;                //Version number (see CSMVtracker for definition)
+  int _geomType;                //Version number (see CSMTTracker for definition)
 
 //  double _x0;                   //Shift along x of the center of the tracker
 //  double _y0;                   //Shift along y of the center of the tracker
@@ -109,11 +109,11 @@ private:
   // Center of the tracker.
   CLHEP::Hep3Vector _center;
 
-  std::unique_ptr<CSMVtracker> _lpst;
-  std::unique_ptr<CSMVAbsorber> _lpsabs;
+  std::unique_ptr<CSMTtracker> _lpst;
+  std::unique_ptr<CSMTTAbsorber> _lpsabs;
 
 };
 
-}  //namespace csmv
+}  //namespace csmtt
 
-#endif /* CSMVMaker_hh */
+#endif /* CSMTTMaker_hh */

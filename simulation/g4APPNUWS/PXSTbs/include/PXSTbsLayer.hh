@@ -16,8 +16,8 @@
 #include "PXSTbsLayerDetail.hh"
 #include "PXSTbsLayerId.hh"
 
-namespace csmv {
-class CSMVMaker;
+namespace csmtt {
+class CSMTTMaker;
 }
 
 namespace pxstbs {
@@ -27,7 +27,7 @@ class Layer{
   friend class Ladder;
   friend class PXSTdetector;
 
-  friend class csmv::CSMVMaker;
+  friend class csmtt::CSMTTMaker;
 
 public:
 

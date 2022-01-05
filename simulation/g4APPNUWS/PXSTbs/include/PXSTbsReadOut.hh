@@ -9,8 +9,8 @@
 #include "CLHEP/Vector/ThreeVector.h"
 #include "PXSTbsReadOutDetail.hh"
 
-namespace csmv {
-class CSMVMaker;
+namespace csmtt {
+class CSMTTMaker;
 }
 
 namespace pxstbs {
@@ -20,7 +20,7 @@ class ReadOut {
   friend class Ladder;
 //  friend class ROGeometryHandle;
 
-  friend class csmv::CSMVMaker;
+  friend class csmtt::CSMTTMaker;
 
 public:
 

@@ -8,6 +8,6 @@
 
 //namespace gmsrv {
 
-const char* SensitiveDetectorName::name[5] = { "DCHtrackerSD", "DCHSWiresSD",  "DCHFWiresSD", "DCHWallsSD", "CSMtrackerSD" };
+const char* SensitiveDetectorName::name[5] = { "DCHtrackerSD", "DCHSWiresSD",  "DCHFWiresSD", "DCHWallsSD", "MPGDtrackerSD" };
 
 //}

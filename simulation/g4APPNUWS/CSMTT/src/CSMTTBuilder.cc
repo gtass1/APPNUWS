@@ -1,9 +1,14 @@
 //
-// CSMVtrackerBuilder builder class for the CSMV in geant4
+// CSMTTtrackerBuilder builder class for the CSMTT in geant4
 //
 // Original author G. Tassielli
 //
 
+#include "CSMTTBuilder.hh"
+
+#include "CSMTtracker.hh"
+#include "CSMTTAbsorber.hh"
+#include "CSMTTLadderSD.hh"
 #include "findMaterialOrThrow.hh"
 #include "GeomHandle.hh"
 #include "GeomService.hh"
@@ -23,40 +28,35 @@
 //#include "PXSTbsLadder.hh"
 #include "PXSTbsLayer.hh"
 
-#include "CSMVBuilder.hh"
-
-#include "CSMVLadderSD.hh"
-#include "CSMVtracker.hh"
-#include "CSMVAbsorber.hh"
 
 using namespace std;
 //using namespace svx;
 
-namespace csmv {
+namespace csmtt {
 
 bool checkOverlap, detailedCheck;
-string csmvName("CSMVMother");
+string csmttName("CSMTTMother");
 
-VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff*/ ){
+VolumeInfo CSMTTBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff*/ ){
 
   // Master geometry for the tracker.
-  GeomHandle<CSMVtracker> csmvtracker;
+  GeomHandle<CSMTtracker> csmttracker;
   crd::SimpleConfig const& config  = GeomService::Instance()->getConfig();
 
-  VolumeInfo csmvInfo;
+  VolumeInfo csmttInfo;
 
-  double x0    = CLHEP::mm * csmvtracker->x0();
-  double y0    = CLHEP::mm * csmvtracker->y0();
-  double z0    = CLHEP::mm * csmvtracker->z0();
+  double x0    = CLHEP::mm * csmttracker->x0();
+  double y0    = CLHEP::mm * csmttracker->y0();
+  double z0    = CLHEP::mm * csmttracker->z0();
   G4ThreeVector trackerOffset(x0,y0,z0/*-zOff*/);
 
   checkOverlap = config.getBool("g4.doSurfaceCheck",false);
-  detailedCheck = checkOverlap&&config.getBool("csmv.doDetailedSurfCheck",false);
+  detailedCheck = checkOverlap&&config.getBool("csmtt.doDetailedSurfCheck",false);
 
-  if (csmvtracker->isExternal()) {
+  if (csmttracker->isExternal()) {
 //                throw cet::exception("GEOM") <<"This GDML file option is temporarily disabled\n";
     exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-    e<<"CSMV: This GDML file option is temporarily disabled\n";
+    e<<"CSMTT: This GDML file option is temporarily disabled\n";
     e.error();
   } else {
 
@@ -66,12 +66,12 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
     visAtt->SetVisibility(false);
     visAtt->SetDaughtersInvisible(false);
 
-    G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmv.motherVolMat","G4_AIR") );
+    G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmtt.motherVolMat","G4_AIR") );
 
-    csmvInfo.solid = new G4Box("CSMTrackerTop", csmvtracker->halfWidth()+0.001,csmvtracker->halfThickness()+0.001,csmvtracker->zHalfLength()+0.001);
+    csmttInfo.solid = new G4Box("CSMTopTracker", csmttracker->halfWidth()+0.001,csmttracker->halfThickness()+0.001,csmttracker->zHalfLength()+0.001);
 
-    csmvInfo.logical = new G4LogicalVolume(csmvInfo.solid , matMother, csmvName,0,0,0);
-    csmvInfo.logical->SetVisAttributes(visAtt);
+    csmttInfo.logical = new G4LogicalVolume(csmttInfo.solid , matMother, csmttName,0,0,0);
+    csmttInfo.logical->SetVisAttributes(visAtt);
 
     G4VisAttributes* visAttLay = new G4VisAttributes(true, G4Colour::Cyan() );
     visAttLay->SetForceSolid(true);
@@ -79,17 +79,17 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
     visAttLay->SetVisibility(true);
     visAttLay->SetDaughtersInvisible(false);
 
-    bool debugLayer =  config.getBool("csmv.debugLayer",false);
+    bool debugLayer =  config.getBool("csmtt.debugLayer",false);
 
     char shape[50], vol[50];
 
-    if (csmvtracker->geomType()==0) {
+    if (csmttracker->geomType()==0) {
 
-      for (int iLy = 0; iLy < csmvtracker->nLayers(); ++iLy){
+      for (int iLy = 0; iLy < csmttracker->nLayers(); ++iLy){
 
-    	pxstbs::Layer *ily = csmvtracker->getLayer(iLy);
+    	pxstbs::Layer *ily = csmttracker->getLayer(iLy);
         if ( debugLayer ) {
-          cout<<"CSMV Layer: "<<ily->Id()<<endl;
+          cout<<"CSMTT Layer: "<<ily->Id()<<endl;
         }
         VolumeInfo LayerInfo;
         sprintf(shape,"cttly-L%d",iLy);
@@ -99,7 +99,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
 //            ily->getDetail()->OuterRadius()+0.0005,
 //            ily->getDetail()->halfLength()+0.0005,
 //            0.0,360.0*CLHEP::degree);
-        LayerInfo.solid = new G4Box(shape, csmvtracker->halfWidth()+0.0005,(ily->getDetail()->OuterRadius()-ily->getDetail()->InnerRadius())+0.0005,csmvtracker->zHalfLength()+0.0005);
+        LayerInfo.solid = new G4Box(shape, csmttracker->halfWidth()+0.0005,(ily->getDetail()->OuterRadius()-ily->getDetail()->InnerRadius())+0.0005,csmttracker->zHalfLength()+0.0005);
         LayerInfo.logical = new G4LogicalVolume(LayerInfo.solid,matMother,vol,0,0,0);
         //            if (ily->voxelizationFactor()==0.0) {
         //                    LayerInfo.logical->SetOptimisation(false);
@@ -146,7 +146,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
                 checkOverlap);
 
             if (ild->getLadderType() == pxstbs::Ladder::pixel || ild->getLadderType() == pxstbs::Ladder::strip) {
-              G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::CSMTrackerRO());
+              G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::MPGDTrackerRO());
               if(sd) {
                 if (ild->getDetail()->nShells()>1) {
                   //for (int ishell=0; ishell<ild->getDetail()->nShells(); ++ishell){
@@ -164,7 +164,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
 
           } else {
             exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-            e<<"CSMV: Only plane ladder geometry is implemented yet\n";
+            e<<"CSMTT: Only plane ladder geometry is implemented yet\n";
             e.error();
 
           }
@@ -174,7 +174,7 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
             G4ThreeVector(0,ily->getDetail()->yPosition(),ily->getDetail()->zPosition()),         // at (x,y,z)
             LayerInfo.logical,       // its logical volume
             vol,                     // its name
-            csmvInfo.logical,     // its mother  volume
+            csmttInfo.logical,     // its mother  volume
             false,                   // no boolean operations
             0,                       // copy number
             checkOverlap);
@@ -184,26 +184,26 @@ VolumeInfo CSMVBuilder::constructTracker( G4LogicalVolume* mother/*, double zOff
     } // geom 00
 
 
-    csmvInfo.physical =  new G4PVPlacement( 0,
+    csmttInfo.physical =  new G4PVPlacement( 0,
                     trackerOffset,
-                    csmvInfo.logical,
-                    csmvName,
+                    csmttInfo.logical,
+                    csmttName,
                     mother,
                     0,
                     0,
                     checkOverlap);
 
-    if ( checkOverlap ) { cout<<"CSMV Overlap Checking "<<csmvInfo.physical->CheckOverlaps(100000,0.0001,true)<<endl; }
+    if ( checkOverlap ) { cout<<"CSMTT Overlap Checking "<<csmttInfo.physical->CheckOverlaps(100000,0.0001,true)<<endl; }
 
 
   }
 
-  return csmvInfo;
+  return csmttInfo;
 
 }
 
-//VolumeInfo CSMVtrackerBuilder::buildLadder(float radius, float length, char *shapeName, char *volName, const std::vector<std::string> &materialName, const std::vector<double> &thicknesses, bool activeWireSD, bool isSense){
-VolumeInfo CSMVBuilder::buildLadder(pxstbs::Ladder &tld){
+//VolumeInfo CSMTTtrackerBuilder::buildLadder(float radius, float length, char *shapeName, char *volName, const std::vector<std::string> &materialName, const std::vector<double> &thicknesses, bool activeWireSD, bool isSense){
+VolumeInfo CSMTTBuilder::buildLadder(pxstbs::Ladder &tld){
 
   crd::SimpleConfig const& config  = GeomService::Instance()->getConfig();
 
@@ -247,7 +247,7 @@ VolumeInfo CSMVBuilder::buildLadder(pxstbs::Ladder &tld){
       LadderInfo.logical = new G4LogicalVolume(LadderInfo.solid,gmsrv::findMaterialOrThrow( tld.getDetail()->materialName(0).c_str() ),volName,0,0,0);
     }
     else {
-      G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmv.motherVolMat","G4_AIR") );
+      G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmtt.motherVolMat","G4_AIR") );
       LadderInfo.logical = new G4LogicalVolume(LadderInfo.solid,matMother/*gmsrv::findMaterialOrThrow( "G4_Galactic" )*/,volName,0,0,0);
       char tShapeName[100], tVolName[100];
 
@@ -292,7 +292,7 @@ VolumeInfo CSMVBuilder::buildLadder(pxstbs::Ladder &tld){
   return LadderInfo;
 }
 
-void CSMVBuilder::instantiateSensitiveDetectors( const std::string hitsCollectionName){
+void CSMTTBuilder::instantiateSensitiveDetectors( const std::string hitsCollectionName){
 
   crd::SimpleConfig const& config  = GeomService::Instance()->getConfig();
 
@@ -300,29 +300,29 @@ void CSMVBuilder::instantiateSensitiveDetectors( const std::string hitsCollectio
 
   // G4 takes ownership and will delete the detectors at the job end
 
-  GeomHandle<CSMVtracker> csmvtracker;
-  G4ThreeVector csmvPos(0.,0.,CLHEP::mm * csmvtracker->z0()/*-zOff*/);
+  GeomHandle<CSMTtracker> csmttracker;
+  G4ThreeVector csmttPos(0.,0.,CLHEP::mm * csmttracker->z0()/*-zOff*/);
 
-  CSMVLadderSD* csmvtrackerSD=0x0;
-  csmvtrackerSD = new CSMVLadderSD(SensitiveDetectorName::CSMTrackerRO(), hitsCollectionName,  config);
-  csmvtrackerSD->setCSMVCenterInDetSys(csmvPos);
-  SDman->AddNewDetector(csmvtrackerSD);
+  CSMTTLadderSD* csmttrackerSD=0x0;
+  csmttrackerSD = new CSMTTLadderSD(SensitiveDetectorName::MPGDTrackerRO(), hitsCollectionName,  config);
+  csmttrackerSD->setCSMTTCenterInDetSys(csmttPos);
+  SDman->AddNewDetector(csmttrackerSD);
 
 }
 
-void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*/ ){
+void CSMTTBuilder::constructAbsorber( G4LogicalVolume* csmttmother/*, double zOff*/ ){
 
   // Master geometry for the tracker.
-  GeomHandle<CSMVtracker> csmvtracker;
-  GeomHandle<CSMVAbsorber> csmvabsorber;
+  GeomHandle<CSMTtracker> csmttracker;
+  GeomHandle<CSMTTAbsorber> csmttabsorber;
   crd::SimpleConfig const& config  = GeomService::Instance()->getConfig();
 
   checkOverlap = config.getBool("g4.doSurfaceCheck",false);
 
-  if (csmvtracker->isExternal()) {
+  if (csmttracker->isExternal()) {
 //                throw cet::exception("GEOM") <<"This GDML file option is temporarily disabled\n";
     exc::exceptionG4 e("GEOM","Fatal Error in Argument",1);
-    e<<"CSMV: This GDML file option is temporarily disabled\n";
+    e<<"CSMTT: This GDML file option is temporarily disabled\n";
     e.error();
   } else {
 
@@ -338,40 +338,40 @@ void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*
 //    visAtt1->SetVisibility(true);
 //    visAtt1->SetDaughtersInvisible(false);
 
-    G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmv.motherVolMat","G4_AIR") );
-//    bool debugLayer =  config.getBool("csmv.debugLayer",false);
+    G4Material* matMother = gmsrv::findMaterialOrThrow( config.getString("csmtt.motherVolMat","G4_AIR") );
+//    bool debugLayer =  config.getBool("csmtt.debugLayer",false);
 
     char shape[50], vol[50];
 
-//    if (csmvtracker->geomType()==0) {
+//    if (csmttracker->geomType()==0) {
 
-      for (int iLy = 0; iLy < csmvabsorber->getAbsorbLayers(); ++iLy){
+      for (int iLy = 0; iLy < csmttabsorber->getAbsorbLayers(); ++iLy){
 
         VolumeInfo LayerInfo;
         sprintf(shape,"cttradly-L%d",iLy);
         sprintf(vol,"cttradlyvol-L%02d",iLy);
-        if (csmvabsorber->getAbsorbType()[iLy]==0) { //Barrel layers
+        if (csmttabsorber->getAbsorbType()[iLy]==0) { //Barrel layers
 
-          LayerInfo.solid = new G4Tubs(shape,csmvabsorber->getAbsorbInRasius()[iLy],
-              csmvabsorber->getAbsorbInRasius()[iLy]+csmvabsorber->getAbsorbersThickness()[iLy],
-              csmvabsorber->getAbsorbHalfLengths()[iLy],
+          LayerInfo.solid = new G4Tubs(shape,csmttabsorber->getAbsorbInRasius()[iLy],
+              csmttabsorber->getAbsorbInRasius()[iLy]+csmttabsorber->getAbsorbersThickness()[iLy],
+              csmttabsorber->getAbsorbHalfLengths()[iLy],
               0.0,360.0*CLHEP::degree);
           LayerInfo.logical = new G4LogicalVolume(LayerInfo.solid,matMother,vol,0,0,0);
 
           char tShapeName[100], tVolName[100];
 
-          double iInRad = csmvabsorber->getAbsorbInRasius()[iLy];
+          double iInRad = csmttabsorber->getAbsorbInRasius()[iLy];
 
-          for (int ishell=0; ishell<csmvabsorber->getAbsorbNmShells()[iLy]; ++ishell){
+          for (int ishell=0; ishell<csmttabsorber->getAbsorbNmShells()[iLy]; ++ishell){
             sprintf(tShapeName,"%s_sub%i",shape,ishell);
             sprintf(tVolName,"%s_sub%i",vol,ishell);
 
             G4Tubs *tradsh = new G4Tubs(tShapeName,iInRad,
-                iInRad+csmvabsorber->getAbsorbShellsThick()[iLy][ishell],
-                csmvabsorber->getAbsorbHalfLengths()[iLy],
+                iInRad+csmttabsorber->getAbsorbShellsThick()[iLy][ishell],
+                csmttabsorber->getAbsorbHalfLengths()[iLy],
                 0.0,360.0*CLHEP::degree);
 
-            G4LogicalVolume *tlogicRadSh = new G4LogicalVolume(tradsh,gmsrv::findMaterialOrThrow(csmvabsorber->getAbsorbShellsMaterial()[iLy][ishell]),tVolName,0,0,0);
+            G4LogicalVolume *tlogicRadSh = new G4LogicalVolume(tradsh,gmsrv::findMaterialOrThrow(csmttabsorber->getAbsorbShellsMaterial()[iLy][ishell]),tVolName,0,0,0);
 
             G4VPhysicalVolume *tphysRadSh = new G4PVPlacement(0,
                 G4ThreeVector(0,0,0),
@@ -383,41 +383,41 @@ void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*
                 checkOverlap);
             tphysRadSh->GetCopyNo(); //just to remove the warning during compiling
             tlogicRadSh->SetVisAttributes(visAtt);
-            iInRad += csmvabsorber->getAbsorbShellsThick()[iLy][ishell];
+            iInRad += csmttabsorber->getAbsorbShellsThick()[iLy][ishell];
           }
 
           LayerInfo.physical = new G4PVPlacement(0,               // no rotation
               G4ThreeVector(0,0,0),    // at (x,y,z)
               LayerInfo.logical,       // its logical volume
               vol,                     // its name
-              csmvmother,              // its mother volume
+              csmttmother,              // its mother volume
               false,                   // no boolean operations
               0,                       // copy number
               checkOverlap);
-        } else if (csmvabsorber->getAbsorbType()[iLy]==1) { //Forward layers
+        } else if (csmttabsorber->getAbsorbType()[iLy]==1) { //Forward layers
 
-          LayerInfo.solid = new G4Tubs(shape,csmvabsorber->getAbsorbInRasius()[iLy],
-              csmvabsorber->getAbsorbOutRasius()[iLy],
-              0.5*csmvabsorber->getAbsorbersThickness()[iLy],
+          LayerInfo.solid = new G4Tubs(shape,csmttabsorber->getAbsorbInRasius()[iLy],
+              csmttabsorber->getAbsorbOutRasius()[iLy],
+              0.5*csmttabsorber->getAbsorbersThickness()[iLy],
               0.0,360.0*CLHEP::degree);
           LayerInfo.logical = new G4LogicalVolume(LayerInfo.solid,matMother,vol,0,0,0);
 
           char tShapeName[100], tVolName[100];
 
-          double iZpos = -0.5*csmvabsorber->getAbsorbersThickness()[iLy];
+          double iZpos = -0.5*csmttabsorber->getAbsorbersThickness()[iLy];
 
-          for (int ishell=0; ishell<csmvabsorber->getAbsorbNmShells()[iLy]; ++ishell){
+          for (int ishell=0; ishell<csmttabsorber->getAbsorbNmShells()[iLy]; ++ishell){
             sprintf(tShapeName,"%s_sub%i",shape,ishell);
             sprintf(tVolName,"%s_sub%i",vol,ishell);
 
-            iZpos += 0.5*csmvabsorber->getAbsorbShellsThick()[iLy][ishell];
+            iZpos += 0.5*csmttabsorber->getAbsorbShellsThick()[iLy][ishell];
 
-            G4Tubs *tradsh = new G4Tubs(tShapeName,csmvabsorber->getAbsorbInRasius()[iLy],
-                csmvabsorber->getAbsorbOutRasius()[iLy],
-                0.5*csmvabsorber->getAbsorbShellsThick()[iLy][ishell],
+            G4Tubs *tradsh = new G4Tubs(tShapeName,csmttabsorber->getAbsorbInRasius()[iLy],
+                csmttabsorber->getAbsorbOutRasius()[iLy],
+                0.5*csmttabsorber->getAbsorbShellsThick()[iLy][ishell],
                 0.0,360.0*CLHEP::degree);
 
-            G4LogicalVolume *tlogicRadSh = new G4LogicalVolume(tradsh,gmsrv::findMaterialOrThrow(csmvabsorber->getAbsorbShellsMaterial()[iLy][ishell]),tVolName,0,0,0);
+            G4LogicalVolume *tlogicRadSh = new G4LogicalVolume(tradsh,gmsrv::findMaterialOrThrow(csmttabsorber->getAbsorbShellsMaterial()[iLy][ishell]),tVolName,0,0,0);
 
             G4VPhysicalVolume *tphysRadSh = new G4PVPlacement(0,
                 G4ThreeVector(0,0,iZpos),
@@ -430,22 +430,22 @@ void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*
             tphysRadSh->GetCopyNo(); //just to remove the warning during compiling
             /*if (ishell==0)*/ tlogicRadSh->SetVisAttributes(visAtt);
 //            if (ishell==1) tlogicRadSh->SetVisAttributes(visAtt1);
-            iZpos += 0.5*csmvabsorber->getAbsorbShellsThick()[iLy][ishell];
+            iZpos += 0.5*csmttabsorber->getAbsorbShellsThick()[iLy][ishell];
           }
 
           LayerInfo.physical = new G4PVPlacement(0,               // no rotation
-              G4ThreeVector(0,0,csmvabsorber->getAbsorbHalfLengths()[iLy]),    // at (x,y,z)
+              G4ThreeVector(0,0,csmttabsorber->getAbsorbHalfLengths()[iLy]),    // at (x,y,z)
               LayerInfo.logical,       // its logical volume
               vol,                     // its name
-              csmvmother,              // its mother volume
+              csmttmother,              // its mother volume
               false,                   // no boolean operations
               0,                       // copy number
               checkOverlap);
-          HepGeom::Transform3D posBckw(HepGeom::TranslateZ3D(-csmvabsorber->getAbsorbHalfLengths()[iLy])*HepGeom::RotateY3D(CLHEP::pi));
+          HepGeom::Transform3D posBckw(HepGeom::TranslateZ3D(-csmttabsorber->getAbsorbHalfLengths()[iLy])*HepGeom::RotateY3D(CLHEP::pi));
           LayerInfo.physical = new G4PVPlacement(posBckw,
               LayerInfo.logical,       // its logical volume
               vol,                     // its name
-              csmvmother,              // its mother volume
+              csmttmother,              // its mother volume
               false,                   // no boolean operations
               1,                       // copy number
               checkOverlap);
@@ -457,4 +457,4 @@ void CSMVBuilder::constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*
 
 }
 
-} // end namespace csmv
+} // end namespace csmtt

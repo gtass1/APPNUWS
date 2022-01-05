@@ -1,11 +1,11 @@
 //
-// CSMVtrackerBuilder builder class for the CSMV in geant4
+// CSMTTtrackerBuilder builder class for the CSMTT in geant4
 //
 // Original author G. Tassielli
 //
 
-#ifndef CSMVtrackerBuilder_hh
-#define CSMVtrackerBuilder_hh
+#ifndef CSMTTrackerBuilder_hh
+#define CSMTTrackerBuilder_hh
 
 #include "VolumeInfo.hh"
 #include "SimpleConfig.hh"
@@ -20,18 +20,18 @@
 //class Ladder;
 //}
 
-namespace csmv {
+namespace csmtt {
 
-  class CSMVBuilder {
+  class CSMTTBuilder {
   public:
     static VolumeInfo constructTracker( G4LogicalVolume* mother/*, double zOff*/ );
     static void constructStepLimiters();
-    static void instantiateSensitiveDetectors(const std::string hitsCollectionName="CSMVHitsCollection");
-    static void constructAbsorber( G4LogicalVolume* csmvmother/*, double zOff*/ );
+    static void instantiateSensitiveDetectors(const std::string hitsCollectionName="CSMTTHitsCollection");
+    static void constructAbsorber( G4LogicalVolume* csmttmother/*, double zOff*/ );
   private:
     static VolumeInfo buildLadder(pxstbs::Ladder &tld);
   };
 
-} //namespace csmv
+} //namespace csmtt
 
-#endif /* CSMVtrackerBuilder_hh */
+#endif /* CSMTTrackerBuilder_hh */

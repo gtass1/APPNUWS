@@ -12,7 +12,7 @@
 class SensitiveDetectorName {
 
 public:
-  enum SDtype { DCHtracker=0, DCHSWires,  DCHFWires, DCHWalls, CSMtracker };
+  enum SDtype { DCHtracker=0, DCHSWires,  DCHFWires, DCHWalls, MPGDtracker };
 
   static char const * TrackerGas(){
     return name[DCHtracker];
@@ -30,8 +30,8 @@ public:
     return name[DCHWalls];
   }
 
-  static char const * CSMTrackerRO(){
-    return name[CSMtracker];
+  static char const * MPGDTrackerRO(){
+    return name[MPGDtracker];
   }
 
 private:
