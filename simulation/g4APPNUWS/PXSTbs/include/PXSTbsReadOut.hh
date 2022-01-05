@@ -13,6 +13,10 @@ namespace csmtt {
 class CSMTTMaker;
 }
 
+namespace csmbt {
+class CSMBTMaker;
+}
+
 namespace pxstbs {
 
 class ReadOut {
@@ -21,6 +25,7 @@ class ReadOut {
 //  friend class ROGeometryHandle;
 
   friend class csmtt::CSMTTMaker;
+  friend class csmbt::CSMBTMaker;
 
 public:
 

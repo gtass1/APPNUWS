@@ -21,6 +21,7 @@ string GDMLFileName     = "g4-APPNUWS.gdml";
 
 // Uncomment exactly one central tracker.
 #include "csmtt_v00-APPNUWS.txt"
+#include "csmbt_v00-APPNUWS.txt"
 
 // Uncomment to enable debug printout on a per event or per track basis.
 //vector<int> g4.steppingActionEventList = { 0, 1 };

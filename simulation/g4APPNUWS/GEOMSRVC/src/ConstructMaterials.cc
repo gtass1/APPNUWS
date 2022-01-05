@@ -34,7 +34,7 @@ void ConstructMaterials::construct() {
 
 //  if ( cRd->getBool("hasDCH",false) ) contructDCHMaterial();
 
-  if ( cRd->getBool("hasCSMTT",false) ) contructMPGMaterial();
+  if ( cRd->getBool("hasCSMTT",false) || cRd->getBool("hasCSMBT",false) ) contructMPGMaterial();
 
 }
 
@@ -321,7 +321,25 @@ void ConstructMaterials::contructMPGMaterial()
 
 	// List of requested specific materials from the config file.
 	std::vector<std::string> materialsToLoad;
-	cRd->getVectorString("csmtt.materials",materialsToLoad);
+	if ( cRd->getBool("hasCSMTT",false) ) {
+	  cRd->getVectorString("csmtt.materials",materialsToLoad);
+	}
+	if ( cRd->getBool("hasCSMBT",false) ) {
+	  std::vector<std::string> materialsToLoad2;
+    cRd->getVectorString("csmbt.materials",materialsToLoad2);
+    for (unsigned int i2=0; i2<materialsToLoad2.size(); ++i2) {
+      bool add=true;
+      for (unsigned int i=0; i<materialsToLoad.size(); ++i) {
+        if (materialsToLoad[i].compare(materialsToLoad2[i2]) ==0 ) {
+          add=false;
+          break;
+        }
+      }
+      if (add) {
+        materialsToLoad.push_back(materialsToLoad2[i2]);
+      }
+    }
+	}
 
 	CheckedG4String mat = isNeeded(materialsToLoad, "GasAr_70CO2_30");
 	if ( mat.doit ){

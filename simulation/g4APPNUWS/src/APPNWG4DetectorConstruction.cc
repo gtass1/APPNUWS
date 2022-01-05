@@ -48,6 +48,12 @@
 #include "CSMTTBuilder.hh"
 //#include "CSMTTAbsorber.hh"
 
+// CSMTT includes
+#include "CSMBTMaker.hh"
+//#include "CSMBtracker.hh"
+#include "CSMBTBuilder.hh"
+//#include "CSMBTAbsorber.hh"
+
 // G4 includes
 #include "G4Material.hh"
 #include "G4Box.hh"
@@ -213,6 +219,21 @@ void APPNWG4DetectorConstruction::ConstructCosmicRayTracker() {
 
     GeomService::Instance()->addDetector( csmttm.getCSMTTabsorberPtr() );
     csmtt::CSMTTBuilder::constructAbsorber( csmttvolinf.logical );
+
+  }
+
+  if (cRd->getBool("hasCSMBT",false)) {
+
+    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::MPGDTrackerRO(),"CSMBTHitsStepCh");
+
+    csmbt::CSMBTMaker csmbtm( *cRd );
+    GeomService::Instance()->addDetector( csmbtm.getCSMBTrackerPtr() );
+
+    csmbt::CSMBTBuilder::instantiateSensitiveDetectors("CSMBTrackerHitsCollection");
+    VolumeInfo csmbtvolinf = csmbt::CSMBTBuilder::constructTracker( fTheWorld->GetLogicalVolume() );
+
+    GeomService::Instance()->addDetector( csmbtm.getCSMBTabsorberPtr() );
+    csmbt::CSMBTBuilder::constructAbsorber( csmbtvolinf.logical );
 
   }
 

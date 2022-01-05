@@ -20,6 +20,10 @@ namespace csmtt {
 class CSMTTMaker;
 }
 
+namespace csmbt {
+class CSMBTMaker;
+}
+
 namespace pxstbs {
 
 class Layer{
@@ -28,6 +32,7 @@ class Layer{
   friend class PXSTdetector;
 
   friend class csmtt::CSMTTMaker;
+  friend class csmbt::CSMBTMaker;
 
 public:
 
