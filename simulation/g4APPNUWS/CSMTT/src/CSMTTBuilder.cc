@@ -146,7 +146,7 @@ VolumeInfo CSMTTBuilder::constructTracker( G4LogicalVolume* mother/*, double zOf
                 checkOverlap);
 
             if (ild->getLadderType() == pxstbs::Ladder::pixel || ild->getLadderType() == pxstbs::Ladder::strip) {
-              G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::MPGDTrackerRO());
+              G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::MPGDCSMTTrackerRO());
               if(sd) {
                 if (ild->getDetail()->nShells()>1) {
                   //for (int ishell=0; ishell<ild->getDetail()->nShells(); ++ishell){
@@ -304,7 +304,7 @@ void CSMTTBuilder::instantiateSensitiveDetectors( const std::string hitsCollecti
   G4ThreeVector csmttPos(0.,0.,CLHEP::mm * csmttracker->z0()/*-zOff*/);
 
   CSMTTLadderSD* csmttrackerSD=0x0;
-  csmttrackerSD = new CSMTTLadderSD(SensitiveDetectorName::MPGDTrackerRO(), hitsCollectionName,  config);
+  csmttrackerSD = new CSMTTLadderSD(SensitiveDetectorName::MPGDCSMTTrackerRO(), hitsCollectionName,  config);
   csmttrackerSD->setCSMTTCenterInDetSys(csmttPos);
   SDman->AddNewDetector(csmttrackerSD);
 

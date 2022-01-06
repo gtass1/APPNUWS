@@ -209,7 +209,7 @@ void APPNWG4DetectorConstruction::ConstructCosmicRayTracker() {
 
   if (cRd->getBool("hasCSMTT",false)) {
 
-    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::MPGDTrackerRO(),"CSMTTHitsStepCh");
+    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::MPGDCSMTTrackerRO(),"CSMTTHitsStepCh");
 
     csmtt::CSMTTMaker csmttm( *cRd );
     GeomService::Instance()->addDetector( csmttm.getCSMTTrackerPtr() );
@@ -224,7 +224,7 @@ void APPNWG4DetectorConstruction::ConstructCosmicRayTracker() {
 
   if (cRd->getBool("hasCSMBT",false)) {
 
-    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::MPGDTrackerRO(),"CSMBTHitsStepCh");
+    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::MPGDCSMBTrackerRO(),"CSMBTHitsStepCh");
 
     csmbt::CSMBTMaker csmbtm( *cRd );
     GeomService::Instance()->addDetector( csmbtm.getCSMBTrackerPtr() );
