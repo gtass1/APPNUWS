@@ -30,10 +30,10 @@
 #/gps/pos/sigma_x 50 cm
 #/gps/pos/sigma_yx 50 um
 /gps/ang/type iso
-/gps/ang/mintheta -1.6 rad
-/gps/ang/maxtheta -1.4 rad
-/gps/ang/minphi 1.4 rad
-/gps/ang/maxphi 1.6 rad
+/gps/ang/mintheta -1.67 rad
+/gps/ang/maxtheta -1.47 rad
+/gps/ang/minphi 1.47 rad
+/gps/ang/maxphi 1.67 rad
 /gps/ang/user_coor true
 #/gps/ang/surfnorm true
 /gps/ene/type Lin
