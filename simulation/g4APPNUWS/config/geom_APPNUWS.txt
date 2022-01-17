@@ -20,8 +20,9 @@ bool   writeGDML        = false;
 string GDMLFileName     = "g4-APPNUWS.gdml";
 
 // Uncomment exactly one central tracker.
-#include "csmtt_v00-APPNUWS.txt"
-#include "csmbt_v00-APPNUWS.txt"
+#include "csmtt_v00.txt"
+#include "csmbt_v00.txt"
+#include "truck_v00.txt"
 
 // Uncomment to enable debug printout on a per event or per track basis.
 //vector<int> g4.steppingActionEventList = { 0, 1 };
@@ -99,7 +100,7 @@ vector<string> appnw.materials =
 bool g4.doSurfaceCheck = false;
 
 //double world.Length            = 2000.;  //unit mm
-vector<double> world.dims = { 6000, 15000, 20000}; //unit mm
+vector<double> world.dims = { 6000, 15000, 25000}; //unit mm
 //double world.minimalMargin.top = 3000;
 //double world.minimalMargin.bottom = 3000;
 //double world.minimalMargin.xmin = 3000;

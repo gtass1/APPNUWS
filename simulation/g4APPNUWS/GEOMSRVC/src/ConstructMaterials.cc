@@ -32,9 +32,11 @@ void ConstructMaterials::construct() {
 
   contructGeneralMaterial();
 
-//  if ( cRd->getBool("hasDCH",false) ) contructDCHMaterial();
+  if ( cRd->getBool("hasDCH",false) ) contructDCHMaterial();
 
   if ( cRd->getBool("hasCSMTT",false) || cRd->getBool("hasCSMBT",false) ) contructMPGMaterial();
+
+  if ( cRd->getBool("hasTRUCK",false) ) contructTRUCKMaterial();
 
 }
 
@@ -496,6 +498,32 @@ void ConstructMaterials::contructDCHMaterial()
     G4Material *CFoam = new G4Material(mat.name, density = 0.030*CLHEP::g/CLHEP::cm3, nel=1);
     G4Element* C  = getElementOrThrow("C");
     CFoam->AddElement(C, 100.0*CLHEP::perCent );
+  }
+
+}
+
+void ConstructMaterials::contructTRUCKMaterial() {
+
+  // List of requested specific materials from the config file.
+  std::vector<std::string> materialsToLoad;
+  cRd->getVectorString("trck.materials",materialsToLoad);
+
+  CheckedG4String mat = isNeeded(materialsToLoad, "Iron30prc");
+  if ( mat.doit ){
+    G4double density;
+    G4int nel;
+    G4Material *Iron30prc = new G4Material(mat.name, density = 0.3*7.87*CLHEP::g/CLHEP::cm3, nel=1);
+    G4Element* Fe  = getElementOrThrow("Fe");
+    Iron30prc->AddElement(Fe, 100.0*CLHEP::perCent );
+  }
+
+  mat = isNeeded(materialsToLoad, "Iron50prc");
+  if ( mat.doit ){
+    G4double density;
+    G4int nel;
+    G4Material *Iron50prc = new G4Material(mat.name, density = 0.5*7.87*CLHEP::g/CLHEP::cm3, nel=1);
+    G4Element* Fe  = getElementOrThrow("Fe");
+    Iron50prc->AddElement(Fe, 100.0*CLHEP::perCent );
   }
 
 }

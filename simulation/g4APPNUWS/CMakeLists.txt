@@ -13,6 +13,7 @@ set(BASE_FLD
 )
 
 set(DETBS_FLD
+	GENELMbs
 	PXSTbs
 	DCHbs
 )
@@ -20,6 +21,8 @@ set(DETBS_FLD
 set(DET_FLD
 	CSMTT
 	CSMBT
+	TRUCK
+	FLOOR
 )
 
 #----------------------------------------------------------------------------

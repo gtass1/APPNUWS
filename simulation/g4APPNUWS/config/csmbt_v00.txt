@@ -27,11 +27,13 @@ bool   csmbt.debugLayer       = false;
 // The Second Side will be placed along the X axis of the refernce system
 
 int    csmbt.nLayers                        = 3;
-vector<double> csmbt.LayersVertPos          = { -75.0, -50.0, -25.0 };
-vector<double> csmbt.LayersFstSidePos       = { -4000.0, -4000.0, -4000.0 };
-vector<double> csmbt.LayersSndSidePos       = { -1500.0, -1500.0, -1500.0 };
-vector<int> csmbt.nLaddersPerFstSide        = { 16, 16, 16 };
-vector<int> csmbt.nLaddersPerSndSide        = { 8, 8, 8 };
+vector<double> csmbt.LayersVertPos          = { -1550.0, -1050.0, -550.0 };
+//vector<double> csmbt.LayersFstSidePos       = { -4000.0, -4000.0, -4000.0 };
+vector<double> csmbt.LayersFstSidePos       = { -7500.0, -7500.0, -7500.0 };
+vector<double> csmbt.LayersSndSidePos       = { -2000.0, -2000.0, -2000.0 };
+//vector<int> csmbt.nLaddersPerFstSide        = { 16, 16, 16 };
+vector<int> csmbt.nLaddersPerFstSide        = { 30, 30, 30 };
+vector<int> csmbt.nLaddersPerSndSide        = { 10, 10, 10 };
 vector<double> csmbt.LaddersFstSideDim      = { 500, 500, 500 };  // First Side dimension of the Ladder per eah Layer
 vector<double> csmbt.LaddersDeadZoneFstSide = { 10, 10, 10 }; // Non active area on the ladder, including Support Frames and other services
 vector<double> csmbt.SpaceBtwnLadFstSide    = { 0, 0, 0 }; // Per Layer

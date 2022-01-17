@@ -52,6 +52,7 @@ private:
   void contructGeneralMaterial();
   void contructDCHMaterial();
   void contructMPGMaterial();
+  void contructTRUCKMaterial();
 
   // Wrapper around FindOrBuildElement.
   G4Element* getElementOrThrow( G4String const& name);

@@ -48,11 +48,21 @@
 #include "CSMTTBuilder.hh"
 //#include "CSMTTAbsorber.hh"
 
-// CSMTT includes
+// CSMBT includes
 #include "CSMBTMaker.hh"
 //#include "CSMBtracker.hh"
 #include "CSMBTBuilder.hh"
 //#include "CSMBTAbsorber.hh"
+
+// TRUCK includes
+#include "TRUCKMaker.hh"
+//#include "TRUCKdescription.hh"
+#include "TRUCKBuilder.hh"
+
+// FLOOR includes
+#include "FLOORMaker.hh"
+//#include "FLOORdescription.hh"
+#include "FLOORBuilder.hh"
 
 // G4 includes
 #include "G4Material.hh"
@@ -193,6 +203,8 @@ void APPNWG4DetectorConstruction::CreateWorld() {
 void APPNWG4DetectorConstruction::DefineVolumes() {
 
   ConstructCosmicRayTracker();
+  ConstructTruck();
+  ConstructFloor();
 
   //export geometry in GDML file
   if (cRd->getBool("writeGDML",false)) {
@@ -234,6 +246,43 @@ void APPNWG4DetectorConstruction::ConstructCosmicRayTracker() {
 
     GeomService::Instance()->addDetector( csmbtm.getCSMBTabsorberPtr() );
     csmbt::CSMBTBuilder::constructAbsorber( csmbtvolinf.logical );
+
+  }
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void APPNWG4DetectorConstruction::ConstructTruck() {
+
+  if (cRd->getBool("hasTRUCK",false)) {
+
+//    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::TRUCKrackerRO(),"TRUCKHitsStepCh");
+
+    trck::TRUCKMaker trckm( *cRd );
+    GeomService::Instance()->addDetector( trckm.getTRUCKdescPtr() );
+
+//    trck::TRUCKBuilder::instantiateSensitiveDetectors("TRUCKrackerHitsCollection");
+    VolumeInfo trckvolinf = trck::TRUCKBuilder::construct( fTheWorld->GetLogicalVolume() );
+
+//    GeomService::Instance()->addDetector( trckm.getCSMBTabsorberPtr() );
+//    trck::TRUCKBuilder::constructAbsorber( trckvolinf.logical );
+
+  }
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void APPNWG4DetectorConstruction::ConstructFloor() {
+
+  if (cRd->getBool("hasFLOOR",false)) {
+
+//    RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::FLOORrackerRO(),"FLOORHitsStepCh");
+
+    flr::FLOORMaker flrm( *cRd );
+    GeomService::Instance()->addDetector( flrm.getFLOORdescPtr() );
+
+//    flr::FLOORBuilder::instantiateSensitiveDetectors("FLOORrackerHitsCollection");
+    VolumeInfo flrvolinf = flr::FLOORBuilder::construct( fTheWorld->GetLogicalVolume() );
 
   }
 
