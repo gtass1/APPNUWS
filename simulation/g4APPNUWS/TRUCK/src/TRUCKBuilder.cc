@@ -31,6 +31,7 @@ namespace trck {
 
 bool checkOverlap, detailedCheck;
 std::string trckName("TRUCKMother");
+VolumeInfo CntInInfo;
 
 VolumeInfo TRUCKBuilder::construct( G4LogicalVolume* mother/*, double zOff*/ ){
 
@@ -84,7 +85,7 @@ VolumeInfo TRUCKBuilder::construct( G4LogicalVolume* mother/*, double zOff*/ ){
     if (trckdesc->geomType()==0) {
 
       genelmbs::Boxkind *cntin = trckdesc->getContainerElem();
-      VolumeInfo CntInInfo;
+//      VolumeInfo CntInInfo;
       sprintf(shape,"%s",cntin->getElmName().c_str());
       sprintf(vol,"%svol",cntin->getElmName().c_str());
 
@@ -205,6 +206,8 @@ VolumeInfo TRUCKBuilder::construct( G4LogicalVolume* mother/*, double zOff*/ ){
   return trckInfo;
 
 }
+
+VolumeInfo TRUCKBuilder::containerInVol() { return CntInInfo; }
 
 G4VSolid* TRUCKBuilder::buildBoxElem(genelmbs::Boxkind *ibx, char shape[]){
   G4VSolid* tmpBox=0x0;

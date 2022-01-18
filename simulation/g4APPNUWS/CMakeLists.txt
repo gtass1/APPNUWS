@@ -22,6 +22,7 @@ set(DET_FLD
 	CSMTT
 	CSMBT
 	TRUCK
+	CARGO
 	FLOOR
 )
 

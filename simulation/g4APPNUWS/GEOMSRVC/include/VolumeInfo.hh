@@ -18,8 +18,6 @@ class G4VPhysicalVolume;
 
 //namespace cdch {
 
-//  class Mu2eWorld;
-
   class VolumeInfo{
 
   public:
@@ -52,7 +50,6 @@ class G4VPhysicalVolume;
     CLHEP::Hep3Vector      centerInParent;
     CLHEP::Hep3Vector      centerInWorld;
 
-//    CLHEP::Hep3Vector centerInMu2e() const { return centerInWorld - mu2eOriginInWorld(); }
 //
 //  private:
 //    static const CLHEP::Hep3Vector& mu2eOriginInWorld();

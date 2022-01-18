@@ -23,11 +23,16 @@ namespace trck {
 class TRUCKMaker;
 }
 
+namespace crg {
+class CARGOMaker;
+}
+
 namespace genelmbs {
 
 class Cylkind{
 
   friend class trck::TRUCKMaker;
+  friend class crg::CARGOMaker;
 
 public:
 

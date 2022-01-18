@@ -31,13 +31,13 @@ public:
   bool isExternal()      const { return _isExternal; }
 
   double zHalfLength()   const { return _zHalfLength;}
-  double halfWidth()   const { return _halfWidth;}
-  double halfHeight()   const { return _halfHeight;}
+  double halfWidth()     const { return _halfWidth;}
+  double halfHeight()    const { return _halfHeight;}
 
   int geomType()         const { return _geomType; }
 
-  int nBoxKindElem()  const { return _nTrkBx; }
-  int nCylKindElem()  const { return _nTrkCyl; }
+  int nBoxKindElem()     const { return _nTrkBx; }
+  int nCylKindElem()     const { return _nTrkCyl; }
 
   genelmbs::Boxkind* getTrkBoxKindElem(int n) const;
 

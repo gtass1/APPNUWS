@@ -26,12 +26,14 @@ namespace trck {
     static VolumeInfo construct( G4LogicalVolume* mother/*, double zOff*/ );
     static void constructStepLimiters();
 //    static void instantiateSensitiveDetectors(const std::string hitsCollectionName="TRUCKHitsCollection");
-//    static void constructAbsorber( G4LogicalVolume* trckmother/*, double zOff*/ );
+    static VolumeInfo containerInVol();// { return CntInInfo; }
   private:
     static G4VSolid* buildBoxElem(genelmbs::Boxkind *ibx, char shape[]);
 //    static G4VSolid* buildCylElem(genelmbs::Cylkind *ibx, char shape[]);
     static VolumeInfo buildCylElem(genelmbs::Cylkind *icy, int iCy);
 //    static VolumeInfo buildLadder(pxstbs::Ladder &tld);
+//    static VolumeInfo CntInInfo;
+
   };
 
 } //namespace trck

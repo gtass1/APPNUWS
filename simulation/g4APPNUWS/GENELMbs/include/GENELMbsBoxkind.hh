@@ -23,6 +23,10 @@ namespace trck {
 class TRUCKMaker;
 }
 
+namespace crg {
+class CARGOMaker;
+}
+
 namespace flr {
 class FLOORMaker;
 }
@@ -32,6 +36,7 @@ namespace genelmbs {
 class Boxkind{
 
   friend class trck::TRUCKMaker;
+  friend class crg::CARGOMaker;
   friend class flr::FLOORMaker;
 
 public:

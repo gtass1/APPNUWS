@@ -59,6 +59,11 @@
 //#include "TRUCKdescription.hh"
 #include "TRUCKBuilder.hh"
 
+// CARGO includes
+#include "CARGOMaker.hh"
+//#include "CARGOdescription.hh"
+#include "CARGOBuilder.hh"
+
 // FLOOR includes
 #include "FLOORMaker.hh"
 //#include "FLOORdescription.hh"
@@ -266,6 +271,22 @@ void APPNWG4DetectorConstruction::ConstructTruck() {
 
 //    GeomService::Instance()->addDetector( trckm.getCSMBTabsorberPtr() );
 //    trck::TRUCKBuilder::constructAbsorber( trckvolinf.logical );
+
+    if (cRd->getBool("hasCARGO",false)) {
+
+      RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::CARGOtargetRO(),"CARGOHitsStepCh");
+
+      crg::CARGOMaker crgm( *cRd );
+      GeomService::Instance()->addDetector( crgm.getCARGOdescPtr() );
+
+      crg::CARGOBuilder::instantiateSensitiveDetectors("CARGOrackerHitsCollection");
+      crg::CARGOBuilder::construct( trck::TRUCKBuilder::containerInVol() );
+
+  //    GeomService::Instance()->addDetector( crgm.getCSMBTabsorberPtr() );
+  //    crg::CARGOBuilder::constructAbsorber( crgvolinf.logical );
+
+    }
+
 
   }
 

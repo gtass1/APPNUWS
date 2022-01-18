@@ -19,7 +19,7 @@
 //#include <string>
 #include <vector>
 
-// Mu2e includes
+// Config includes
 #include "SimpleConfig.hh"
 #include "SimpleConfigRecord.hh"
 #include "trimInPlace.hh"
