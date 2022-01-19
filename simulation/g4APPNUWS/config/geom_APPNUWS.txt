@@ -24,7 +24,7 @@ string GDMLFileName     = "g4-APPNUWS.gdml";
 #include "csmbt_v00.txt"
 #include "truck_v00.txt"
 #include "cargo_v00.txt"
-#include "floor_v01.txt"
+#include "floor_v00.txt"
 
 // Uncomment to enable debug printout on a per event or per track basis.
 //vector<int> g4.steppingActionEventList = { 0, 1 };

@@ -76,8 +76,8 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
   _TrailerFullPlaneEqMaterial       = config.getString("trck.TrailerFullPlaneEqMaterial","");
   _TrailerPlaneHeight               = config.getDouble("trck.TrailerPlaneHeight",0.0);
   _nTrailerRibs                     = config.getInt("trck.nTrailerRibs",0);
-  config.getVectorDouble("trck.TrailerRibPos", _TrailerRibPos, _nTrailerRibs);
   if (_nTrailerRibs>0) {
+    config.getVectorDouble("trck.TrailerRibPos", _TrailerRibPos, _nTrailerRibs);
     _TrailerRibsWidth                 = config.getDouble("trck.TrailerRibsWidth");
     _TrailerRibsHeight                = config.getDouble("trck.TrailerRibsHeight");
     _TrailerRibsThicknesExt           = config.getDouble("trck.TrailerRibsThicknesExt");
@@ -101,7 +101,11 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
   _TrailerShaftsHeight              = config.getDouble("trck.TrailerShaftsHeight",0.0);
   _TrailerShaftsThicknesExt         = config.getDouble("trck.TrailerShaftsThicknesExt",0.0);
   _TrailerShaftsThicknesCent        = config.getDouble("trck.TrailerShaftsThicknesCent",0.0);
-  _TrailerShaftsEqMaterial          = config.getString("trck.TrailerShaftsEqMaterial");
+  if (_TrailerShaftsInterDist>0.0) {
+    _TrailerShaftsEqMaterial          = config.getString("trck.TrailerShaftsEqMaterial");
+  } else {
+    _TrailerShaftsEqMaterial          = "";
+  }
   _TrailerReducedShaftsHeight       = config.getDouble("trck.TrailerReducedShaftsHeight",0.0);
 
   //Trailer wheels description
@@ -114,9 +118,15 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
   _TrlWheelPitch                    = config.getDouble("trck.TrlWheelPitch",0.0);
   _TrlWheelDistFromBack             = config.getDouble("trck.TrlWheelDistFromBack",0.0);
   _TrlWheelAxisRadius               = config.getDouble("trck.TrlWheelAxisRadius",0.0);
-  _TrlWheelRimMaterial              = config.getString("trck.TrlWheelRimMaterial");
-  _TrlWheelAxisMaterial             = config.getString("trck.TrlWheelAxisMaterial");
-  _TrlTireMaterial                  = config.getString("trck.TrlTireMaterial");
+  if (_nTrailerWheels>0) {
+    _TrlWheelRimMaterial              = config.getString("trck.TrlWheelRimMaterial");
+    _TrlWheelAxisMaterial             = config.getString("trck.TrlWheelAxisMaterial");
+    _TrlTireMaterial                  = config.getString("trck.TrlTireMaterial");
+  } else {
+    _TrlWheelRimMaterial              = "";
+    _TrlWheelAxisMaterial             = "";
+    _TrlTireMaterial                  = "";
+  }
   _TrlTireEqThickness               = config.getDouble("trck.TrlTireEqThickness",0.0);
 
 
@@ -167,9 +177,15 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
   _TruckShaftsThicknesExt           = config.getDouble("trck.TruckShaftsThicknesExt",0.0);
   _TruckShaftsThicknesCent          = config.getDouble("trck.TruckShaftsThicknesCent",0.0);
   _TruckChassistsHeight             = config.getDouble("trck.TruckChassistsHeight",0.0);
-  _TruckChassisEqMaterial           = config.getString("trck.TruckChassisEqMaterial");
+  if ( _TruckShaftsInterDist>0.0 ) {
+    _TruckChassisEqMaterial           = config.getString("trck.TruckChassisEqMaterial");
+  } else {
+    _TruckChassisEqMaterial           = "";
+  }
   _nTruckRibs                       = config.getInt("trck.nTruckRibs",0);
-  config.getVectorDouble("trck.TruckRibPos", _TruckRibPos, _nTruckRibs);
+  if ( _nTruckRibs>0 ) {
+    config.getVectorDouble("trck.TruckRibPos", _TruckRibPos, _nTruckRibs);
+  }
   _TruckTrailerOverlap              = config.getDouble("trck.TruckTrailerOverlap",0.0);
 
 
@@ -182,15 +198,28 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
   _TruckWheelDistFromBack             = config.getDouble("trck.TruckWheelDistFromBack",0.0);
   _TruckWheelDistFromFront            = config.getDouble("trck.TruckWheelDistFromFront",0.0);
   _TruckWheelAxisRadius               = config.getDouble("trck.TruckWheelAxisRadius",0.0);
-  _TruckWheelRimMaterial              = config.getString("trck.TruckWheelRimMaterial");
-  _TruckWheelAxisMaterial             = config.getString("trck.TruckWheelAxisMaterial");
-  _TruckTireMaterial                  = config.getString("trck.TruckTireMaterial");
+  if ( _TruckShaftsInterDist>0.0 ) {
+    _TruckWheelRimMaterial              = config.getString("trck.TruckWheelRimMaterial");
+    _TruckWheelAxisMaterial             = config.getString("trck.TruckWheelAxisMaterial");
+    _TruckTireMaterial                  = config.getString("trck.TruckTireMaterial");
+  } else {
+    _TruckWheelRimMaterial              = "";
+    _TruckWheelAxisMaterial             = "";
+    _TruckTireMaterial                  = "";
+  }
   _TruckTireEqThickness               = config.getDouble("trck.TruckTireEqThickness",0.0);
 
-  _TrckTrnWheelJnRadius               = config.getDouble("trck.TrckTrnWheelJnRadius");
-  _TrckTrnWheelJnThickness            = config.getDouble("trck.TrckTrnWheelJnThickness");
-  _TrckTrnWheelJnDistFromBack         = config.getDouble("trck.TrckTrnWheelJnDistFromBack");
-  _TrckTrnWheelJnEqMaterial           = config.getString("trck.TrckTrnWheelJnEqMaterial");
+  if ( _TruckShaftsInterDist>0.0 ) {
+    _TrckTrnWheelJnRadius               = config.getDouble("trck.TrckTrnWheelJnRadius");
+    _TrckTrnWheelJnThickness            = config.getDouble("trck.TrckTrnWheelJnThickness");
+    _TrckTrnWheelJnDistFromBack         = config.getDouble("trck.TrckTrnWheelJnDistFromBack");
+    _TrckTrnWheelJnEqMaterial           = config.getString("trck.TrckTrnWheelJnEqMaterial");
+  } else {
+    _TrckTrnWheelJnRadius               = 0.0;
+    _TrckTrnWheelJnThickness            = 0.0;
+    _TrckTrnWheelJnDistFromBack         = 0.0;
+    _TrckTrnWheelJnEqMaterial           = "";
+  }
 
 
 //  char tmpVarName[50];
@@ -206,9 +235,13 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
     _ContainerInWidth = _ContainerWidth;
     _ContainerInHeight = _ContainerHeight;
 
-    _nTrlBxKindEl = 2;  //two shafts is assumed
-    if (_TrailerReducedShaftsHeight>0.0) {
-      _nTrlBxKindEl += 2;
+    if (_TrailerShaftsInterDist>0.0) {
+      _nTrlBxKindEl = 2;  //two shafts is assumed
+      if (_TrailerReducedShaftsHeight>0.0) {
+        _nTrlBxKindEl += 2;
+      }
+    } else {
+      _nTrlBxKindEl = 0;
     }
     _nTrlBxKindEl += 1 + _nTrailerRibs; //1 is for the plane, is it is not a solid plane a volume to contain the ribs is even defined
     _nTrlCylKindEl = 5 * _nTrailerWheels; // 2 per wheel, 2 per wheel tire, 1 per axes
@@ -230,9 +263,14 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
     _ContainerInRelCenter.setY(_TrailerPlaneHeight+_ContainerBasementThicknes+_ContainerInHeight/2.0);
     _ContainerInRelCenter.setZ(-_halfLength+_ContainerLength/2.0);
 
-    _nTrkBxKindEl = 2 + _nTruckRibs;
-    _nTrkCylKindEl = 4 * 3 + 2; // 2 per wheel (3 wheel), 2 per wheel tire, 2 axes
-    ++_nTrkCylKindEl; //Truck Trailer joint (fifth wheel)
+    if (_TruckShaftsInterDist>0.0) {
+      _nTrkBxKindEl = 2 + _nTruckRibs;
+      _nTrkCylKindEl = 4 * 3 + 2; // 2 per wheel (3 wheel), 2 per wheel tire, 2 axes
+      ++_nTrkCylKindEl; //Truck Trailer joint (fifth wheel)
+    } else {
+      _nTrkBxKindEl = 0;
+      _nTrkCylKindEl = 0;
+    }
 
   }
 
@@ -288,55 +326,57 @@ void TRUCKMaker::Build(){
     //------------------ Trailer structural elements description -----------------------------
     long lbid=0;
 
-    genelmbs::Boxkind &trlSft = _trkBx[lbid];
-    trlSft._elmName="trlrSft";
-    trlSft._id = genelmbs::BoxkindId(lbid);
-    trlSft._shapeType = genelmbs::Boxkind::Ishape;
-    trlSft._detail.reset( new genelmbs::BoxkindDetail(_TrailerShaftsFullHeightLength/2.0, _TrailerShaftsWidth/2.0, _TrailerShaftsHeight/2.0, _TrailerShaftsEqMaterial,
-                                                      _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
-    HepGeom::Translate3D sftposL (-_TrailerShaftsInterDist/2.0,
-        _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSft._detail->halfHeight()-_halfHeight,
-        -_halfLength+trlSft._detail->halfLength());
-    trlSft.setPosMatrix ( sftposL );
-    ++lbid;
-
-    genelmbs::Boxkind &trlSft1 = _trkBx[lbid];
-    trlSft1._elmName="trlrSft";
-    trlSft1._id = genelmbs::BoxkindId(lbid);
-    trlSft1._shapeType = genelmbs::Boxkind::Ishape;
-    trlSft1._detail.reset( new genelmbs::BoxkindDetail(_TrailerShaftsFullHeightLength/2.0, _TrailerShaftsWidth/2.0, _TrailerShaftsHeight/2.0, _TrailerShaftsEqMaterial,
-                                                       _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
-    HepGeom::Translate3D sftposR (_TrailerShaftsInterDist/2.0,
-        _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSft1._detail->halfHeight()-_halfHeight,
-        -_halfLength+trlSft1._detail->halfLength());
-    trlSft1.setPosMatrix ( sftposR );
-    ++lbid;
-
-    if (_TrailerReducedShaftsHeight>0.0) {
-      double trlrReducedShaftsLength = _TrailerPlaneLength-_TrailerShaftsFullHeightLength;
-      genelmbs::Boxkind &trlSftRd = _trkBx[lbid];
-      trlSftRd._elmName="trlrSft";
-      trlSftRd._id = genelmbs::BoxkindId(lbid);
-      trlSftRd._shapeType = genelmbs::Boxkind::Ishape;
-      trlSftRd._detail.reset( new genelmbs::BoxkindDetail(trlrReducedShaftsLength/2.0, _TrailerShaftsWidth/2.0, _TrailerReducedShaftsHeight/2.0, _TrailerShaftsEqMaterial,
-                                                          _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
-      HepGeom::Translate3D rdsftposL (-_TrailerShaftsInterDist/2.0,
-          _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSftRd._detail->halfHeight()-_halfHeight,
-          -_halfLength+_TrailerShaftsFullHeightLength+trlSftRd._detail->halfLength());
-      trlSftRd.setPosMatrix ( rdsftposL );
+    if (_TrailerShaftsInterDist>0.0) {
+      genelmbs::Boxkind &trlSft = _trkBx[lbid];
+      trlSft._elmName="trlrSft";
+      trlSft._id = genelmbs::BoxkindId(lbid);
+      trlSft._shapeType = genelmbs::Boxkind::Ishape;
+      trlSft._detail.reset( new genelmbs::BoxkindDetail(_TrailerShaftsFullHeightLength/2.0, _TrailerShaftsWidth/2.0, _TrailerShaftsHeight/2.0, _TrailerShaftsEqMaterial,
+          _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
+      HepGeom::Translate3D sftposL (-_TrailerShaftsInterDist/2.0,
+          _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSft._detail->halfHeight()-_halfHeight,
+          -_halfLength+trlSft._detail->halfLength());
+      trlSft.setPosMatrix ( sftposL );
       ++lbid;
 
-      genelmbs::Boxkind &trlSftRd1 = _trkBx[lbid];
-      trlSftRd1._elmName="trlrSft";
-      trlSftRd1._id = genelmbs::BoxkindId(lbid);
-      trlSftRd1._shapeType = genelmbs::Boxkind::Ishape;
-      trlSftRd1._detail.reset( new genelmbs::BoxkindDetail(trlrReducedShaftsLength/2.0, _TrailerShaftsWidth/2.0, _TrailerReducedShaftsHeight/2.0, _TrailerShaftsEqMaterial,
-                                                           _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
-      HepGeom::Translate3D rdsftposR (_TrailerShaftsInterDist/2.0,
-          _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSftRd1._detail->halfHeight()-_halfHeight,
-          -_halfLength+_TrailerShaftsFullHeightLength+trlSftRd1._detail->halfLength());
-      trlSftRd1.setPosMatrix ( rdsftposR );
+      genelmbs::Boxkind &trlSft1 = _trkBx[lbid];
+      trlSft1._elmName="trlrSft";
+      trlSft1._id = genelmbs::BoxkindId(lbid);
+      trlSft1._shapeType = genelmbs::Boxkind::Ishape;
+      trlSft1._detail.reset( new genelmbs::BoxkindDetail(_TrailerShaftsFullHeightLength/2.0, _TrailerShaftsWidth/2.0, _TrailerShaftsHeight/2.0, _TrailerShaftsEqMaterial,
+          _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
+      HepGeom::Translate3D sftposR (_TrailerShaftsInterDist/2.0,
+          _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSft1._detail->halfHeight()-_halfHeight,
+          -_halfLength+trlSft1._detail->halfLength());
+      trlSft1.setPosMatrix ( sftposR );
       ++lbid;
+
+      if (_TrailerReducedShaftsHeight>0.0) {
+        double trlrReducedShaftsLength = _TrailerPlaneLength-_TrailerShaftsFullHeightLength;
+        genelmbs::Boxkind &trlSftRd = _trkBx[lbid];
+        trlSftRd._elmName="trlrSft";
+        trlSftRd._id = genelmbs::BoxkindId(lbid);
+        trlSftRd._shapeType = genelmbs::Boxkind::Ishape;
+        trlSftRd._detail.reset( new genelmbs::BoxkindDetail(trlrReducedShaftsLength/2.0, _TrailerShaftsWidth/2.0, _TrailerReducedShaftsHeight/2.0, _TrailerShaftsEqMaterial,
+            _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
+        HepGeom::Translate3D rdsftposL (-_TrailerShaftsInterDist/2.0,
+            _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSftRd._detail->halfHeight()-_halfHeight,
+            -_halfLength+_TrailerShaftsFullHeightLength+trlSftRd._detail->halfLength());
+        trlSftRd.setPosMatrix ( rdsftposL );
+        ++lbid;
+
+        genelmbs::Boxkind &trlSftRd1 = _trkBx[lbid];
+        trlSftRd1._elmName="trlrSft";
+        trlSftRd1._id = genelmbs::BoxkindId(lbid);
+        trlSftRd1._shapeType = genelmbs::Boxkind::Ishape;
+        trlSftRd1._detail.reset( new genelmbs::BoxkindDetail(trlrReducedShaftsLength/2.0, _TrailerShaftsWidth/2.0, _TrailerReducedShaftsHeight/2.0, _TrailerShaftsEqMaterial,
+            _TrailerShaftsThicknesExt, _TrailerShaftsThicknesCent) );
+        HepGeom::Translate3D rdsftposR (_TrailerShaftsInterDist/2.0,
+            _TrailerPlaneHeight-_TrailerPlaneThicknes-trlSftRd1._detail->halfHeight()-_halfHeight,
+            -_halfLength+_TrailerShaftsFullHeightLength+trlSftRd1._detail->halfLength());
+        trlSftRd1.setPosMatrix ( rdsftposR );
+        ++lbid;
+      }
     }
 
     genelmbs::Boxkind &trlPln = _trkBx[lbid];
@@ -475,97 +515,100 @@ void TRUCKMaker::Build(){
     }
 
     //------------------ Truck structural elements description -----------------------------
+    if (_TruckShaftsInterDist>0.0) {
+      genelmbs::Boxkind &trkSft = _trkBx[lbid];
+      trkSft._elmName="trkrSft";
+      trkSft._id = genelmbs::BoxkindId(lbid);
+      trkSft._shapeType = genelmbs::Boxkind::Cshape;
+      trkSft._detail.reset( new genelmbs::BoxkindDetail(_TruckShaftsLength/2.0, _TruckShaftsWidth/2.0, _TruckShaftsHeight/2.0, _TruckChassisEqMaterial,
+          _TruckShaftsThicknesExt, _TruckShaftsThicknesCent) );
+      HepGeom::Translate3D trksftposL (-_TruckShaftsInterDist/2.0,
+          _TruckChassistsHeight-trkSft._detail->halfHeight()-_halfHeight,
+          _halfLength-trkSft._detail->halfLength());
+      trkSft.setPosMatrix ( trksftposL );
+      ++lbid;
 
-    genelmbs::Boxkind &trkSft = _trkBx[lbid];
-     trkSft._elmName="trkrSft";
-     trkSft._id = genelmbs::BoxkindId(lbid);
-     trkSft._shapeType = genelmbs::Boxkind::Cshape;
-     trkSft._detail.reset( new genelmbs::BoxkindDetail(_TruckShaftsLength/2.0, _TruckShaftsWidth/2.0, _TruckShaftsHeight/2.0, _TruckChassisEqMaterial,
-                                                       _TruckShaftsThicknesExt, _TruckShaftsThicknesCent) );
-     HepGeom::Translate3D trksftposL (-_TruckShaftsInterDist/2.0,
-         _TruckChassistsHeight-trkSft._detail->halfHeight()-_halfHeight,
-         _halfLength-trkSft._detail->halfLength());
-     trkSft.setPosMatrix ( trksftposL );
-     ++lbid;
+      genelmbs::Boxkind &trkSft1 = _trkBx[lbid];
+      trkSft1._elmName="trkrSft";
+      trkSft1._id = genelmbs::BoxkindId(lbid);
+      trkSft1._shapeType = genelmbs::Boxkind::Cshape;
+      trkSft1._detail.reset( new genelmbs::BoxkindDetail(_TruckShaftsLength/2.0, _TruckShaftsWidth/2.0, _TruckShaftsHeight/2.0, _TruckChassisEqMaterial,
+          _TruckShaftsThicknesExt, _TruckShaftsThicknesCent) );
+      HepGeom::RotateZ3D trksftRVertR(CLHEP::pi);
+      HepGeom::Translate3D trksftposR (_TruckShaftsInterDist/2.0,
+          _TruckChassistsHeight-trkSft._detail->halfHeight()-_halfHeight,
+          _halfLength-trkSft._detail->halfLength());
+      HepGeom::Transform3D trkSftTransfR (trksftposR*trksftRVertR);
+      trkSft1.setPosMatrix ( trkSftTransfR );
+      ++lbid;
 
-     genelmbs::Boxkind &trkSft1 = _trkBx[lbid];
-     trkSft1._elmName="trkrSft";
-     trkSft1._id = genelmbs::BoxkindId(lbid);
-     trkSft1._shapeType = genelmbs::Boxkind::Cshape;
-     trkSft1._detail.reset( new genelmbs::BoxkindDetail(_TruckShaftsLength/2.0, _TruckShaftsWidth/2.0, _TruckShaftsHeight/2.0, _TruckChassisEqMaterial,
-                                                        _TruckShaftsThicknesExt, _TruckShaftsThicknesCent) );
-     HepGeom::RotateZ3D trksftRVertR(CLHEP::pi);
-     HepGeom::Translate3D trksftposR (_TruckShaftsInterDist/2.0,
-         _TruckChassistsHeight-trkSft._detail->halfHeight()-_halfHeight,
-         _halfLength-trkSft._detail->halfLength());
-     HepGeom::Transform3D trkSftTransfR (trksftposR*trksftRVertR);
-     trkSft1.setPosMatrix ( trkSftTransfR );
-     ++lbid;
-
-     double trckRibLength=_TruckShaftsInterDist+_TruckShaftsWidth-2.0*_TruckShaftsThicknesCent;
-     for (int itrkrb=0; itrkrb<_nTruckRibs; ++itrkrb) {
-       genelmbs::Boxkind &trkRbs = _trkBx[lbid];
-       trkRbs._elmName="trkrRbs";
-       trkRbs._id = genelmbs::BoxkindId(lbid);
-       trkRbs._shapeType = genelmbs::Boxkind::Cshape;
-       trkRbs._detail.reset( new genelmbs::BoxkindDetail(trckRibLength/2.0, _TruckShaftsWidth/2.0, (_TruckShaftsHeight-2.0*_TruckShaftsThicknesExt)/2.0, _TruckChassisEqMaterial,
-                                                          _TruckShaftsThicknesExt, _TruckShaftsThicknesCent) );
-       HepGeom::RotateY3D trkribR(-CLHEP::halfpi);
-       HepGeom::Translate3D trkribpos (0.0,
-           _TruckChassistsHeight-trkSft._detail->halfHeight()-_halfHeight,
-           _halfLength-2.0*trkSft._detail->halfLength()+trkRbs._detail->halfWidth()+_TruckRibPos[itrkrb]);
-       HepGeom::Transform3D trkribTransf (trkribpos*trkribR);
-       trkRbs.setPosMatrix ( trkribTransf );
-       ++lbid;
-     }
+      double trckRibLength=_TruckShaftsInterDist+_TruckShaftsWidth-2.0*_TruckShaftsThicknesCent;
+      for (int itrkrb=0; itrkrb<_nTruckRibs; ++itrkrb) {
+        genelmbs::Boxkind &trkRbs = _trkBx[lbid];
+        trkRbs._elmName="trkrRbs";
+        trkRbs._id = genelmbs::BoxkindId(lbid);
+        trkRbs._shapeType = genelmbs::Boxkind::Cshape;
+        trkRbs._detail.reset( new genelmbs::BoxkindDetail(trckRibLength/2.0, _TruckShaftsWidth/2.0, (_TruckShaftsHeight-2.0*_TruckShaftsThicknesExt)/2.0, _TruckChassisEqMaterial,
+            _TruckShaftsThicknesExt, _TruckShaftsThicknesCent) );
+        HepGeom::RotateY3D trkribR(-CLHEP::halfpi);
+        HepGeom::Translate3D trkribpos (0.0,
+            _TruckChassistsHeight-trkSft._detail->halfHeight()-_halfHeight,
+            _halfLength-2.0*trkSft._detail->halfLength()+trkRbs._detail->halfWidth()+_TruckRibPos[itrkrb]);
+        HepGeom::Transform3D trkribTransf (trkribpos*trkribR);
+        trkRbs.setPosMatrix ( trkribTransf );
+        ++lbid;
+      }
+    }
 
     //------------------ Trailer wheels description -----------------------------
     long lcyid=0;
-    if (_nTrailerWheels>0) {
-      for (int itrw=0; itrw<_nTrailerWheels; ++itrw) {
 
-        for (int side=1; side>-2; side-=2) {
-          genelmbs::Cylkind &tCyl = _trkCyl[lcyid];
-          tCyl._elmName="trlrWheel";
-          tCyl._id = genelmbs::CylkindId(lcyid);
-          tCyl._shapeType = genelmbs::Cylkind::Cshape;
-          tCyl._detail.reset( new genelmbs::CylkindDetail(_TrlWheelRimWidth/2.0, 0.0, _TrlWheelRimRadius, _TrlWheelRimMaterial,
-                                                          _TrlWheelRimShellThickness, _TrlWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
-          HepGeom::RotateY3D cylRVertL(side*CLHEP::halfpi);
-          HepGeom::Translate3D cylposL (side*(-_halfWidth+_TrlWheelRimWidth/2.0),
-              trlTireOutRadius-_halfHeight,
-              -_halfLength+_TrlWheelDistFromBack+_TrlWheelPitch*itrw);
-          HepGeom::Transform3D cylTransfL (cylposL*cylRVertL);
-          //        HepGeom::Transform3D cylTransfL (cylposL);
-          tCyl.setPosMatrix ( cylTransfL );
-          ++lcyid;
+    for (int itrw=0; itrw<_nTrailerWheels; ++itrw) {
 
-          genelmbs::Cylkind &tCyl1 = _trkCyl[lcyid];
-          tCyl1._elmName="trlrTire";
-          tCyl1._id = genelmbs::CylkindId(lcyid);
-          tCyl1._shapeType = genelmbs::Cylkind::Ushape;
-          tCyl1._detail.reset( new genelmbs::CylkindDetail(_TrlWheelRimWidth/2.0, _TrlWheelRimRadius, trlTireOutRadius, _TrlTireMaterial,
-                                                           _TrlTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
-          tCyl1.setPosMatrix ( cylTransfL );
-          ++lcyid;
-        }
-
-        genelmbs::Cylkind &tCyl2 = _trkCyl[lcyid];
-        tCyl2._elmName="trlrAxis";
-        tCyl2._id = genelmbs::CylkindId(lcyid);
-        tCyl2._shapeType = genelmbs::Cylkind::full;
-        tCyl2._detail.reset( new genelmbs::CylkindDetail(_halfWidth-_TrlWheelRimWidth, 0.0, _TrlWheelAxisRadius, _TrlWheelAxisMaterial) );
-        HepGeom::RotateY3D cylRVert(CLHEP::halfpi);
-        HepGeom::Translate3D cylpos (0.0,
+      for (int side=1; side>-2; side-=2) {
+        genelmbs::Cylkind &tCyl = _trkCyl[lcyid];
+        tCyl._elmName="trlrWheel";
+        tCyl._id = genelmbs::CylkindId(lcyid);
+        tCyl._shapeType = genelmbs::Cylkind::Cshape;
+        tCyl._detail.reset( new genelmbs::CylkindDetail(_TrlWheelRimWidth/2.0, 0.0, _TrlWheelRimRadius, _TrlWheelRimMaterial,
+            _TrlWheelRimShellThickness, _TrlWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
+        HepGeom::RotateY3D cylRVertL(side*CLHEP::halfpi);
+        HepGeom::Translate3D cylposL (side*(-_halfWidth+_TrlWheelRimWidth/2.0),
             trlTireOutRadius-_halfHeight,
             -_halfLength+_TrlWheelDistFromBack+_TrlWheelPitch*itrw);
-        HepGeom::Transform3D cylTransf (cylpos*cylRVert);
-        //        HepGeom::Transform3D cylTransfR (cylposR);
-        tCyl2.setPosMatrix ( cylTransf );
+        HepGeom::Transform3D cylTransfL (cylposL*cylRVertL);
+        //        HepGeom::Transform3D cylTransfL (cylposL);
+        tCyl.setPosMatrix ( cylTransfL );
         ++lcyid;
 
+        genelmbs::Cylkind &tCyl1 = _trkCyl[lcyid];
+        tCyl1._elmName="trlrTire";
+        tCyl1._id = genelmbs::CylkindId(lcyid);
+        tCyl1._shapeType = genelmbs::Cylkind::Ushape;
+        tCyl1._detail.reset( new genelmbs::CylkindDetail(_TrlWheelRimWidth/2.0, _TrlWheelRimRadius, trlTireOutRadius, _TrlTireMaterial,
+            _TrlTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
+        tCyl1.setPosMatrix ( cylTransfL );
+        ++lcyid;
       }
-      //------------------ Truck wheels description -----------------------------
+
+      genelmbs::Cylkind &tCyl2 = _trkCyl[lcyid];
+      tCyl2._elmName="trlrAxis";
+      tCyl2._id = genelmbs::CylkindId(lcyid);
+      tCyl2._shapeType = genelmbs::Cylkind::full;
+      tCyl2._detail.reset( new genelmbs::CylkindDetail(_halfWidth-_TrlWheelRimWidth, 0.0, _TrlWheelAxisRadius, _TrlWheelAxisMaterial) );
+      HepGeom::RotateY3D cylRVert(CLHEP::halfpi);
+      HepGeom::Translate3D cylpos (0.0,
+          trlTireOutRadius-_halfHeight,
+          -_halfLength+_TrlWheelDistFromBack+_TrlWheelPitch*itrw);
+      HepGeom::Transform3D cylTransf (cylpos*cylRVert);
+      //        HepGeom::Transform3D cylTransfR (cylposR);
+      tCyl2.setPosMatrix ( cylTransf );
+      ++lcyid;
+
+    }
+    //------------------ Truck wheels description -----------------------------
+
+    if (_TruckShaftsInterDist>0.0) {
 
       for (int side=1; side>-2; side-=2) {
         genelmbs::Cylkind &trkWl = _trkCyl[lcyid];
@@ -573,7 +616,7 @@ void TRUCKMaker::Build(){
         trkWl._id = genelmbs::CylkindId(lcyid);
         trkWl._shapeType = genelmbs::Cylkind::Cshape;
         trkWl._detail.reset( new genelmbs::CylkindDetail(_TruckWheelRimWidth/2.0, 0.0, _TruckWheelRimRadius, _TruckWheelRimMaterial,
-                                                        _TruckWheelRimShellThickness, _TruckWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
+            _TruckWheelRimShellThickness, _TruckWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
         HepGeom::RotateY3D cylRVert(side*CLHEP::halfpi);
         HepGeom::Translate3D cylpos (side*(-_halfWidth+_TruckWheelRimWidth/2.0),
             truckTireOutRadius-_halfHeight,
@@ -588,7 +631,7 @@ void TRUCKMaker::Build(){
         trkTr._id = genelmbs::CylkindId(lcyid);
         trkTr._shapeType = genelmbs::Cylkind::Ushape;
         trkTr._detail.reset( new genelmbs::CylkindDetail(_TruckWheelRimWidth/2.0, _TruckWheelRimRadius, truckTireOutRadius, _TruckTireMaterial,
-                                                         _TruckTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
+            _TruckTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
         trkTr.setPosMatrix ( cylTransf );
         ++lcyid;
 
@@ -597,7 +640,7 @@ void TRUCKMaker::Build(){
         trkWl1._id = genelmbs::CylkindId(lcyid);
         trkWl1._shapeType = genelmbs::Cylkind::Cshape;
         trkWl1._detail.reset( new genelmbs::CylkindDetail(_TruckWheelRimWidth/2.0, _TruckWheelAxisRadius, _TruckWheelRimRadius, _TruckWheelRimMaterial,
-                                                        _TruckWheelRimShellThickness, _TruckWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
+            _TruckWheelRimShellThickness, _TruckWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
         HepGeom::Translate3D cylpos1 (side*(-_halfWidth+_TruckWheelRimWidth+50.0+_TruckWheelRimWidth/2.0),
             truckTireOutRadius-_halfHeight,
             _halfLength-_TruckShaftsLength+_TruckWheelDistFromBack+truckTireOutRadius);
@@ -611,7 +654,7 @@ void TRUCKMaker::Build(){
         trkTr1._id = genelmbs::CylkindId(lcyid);
         trkTr1._shapeType = genelmbs::Cylkind::Ushape;
         trkTr1._detail.reset( new genelmbs::CylkindDetail(_TruckWheelRimWidth/2.0, _TruckWheelRimRadius, truckTireOutRadius, _TruckTireMaterial,
-                                                         _TruckTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
+            _TruckTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
         trkTr1.setPosMatrix ( cylTransf1 );
         ++lcyid;
 
@@ -620,7 +663,7 @@ void TRUCKMaker::Build(){
         trkWlF._id = genelmbs::CylkindId(lcyid);
         trkWlF._shapeType = genelmbs::Cylkind::Cshape;
         trkWlF._detail.reset( new genelmbs::CylkindDetail(_TruckWheelRimWidth/2.0, 0.0, _TruckWheelRimRadius, _TruckWheelRimMaterial,
-                                                        _TruckWheelRimShellThickness, _TruckWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
+            _TruckWheelRimShellThickness, _TruckWheelRimEqThickness) ); // 10.0 means 1 cm of supposed rim thickness for the tire support
         HepGeom::Translate3D cylposF (side*(-_halfWidth+_TruckWheelRimWidth/2.0),
             truckTireOutRadius-_halfHeight,
             _halfLength-_TruckWheelDistFromFront-truckTireOutRadius);
@@ -634,7 +677,7 @@ void TRUCKMaker::Build(){
         trkTrF._id = genelmbs::CylkindId(lcyid);
         trkTrF._shapeType = genelmbs::Cylkind::Ushape;
         trkTrF._detail.reset( new genelmbs::CylkindDetail(_TruckWheelRimWidth/2.0, _TruckWheelRimRadius, truckTireOutRadius, _TruckTireMaterial,
-                                                         _TruckTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
+            _TruckTireEqThickness, 5.0) ); //Tire vertical wall thickness is supposed to be equivalent 5.0 mmm
         trkTrF.setPosMatrix ( cylTransfF );
         ++lcyid;
 
