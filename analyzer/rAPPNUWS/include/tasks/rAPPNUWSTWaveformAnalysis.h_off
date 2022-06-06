@@ -1,0 +1,48 @@
+#ifndef rAPPNUWSTWaveformAnalysis_H
+#define rAPPNUWSTWaveformAnalysis_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTWaveformAnalysis                                                  //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+
+#include "TTree.h"
+#include "TClonesArray.h"
+
+#include "generated/rAPPNUWSTWaveformAnalysis_Base.h"
+
+class rAPPNUWSTWaveformAnalysis : public rAPPNUWSTWaveformAnalysis_Base
+{
+
+private:
+   rAPPNUWSTWaveformAnalysis(const rAPPNUWSTWaveformAnalysis &c); // not implemented
+   rAPPNUWSTWaveformAnalysis &operator=(const rAPPNUWSTWaveformAnalysis &c); // not implemented
+
+public:
+   rAPPNUWSTWaveformAnalysis(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTWaveformAnalysis_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTWaveformAnalysis() {}
+
+protected:
+   // Event Methods
+   void   Init();
+   void   BeginOfRun();
+   void   Event();
+   void   EndOfRun();
+   void   Terminate();
+   void   LoadEvent(Int_t ev);
+   Int_t  FindPeaks(Int_t ndot, Double_t *signal);
+
+
+   TTree          *fDataTree; 
+   TClonesArray   *fBrDataWave;
+
+
+   ClassDef(rAPPNUWSTWaveformAnalysis,0)
+
+};
+
+#endif   // rAPPNUWSTWaveformAnalysis_H

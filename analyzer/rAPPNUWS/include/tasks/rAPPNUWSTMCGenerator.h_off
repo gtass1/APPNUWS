@@ -1,0 +1,44 @@
+#ifndef rAPPNUWSTMCGenerator_H
+#define rAPPNUWSTMCGenerator_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTMCGenerator                                                       //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+#include "generated/rAPPNUWSTMCGenerator_Base.h"
+
+#include "TVector3.h"
+
+class rAPPNUWSTMCGenerator : public rAPPNUWSTMCGenerator_Base
+{
+
+private:
+   rAPPNUWSTMCGenerator(const rAPPNUWSTMCGenerator &c); // not implemented
+   rAPPNUWSTMCGenerator &operator=(const rAPPNUWSTMCGenerator &c); // not implemented
+
+public:
+   rAPPNUWSTMCGenerator(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTMCGenerator_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTMCGenerator() {}
+
+protected:
+   // Event Methods
+   void Init();
+   void BeginOfRun();
+   void Event();
+   void EndOfRun();
+   void Terminate();
+
+   Int_t Intersection(TVector3 c,TVector3 *p1, TVector3 *p2);
+   void SetClustersGlobal(TVector3 c,TVector3 p1,TVector3 p2, Int_t tube);
+   void GenerateHits();
+
+   ClassDef(rAPPNUWSTMCGenerator,0)
+};
+
+#endif   // rAPPNUWSTMCGenerator_H

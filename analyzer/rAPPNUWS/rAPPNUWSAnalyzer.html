@@ -1,0 +1,637 @@
+<!--
+   *** This file will be overwritten by the ROMEBuilder ***
+   ***      Don't make manual changes to this file      ***
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>rAPPNUWSAnalyzer Manual</TITLE>
+<STYLE type="text/css">
+   body { color: #000000; background-color: #ffffff; }
+   h1 { color: blue; }
+   h2 { color: green; }
+   table { border: 1; }
+   a.object { text-decoration: underline; font-weight: bold; }
+   tr.cont { color: #ffffff; background-color: #819cc8; font-weight: bold; }
+   tr.group { background-color: #d0d0ee; }
+   tr.even { background-color: #e0e0e0; }
+   tr.odd { background-color: #f0f0f0; }
+</STYLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>rAPPNUWSAnalyzer Manual</H1>
+
+<H2>Table of Contents</H2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#tasks">Tasks</a></li>
+<li><a href="#tabs">Tabs</a></li>
+<li><a href="#folders">Folders</a></li>
+<li><a href="#supportFolders">Support Folders</a></li>
+<li><a href="#database">Database Connections</a></li>
+<li><a href="#trees">Trees</a></li>
+<li><a href="#steers">Global Steering Parameters</a></li>
+<li><a href="#affiliations">Affiliations</a></li>
+<li><a href="#accessmethods">Access Methods to Objects in the rAPPNUWSAnalyzer</a></li>
+<li><A TARGET=_top HREF="htmldoc//ClassIndex.html">Class Overview</A></li>
+</ul>
+
+<hr size="4" noshade>
+
+<H2><a name=introduction>Introduction</a> </H2>
+
+
+<p>
+<a href="#top">top</a>
+
+<hr size="4" noshade>
+<h2><a name=tasks>Tasks</a></h2>
+
+<ul>
+<li><a href="#taskhierarchy">Task Hierarchy</a></li>
+<li><a href="#ReadMCDataCSMBTTask">ReadMCDataCSMBT</a></li>
+<li><a href="#ReadMCDataCSMTTTask">ReadMCDataCSMTT</a></li>
+<li><a href="#rAPPNUWSMainTask">rAPPNUWSMain</a></li>
+</ul>
+<p>
+
+<a href="#top">top</a>
+
+
+
+<hr size="1">
+<h3><a name=taskhierarchy>Task Hierarchy</a></h3>
+<ul>
+<li type="circle"><a href="#rAPPNUWSMainTask">rAPPNUWSMain</a>
+<li type="circle"><a href="#ReadMCDataCSMBTTask">ReadMCDataCSMBT</a>
+<li type="circle"><a href="#ReadMCDataCSMTTTask">ReadMCDataCSMTT</a>
+</ul>
+<p>
+<a href="#top">top</a>, <a href="#tasks">Tasks</a>
+
+
+
+<hr size="1">
+<h3><a name=ReadMCDataCSMBTTask class="object">ReadMCDataCSMBT</a></h3>
+
+<h4>Steering Parameters</h4>
+<table summary="Table showing steering parameters in ReadMCDataCSMBT task">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;NLayers&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Numeber of CSMBT Layers&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;RODeadTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;[NLayers] Read Out Channel dead time per Layer&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;HitEnergyCut&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Minimum energy cut for hit creation&nbsp;</td></tr>
+</table>
+<h4>Histograms</h4>
+<p>
+This task containes no histograms.
+This task containes no graphs.
+<h4>Folders</h4>
+<p>
+This task accesses data from the following folders :
+<ul>
+<li type="circle">GeantTrack
+<li type="circle">CSMBTGeantStep
+<li type="circle">CSMBTHit
+</ul>
+<h4>More Info</h4>
+<p>
+For more information take a look at the <A TARGET=_top HREF="htmldoc//rAPPNUWSTReadMCDataCSMBT.html">class file</a>
+<p>
+<a href="#top">top</a>, <a href="#tasks">Tasks</a>
+
+
+
+<hr size="1">
+<h3><a name=ReadMCDataCSMTTTask class="object">ReadMCDataCSMTT</a></h3>
+
+<h4>Steering Parameters</h4>
+<table summary="Table showing steering parameters in ReadMCDataCSMTT task">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;NLayers&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Numeber of CSMTT Layers&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;RODeadTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;[NLayers] Read Out Channel dead time per Layer&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;HitEnergyCut&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Minimum energy cut for hit creation&nbsp;</td></tr>
+</table>
+<h4>Histograms</h4>
+<p>
+This task containes no histograms.
+This task containes no graphs.
+<h4>Folders</h4>
+<p>
+This task accesses data from the following folders :
+<ul>
+<li type="circle">GeantTrack
+<li type="circle">CSMTTGeantStep
+<li type="circle">CSMTTHit
+</ul>
+<h4>More Info</h4>
+<p>
+For more information take a look at the <A TARGET=_top HREF="htmldoc//rAPPNUWSTReadMCDataCSMTT.html">class file</a>
+<p>
+<a href="#top">top</a>, <a href="#tasks">Tasks</a>
+
+
+
+<hr size="1">
+<h3><a name=rAPPNUWSMainTask class="object">rAPPNUWSMain</a></h3>
+contact person : Gianfranco Tassielli
+
+<h4>Description</h4>
+Main task. This task does common initialization for all the tasks.
+
+<h4>Steering Parameters</h4>
+<table summary="Table showing steering parameters in rAPPNUWSMain task">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;WriteODBXML&nbsp;</td><td>&nbsp;Bool_t&nbsp;</td><td>&nbsp;When this is true, ODB is copied to ROOT output files. 'odb' database must be present in config XML.&nbsp;</td></tr>
+<tr class="group"><td colspan="3">&nbsp;EventSelectionText&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;InputFileName&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;File name of a text file to skip unselected events by GLBEventSelection task. This file must be created in advance.&nbsp;</td></tr>
+</table>
+<h4>Histograms</h4>
+<p>
+This task containes no histograms.
+This task containes no graphs.
+<h4>Folders</h4>
+<h4>More Info</h4>
+<p>
+For more information take a look at the <A TARGET=_top HREF="htmldoc//rAPPNUWSTrAPPNUWSMain.html">class file</a>
+<p>
+<a href="#top">top</a>, <a href="#tasks">Tasks</a>
+
+
+
+<hr size="4" noshade>
+<h2><a name=tabs>Tabs</a></h2>
+
+<p>
+
+<a href="#top">top</a>
+
+
+
+<hr size="4" noshade>
+<h2><a name=folders>Folders</a></h2>
+
+The rAPPNUWSAnalyzer incorporates the following folder structure :
+
+<ul>
+<li type="circle"><a href="#ODBFolder"><b>ODB</b></a>
+<li type="circle">rAPPNUWSData
+<ul>
+<li type="circle"><a href="#GeantTrackFolder"><b>GeantTrack</b></a>
+<li type="circle"><a href="#DCGeantStepFolder"><b>DCGeantStep</b></a>
+<li type="circle"><a href="#CSMBTGeantStepFolder"><b>CSMBTGeantStep</b></a>
+<li type="circle"><a href="#CSMTTGeantStepFolder"><b>CSMTTGeantStep</b></a>
+<li type="circle"><a href="#MCTrackFolder"><b>MCTrack</b></a>
+</ul>
+<li type="circle">MC
+<ul>
+<li type="circle"><a href="#MCRunHeaderFolder"><b>MCRunHeader</b></a>
+<li type="circle"><a href="#DCHHitFolder"><b>DCHHit</b></a>
+<li type="circle"><a href="#CSMBTHitFolder"><b>CSMBTHit</b></a>
+<li type="circle"><a href="#CSMTTHitFolder"><b>CSMTTHit</b></a>
+</ul>
+<li type="circle">RecoData
+<ul>
+<li type="circle"><a href="#RecoTracksFolder"><b>RecoTracks</b></a>
+</ul>
+<li type="circle"><a href="#AnalyzerConfigParametersFolder"><b>AnalyzerConfigParameters</b></a>
+</ul>
+The bold folders are data folders. The others are only used to structure the frame work.
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+
+<hr size="1">
+<h2><a name=supportFolders>Support Folders</a></h2>
+
+The rAPPNUWSAnalyzer incorporates the following support folders :
+
+<a href="#top">top</a>, <a href="#supportFolders">Support Folders</a>
+
+
+
+<hr size="1">
+<h3><a name=ODBFolder class="object">ODB</a></h3>
+<p>
+<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in ODB folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Database</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;RunNumber&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td><center><a href="#db_ODB_RunNumber">Yes</a></center></td><td>&nbsp;Runinfo/Run number&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;StartTime&nbsp;</td><td>&nbsp;ROMEString&nbsp;</td><td><center><a href="#db_ODB_StartTime">Yes</a></center></td><td>&nbsp;Runinfo/Start time&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=GeantTrackFolder class="object">GeantTrack</a></h3>
+<p>
+Folder class for Geant track info<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in GeantTrack folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;fTrackID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fParentID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Parent ID&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fParticleName&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Particle name&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fCharge&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Particle charge&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fPDGCode&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Particle code in PDG&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fPosStart&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Track Initial position&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fPosEnd&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Track End position&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fMomentum&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Track Momentum&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=DCGeantStepFolder class="object">DCGeantStep</a></h3>
+<p>
+Folder class for Chamber step from geant4<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in DCGeantStep folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;fTrackID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID for hit&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fChamberNr&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Tracker Tube number&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEdep&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Energy deposit&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fNoIEdep&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Energy deposit no ionizing&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fGlobalTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total time of event&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fProperTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Proper time (time from init track)&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fStepLen&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Step length&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fMomentum&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Particle momentum&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fPos&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Pre Step Position&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fPosEnding&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Post Step Position&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fProcessCode&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Process code for energy loss&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=CSMBTGeantStepFolder class="object">CSMBTGeantStep</a></h3>
+<p>
+Folder class for Pixel/Strip tracker step from geant4<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in CSMBTGeantStep folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="even"><td>&nbsp;fTrackID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID for hit&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fChamberNr&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Tracker Ladder station number&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fChannelNr&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Read Out Channel in Ladder station number&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEdep&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Energy deposit&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fNoIEdep&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Energy deposit no ionizing&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fGlobalTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total time of event&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fProperTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Proper time (time from init track)&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fStepLen&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Step length&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fMomentum&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Particle momentum&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fPos&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Pre Step Position&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fPosEnding&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Post Step Position&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fProcessCode&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Process code for energy loss&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=CSMTTGeantStepFolder class="object">CSMTTGeantStep</a></h3>
+<p>
+Folder class for Pixel/Strip tracker step from geant4<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in CSMTTGeantStep folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="even"><td>&nbsp;fTrackID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID for hit&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fChamberNr&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Tracker Ladder station number&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fChannelNr&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Read Out Channel in Ladder station number&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEdep&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Energy deposit&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fNoIEdep&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Energy deposit no ionizing&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fGlobalTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total time of event&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fProperTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Proper time (time from init track)&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fStepLen&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Step length&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fMomentum&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Particle momentum&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fPos&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Pre Step Position&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fPosEnding&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Post Step Position&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fProcessCode&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Process code for energy loss&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=MCTrackFolder class="object">MCTrack</a></h3>
+<p>
+Folder class for MC track info<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in MCTrack folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="even"><td>&nbsp;TrkID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;PDGCode&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Particle code in PDG&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;x0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Vertex x coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;y0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Vertex y coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;z0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Vertex z coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;theta&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;polar angle w.r.t. the  beam direction&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;phi&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;azimuthal angle in the X-Y plane&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Momentum&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Momentum&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=MCRunHeaderFolder class="object">MCRunHeader</a></h3>
+<p>
+run information of simulation data.<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in MCRunHeader folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="even"><td>&nbsp;FileArraySize&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Number of files in the array.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;EventRate&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;event rate.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;TotalNumberOfEvents&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;! total number of events in the array.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;AccessMode&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;! How to pick up events. 0:sequential, 1:loop, 2:random&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;NEvent&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Number of events in the file.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;FileName&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Input file name.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;FileRevision&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Revision number of sim.&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=DCHHitFolder class="object">DCHHit</a></h3>
+<p>
+Folder class for Track Chamber hit<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in DCHHit folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;fCellId&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Tracker Tube number&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fTrkIDofHit&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID for hit&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fTotalEnergyLoss&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total energy loss&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fTotalCharge&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total charge (related to energy loss)&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fToF&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Global time of hits&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fxPCA&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;PoCA x coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fyPCA&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;PoCA y coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fzPCA&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;PoCA z coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceX&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point x coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceY&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point y coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceZ&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point z coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceMomX&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom x&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceMomY&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom y&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceMomZ&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom z&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fGlobalTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;global time in nsec&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fImpact&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Impact parameter&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fLength&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Impact parameter&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fNrClusters&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Number of clusters&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fClsDistance&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;[NrClusters] drift distance of ionization clusters&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fClsDistanceSmeared&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;[NrClusters] drift distance of ionization clusters&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fClsPathPos&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;[NrClusters] path of ionization clusters along track&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fClsCharge&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;[NrClusters] Charge of ionization clusters&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=CSMBTHitFolder class="object">CSMBTHit</a></h3>
+<p>
+Folder class for CSMBT Track hit<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in CSMBTHit folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;fChanId&nbsp;</td><td>&nbsp;ULong_t&nbsp;</td><td>&nbsp;CSMBT Tracker Read Out Channel number&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fTrkIDofHit&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID for hit&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fTotalEnergyLoss&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total energy loss&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fTotalCharge&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total charge (related to energy loss)&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fToF&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Global time of hits&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceX&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point x coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceY&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point y coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceZ&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point z coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceMomX&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom x&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceMomY&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom y&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceMomZ&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom z&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fGlobalTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;global time in nsec&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=CSMTTHitFolder class="object">CSMTTHit</a></h3>
+<p>
+Folder class for CSMTT Track hit<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in CSMTTHit folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;fChanId&nbsp;</td><td>&nbsp;ULong_t&nbsp;</td><td>&nbsp;CSMTT Tracker Read Out Channel number&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fTrkIDofHit&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID for hit&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fTotalEnergyLoss&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total energy loss&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fTotalCharge&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Total charge (related to energy loss)&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fToF&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Global time of hits&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceX&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point x coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceY&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point y coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceZ&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance point z coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceMomX&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom x&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fEntranceMomY&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom y&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;fEntranceMomZ&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Entrance mom z&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;fGlobalTime&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;global time in nsec&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=RecoTracksFolder class="object">RecoTracks</a></h3>
+<p>
+Folder class for reconstructed tracks<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in RecoTracks folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;TrkID&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Track ID&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;x0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Vertex x coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;err_x0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Error On the Track Vertex x coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;y0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Vertex y coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;err_y0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Error On the Track Vertex y coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;z0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Vertex z coord&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;err_z0&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Error On the Track Vertex z coord&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;theta&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;polar angle w.r.t. the  beam direction&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;err_theta&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Error on thepolar angle w.r.t. the  beam direction&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;phi&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;azimuthal angle in the X-Y plane&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;err_phi&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;azimuthal angle in the X-Y plane&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Momentum&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Momentum&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Err_Momentum&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Track Momentum&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;mom&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;Fitted Track Momentum&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;cov&nbsp;</td><td>&nbsp;TMatrixDSym&nbsp;</td><td>&nbsp;Covariant Matrix of fitted Tracks&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;hitindex&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Index of the hit in DCHHitRecResult folder.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;detid&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;detector id of hit: 0 - DCH, 1 - CSMBT, 2 - CSMTT&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Skipped&nbsp;</td><td>&nbsp;Bool_t&nbsp;</td><td>&nbsp;Flag for hits removed from the fit.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;StateVector&nbsp;</td><td>&nbsp;TVector3&nbsp;</td><td>&nbsp;State vectors of the track.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;nhits&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of hits.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;ngoodhits&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of hits.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;nhitsdch&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of dch hits.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;ngoodhitsdch&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of good dch hits.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;nhitsCSMBT&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of dch hits.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;ngoodhitsCSMBT&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of good dch hits.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;nhitsCSMTT&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of dch hits.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;ngoodhitsCSMTT&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;number of good dch hits.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;chi2&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;chi2 of the track.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;dof&nbsp;</td><td>&nbsp;Int_t&nbsp;</td><td>&nbsp;Degrees of freedom.&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;IsFitted&nbsp;</td><td>&nbsp;Bool_t&nbsp;</td><td>&nbsp;Flag indicating if the track has been already fitted.&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="1">
+<h3><a name=AnalyzerConfigParametersFolder class="object">AnalyzerConfigParameters</a></h3>
+<p>
+folder for configuration parameters<br>
+<p>
+<u>Fields</u>
+<table summary="Table showing fields in AnalyzerConfigParameters folder">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;ConfigFileName&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;File name of configuration file&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;ConfigString&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Content of configuration file&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#folders">Folders</a>
+
+
+<hr size="4" noshade>
+<h2><a name=database>Database Connections</a></h2>
+
+List of defualt database connections. These values can be overwritten by configuration file.
+<h3>odb</h3>
+<table summary="Table showing database connections">
+<tr class="cont"><td>Folder</td><td>Field</td><td>Database name</td><td>Database path</td></tr>
+<tr class="odd"><td>ODB</td><td>&nbsp;<a name = db_ODB_RunNumber>RunNumber</a>&nbsp;</td><td>&nbsp;odb&nbsp;</td><td>&nbsp;"/Runinfo/Run number"&nbsp;</td></tr>
+<tr class="even"><td>ODB</td><td>&nbsp;<a name = db_ODB_StartTime>StartTime</a>&nbsp;</td><td>&nbsp;odb&nbsp;</td><td>&nbsp;"/Runinfo/Start time"&nbsp;</td></tr>
+</table>
+<a href="#top">top</a>, <a href="#database">Database Connections</a>
+
+
+<hr size="4" noshade>
+<h2><a name=trees>Trees</a></h2>
+
+The rAPPNUWSAnalyzer incorporates the following trees and branches.
+In brackets are the folders, which are filled to the branch.
+
+<ul>
+<li type="disc">MCData
+Simulation specific data. It a simple conversion from Geant4 stepper
+<ul>
+<li type="circle">MCTracks (GeantTrack)
+<li type="circle">MCDCStep (DCGeantStep)
+<li type="circle">MCCSMBTStep (CSMBTGeantStep)
+<li type="circle">MCCSMTTStep (CSMTTGeantStep)
+</ul>
+<li type="disc">MCHits
+Container for MC Hits
+<ul>
+<li type="circle">MCTracks (GeantTrack)
+<li type="circle">DCHits (DCHHit)
+<li type="circle">CSMBTHits (CSMBTHit)
+<li type="circle">CSMTTHits (CSMTTHit)
+</ul>
+<li type="disc">RecoData
+Container for RecoData
+<ul>
+<li type="circle">RecoTracks (RecoTracks)
+</ul>
+</ul>
+<p>
+<a href="#top">top</a>, <a href="#database">Database Connections</a>
+
+<hr size="4" noshade>
+<H2><a name=steers>Global Steering Parameters</a> </H2>
+
+<a class="object">Global Steering Parameters</a><br>
+<table summary="Table showing global steering parameters">
+<tr class="cont"><td>Name</td><td>Type</td><td>Description</td></tr>
+<tr class="odd"><td>&nbsp;GeomSrvType&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;Geometry Service Type (PROTO: to load Prototypes Geometry Service, CDCH: for central geometry DCH Geometry Service)&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;GSrvAddFile&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;additional (optional) configuration file name for Geometry Service&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;GSrvAddFold&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;additional (optional) folder for configuration file for Geometry Service&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;GeomGDMLfile&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;GDML file for G4 geometry description&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Bz&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;value of magnetic field (Z component) in case of constant magnetic field&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;GasMixture&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;gas mixture composition&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;tube_radius&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;tube radius in mm&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;tube_lenght&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;tube lenght in mm.&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;lambda&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;interaction lenght in mm&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;xBeam&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;beam distance from the first tube in mm&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;yBeamSpot&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;Y estention for the beam in mm&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;zBeam&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;beam distance from the first tube in mm&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;beamSpread&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;beam angular spread in rad&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;central_tube&nbsp;</td><td>&nbsp;Double_t&nbsp;</td><td>&nbsp;central tube&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;CablingFile&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;cabling file&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;TimeOffsetsFile&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;time offsets file&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;AlignmentFile&nbsp;</td><td>&nbsp;TString&nbsp;</td><td>&nbsp;alignment file&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#steers">Global Steering Parameters</a>
+
+<hr size="4" noshade>
+<h2><a name=affiliations>Affiliations</a></h2>
+<ul>
+<li>Enabled affiliations<ul>
+<li><a href="#rAPPNUWSaff">rAPPNUWS</a>
+</ul><li>Disabled affiliations<ul>
+</ul>
+</ul>
+<h3><a name="rAPPNUWSaff" class="object">rAPPNUWS</a></h3>
+<table summary="Table showing affiliations">
+<tr class="cont"><td>Type</td><td>Name</td></tr>
+<tr class="odd"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/Waveform.h&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/Geometry.h&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/GeometrySrvHndl.h&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/CreateClusters.h&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/XTDataVlGas.h&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/XTREL.h&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/XTRELTIME.h&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Class&nbsp;</td><td>&nbsp;include/util/ClusterSize.h&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;rAPPNUWSData&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;GeantTrack&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;DCGeantStep&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;CSMBTGeantStep&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;CSMTTGeantStep&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;MCTrack&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;MC&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;MCRunHeader&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;DCHHit&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;CSMBTHit&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;CSMTTHit&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;RecoData&nbsp;</td></tr>
+<tr class="odd"><td>&nbsp;Folder&nbsp;</td><td>&nbsp;RecoTracks&nbsp;</td></tr>
+<tr class="even"><td>&nbsp;Task&nbsp;</td><td>&nbsp;rAPPNUWSMain&nbsp;</td></tr>
+</table>
+<p>
+<a href="#top">top</a>, <a href="#affiliations">Affiliations</a>
+
+<hr size="4" noshade>
+<H2><a name=accessmethods>Access Methods to Objects in the rAPPNUWSAnalyzer</a> </H2>
+For a description of all access methods to all types of objects in the rAPPNUWSAnalyzer please visit the
+<A TARGET=_top HREF="http://midas.psi.ch/rome/usersGuide.html">users guide on the ROME homepage</A>.
+The <A TARGET=_top HREF="http://midas.psi.ch/rome/usersGuide.html#fwaccess">Access Methods</A> subsection of the
+<A TARGET=_top HREF="http://midas.psi.ch/rome/usersGuide.html#framework">The generated Framework</A> section
+describes all access methods of frameworks generated with ROME.
+<p>
+<a href="#top">top</a>
+
+<hr size="4" noshade>
+<ADDRESS>
+<u> Contact person from the rAPPNUWS Experiment</u></br>
+<u> Contact person from ROME</u></br>
+Matthias Schneebeli (PSI)</br>
+email: <a href="mailto:matthias.schneebeli@psi.ch">matthias.schneebeli@psi.ch</a>
+</ADDRESS>
+</BODY>
+</HTML>

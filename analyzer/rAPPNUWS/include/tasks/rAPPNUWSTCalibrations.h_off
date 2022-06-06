@@ -1,0 +1,39 @@
+#ifndef rAPPNUWSTCalibrations_H
+#define rAPPNUWSTCalibrations_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTCalibrations                                                      //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+#include "generated/rAPPNUWSTCalibrations_Base.h"
+
+class rAPPNUWSTCalibrations : public rAPPNUWSTCalibrations_Base
+{
+
+private:
+   rAPPNUWSTCalibrations(const rAPPNUWSTCalibrations &c); // not implemented
+   rAPPNUWSTCalibrations &operator=(const rAPPNUWSTCalibrations &c); // not implemented
+
+public:
+   rAPPNUWSTCalibrations(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTCalibrations_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTCalibrations() {}
+
+protected:
+   // Event Methods
+   void Init();
+   void BeginOfRun();
+   void Event();
+   void EndOfRun();
+   void Terminate();
+
+
+   ClassDef(rAPPNUWSTCalibrations,0)
+};
+
+#endif   // rAPPNUWSTCalibrations_H

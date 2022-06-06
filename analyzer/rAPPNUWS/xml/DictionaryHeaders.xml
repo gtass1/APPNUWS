@@ -1,0 +1,40 @@
+<!-- $Id$ -->
+<DictionaryHeaders>
+   <Header>
+     <HeaderName>include/util/Waveform</HeaderName>    
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>
+   <Header> 
+     <HeaderName>include/util/Geometry</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header> 
+   <Header>
+     <HeaderName>include/util/GeometrySrvHndl</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>                                                                                                                        
+   <!--    <Header> 
+     <HeaderName>include/util/GeometryProto</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header> -->
+   <Header>
+     <HeaderName>include/util/CreateClusters</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>
+   <Header>
+     <HeaderName>include/util/XTDataVlGas</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>
+   <Header>
+     <HeaderName>include/util/XTREL</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>
+   <Header>
+     <HeaderName>include/util/XTRELTIME</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>    
+   <Header>
+     <HeaderName>include/util/ClusterSize</HeaderName>
+     <Affiliation>rAPPNUWS</Affiliation>
+   </Header>
+</DictionaryHeaders>
+

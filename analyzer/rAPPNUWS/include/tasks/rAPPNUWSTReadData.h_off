@@ -1,0 +1,43 @@
+#ifndef rAPPNUWSTReadData_H
+#define rAPPNUWSTReadData_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTReadData                                                          //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+#include "util/Geometry.h"
+
+#include "generated/rAPPNUWSTReadData_Base.h"
+
+class rAPPNUWSTReadData : public rAPPNUWSTReadData_Base
+{
+
+
+ protected:
+  Geometry *fGeom;
+
+private:
+   rAPPNUWSTReadData(const rAPPNUWSTReadData &c); // not implemented
+   rAPPNUWSTReadData &operator=(const rAPPNUWSTReadData &c); // not implemented
+
+public:
+   rAPPNUWSTReadData(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTReadData_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTReadData() {}
+
+protected:
+
+   // Event Methods
+   void Init();
+   void BeginOfRun();
+   void Event();
+   void EndOfRun();
+   void Terminate();
+
+   ClassDef(rAPPNUWSTReadData,0)
+};
+
+#endif   // rAPPNUWSTReadData_H

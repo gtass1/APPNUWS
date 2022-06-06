@@ -1,0 +1,38 @@
+<!-- $Id$ -->
+<Tree>
+  <TreeName>MCData</TreeName>
+  <TreeTitle>MCData</TreeTitle>
+  <TreeDescription>Simulation specific data. It a simple conversion from Geant4 stepper</TreeDescription>
+<!--  <RunHeader>
+    <RelatedFolder>MCTrack</RelatedFolder>
+  </RunHeader>
+  <RunHeader>
+    <RelatedFolder>BarXECPM</RelatedFolder>
+  </RunHeader>
+  <RunHeader>
+    <RelatedFolder>MCRunHeader</RelatedFolder>
+  </RunHeader>
+  <RunHeader>
+    <RelatedFolder>MCKineRunHeader</RelatedFolder>
+  </RunHeader>
+  <RunHeader>
+    <RelatedFolder>MCBFieldRunHeader</RelatedFolder>
+  </RunHeader>  -->
+
+  <Branch>
+    <BranchName>MCTracks</BranchName>
+    <RelatedFolder>GeantTrack</RelatedFolder>
+  </Branch>
+  <Branch>
+    <BranchName>MCDCStep</BranchName>
+    <RelatedFolder>DCGeantStep</RelatedFolder>
+  </Branch>
+  <Branch>
+    <BranchName>MCCSMBTStep</BranchName>
+    <RelatedFolder>CSMBTGeantStep</RelatedFolder>
+  </Branch>
+  <Branch>
+    <BranchName>MCCSMTTStep</BranchName>
+    <RelatedFolder>CSMTTGeantStep</RelatedFolder>
+  </Branch>
+</Tree>

@@ -1,0 +1,57 @@
+#ifndef rAPPNUWSTTrackFitCDCH_H
+#define rAPPNUWSTTrackFitCDCH_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTTrackFitCDCH                                                      //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+#include <util/GeometrySrvHndl.h>
+#include "generated/rAPPNUWSTTrackFitCDCH_Base.h"
+#include "TVector3.h"
+
+class rAPPNUWSRecoTracks;
+
+class rAPPNUWSTTrackFitCDCH : public rAPPNUWSTTrackFitCDCH_Base
+{
+
+private:
+   rAPPNUWSTTrackFitCDCH(const rAPPNUWSTTrackFitCDCH &c); // not implemented
+   rAPPNUWSTTrackFitCDCH &operator=(const rAPPNUWSTTrackFitCDCH &c); // not implemented
+
+public:
+   rAPPNUWSTTrackFitCDCH(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTTrackFitCDCH_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTTrackFitCDCH() {}
+
+protected:
+
+   // Event Methods
+   void Init();
+   void BeginOfRun();
+   void Event();
+   void EndOfRun();
+   void Terminate();
+   void StoreReconstructedTrack();
+   Bool_t Fit(rAPPNUWSRecoTracks *aTrack);
+   Bool_t Fit2(rAPPNUWSRecoTracks *aTrack);
+   void MCFinder();
+
+  GeometrySrvHndl   *fGeometry;
+   TClonesArray   *fBrHitsDC;
+   TClonesArray   *fBrHitsCSMBT;
+   TClonesArray   *fBrHitsCSMTT;
+   TClonesArray   *fBrDataTrk;
+
+   Double_t       fTheta;
+   Double_t       fPhi;
+   TVector3       fVert;
+//   Double_t       fChiSquare;
+//   Double_t       fStatus;  
+
+   ClassDef(rAPPNUWSTTrackFitCDCH,0)
+};
+
+#endif   // rAPPNUWSTTrackFitCDCH_H

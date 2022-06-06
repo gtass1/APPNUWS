@@ -1,0 +1,83 @@
+#ifndef rAPPNUWSTReadMCDataCDCH_H
+#define rAPPNUWSTReadMCDataCDCH_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTReadMCData                                                        //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+#include <util/GeometrySrvHndl.h>
+//#include "TTree.h"
+#include "TClonesArray.h"
+#include "TVector3.h"
+
+#include "generated/rAPPNUWSTReadMCDataCDCH_Base.h"
+#include "generated/rAPPNUWSDCHHit.h"
+#include <vector>
+#include <map>
+
+class rAPPNUWSDCGeantStep;
+
+class rAPPNUWSTReadMCDataCDCH : public rAPPNUWSTReadMCDataCDCH_Base
+{
+
+private:
+   rAPPNUWSTReadMCDataCDCH(const rAPPNUWSTReadMCDataCDCH &c); // not implemented
+   rAPPNUWSTReadMCDataCDCH &operator=(const rAPPNUWSTReadMCDataCDCH &c); // not implemented
+
+public:
+   rAPPNUWSTReadMCDataCDCH(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTReadMCDataCDCH_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTReadMCDataCDCH() {}
+
+protected:
+   // Event Methods
+   void Init();
+   void BeginOfRun();
+   void Event();
+   void EndOfRun();
+   void Terminate();
+   void LoadEvent(Int_t nev);  
+   void DefineHitsInDCH();
+   void DefineHitsInDCH2();
+//   void DefineHitsInMPX();
+   void DefineClustersInDCH(rAPPNUWSDCHHit *ah, TVector3 &pos, TVector3 &trkDir);
+   Bool_t DCACalculation(Int_t nCh, TVector3 &pos, TVector3 &trkDir);
+
+//   TTree* fDataTree;
+   TClonesArray* fBrDataTrk;
+   TClonesArray* fBrDataDch;
+//   TClonesArray* fBrDataMpx;
+//   TClonesArray* fDCHHitsMap;
+   GeometrySrvHndl* fGeometry;
+
+   Double_t      fDCA;      //distance of clesest approach
+   Double_t      fDCA2d;    //distance of clesest approach in the transverse pl.
+   TVector3      fCApoint;
+
+   typedef std::map<int,std::vector<rAPPNUWSDCGeantStep *> > DriftCellHitMap;
+
+   void fillHitMap ( DriftCellHitMap& hitmap );
+
+   // Parameters
+   double _timetodist;     // const to convert delata t in delat z along the wire in mm/ns
+   double _distSigma;      // sigma of dealta z in mm
+   double _minimumEnergy;  // minimum energy deposition of G4 step
+   double _minimumLength;  // is G4Step is shorter than this, consider it a point
+   double _driftVelocity;
+   double _driftSigma;
+   double _minimumTimeGap;
+   int    _nzHittingZone;
+   bool   _zHittingZonePresent;
+   std::vector<double> _zZoneLimits;
+   std::vector<bool>   _zZoneActive;
+   std::vector<double> _zZoneMinLiveTime;
+   bool   _useDeltaT;
+   int    _mapCellDTtype;
+
+   ClassDef(rAPPNUWSTReadMCDataCDCH,0)
+};
+
+#endif   // rAPPNUWSTReadMCDataCDCH_H

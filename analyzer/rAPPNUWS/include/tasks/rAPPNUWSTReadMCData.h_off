@@ -1,0 +1,59 @@
+#ifndef rAPPNUWSTReadMCData_H
+#define rAPPNUWSTReadMCData_H
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+// rAPPNUWSTReadMCData                                                        //
+//                                                                            //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+#include "TTree.h"
+#include "TClonesArray.h"
+#include "TVector3.h"
+
+#include "generated/rAPPNUWSTReadMCData_Base.h"
+#include "generated/rAPPNUWSDCHHit.h"
+
+class Geometry;
+
+class rAPPNUWSTReadMCData : public rAPPNUWSTReadMCData_Base
+{
+
+private:
+   rAPPNUWSTReadMCData(const rAPPNUWSTReadMCData &c); // not implemented
+   rAPPNUWSTReadMCData &operator=(const rAPPNUWSTReadMCData &c); // not implemented
+
+public:
+   rAPPNUWSTReadMCData(const char *name = 0, const char *title = 0, int level = 0, const char *taskSuffix = 0, TFolder *histoFolder = 0)
+   :rAPPNUWSTReadMCData_Base(name,title,level,taskSuffix,histoFolder) {}
+   virtual ~rAPPNUWSTReadMCData() {}
+
+protected:
+   // Event Methods
+   void Init();
+   void BeginOfRun();
+   void Event();
+   void EndOfRun();
+   void Terminate();
+   void LoadEvent(Int_t nev);  
+   void DefineHitsInDCH();
+//   void DefineHitsInMPX();
+   void DefineClustersInDCH(rAPPNUWSDCHHit *ah, TVector3 pos, TVector3 trkDir);
+   Bool_t DCACalculation(Int_t nCh, TVector3 pos, TVector3 trkDir);   
+
+   TTree* fDataTree;
+   TClonesArray* fBrDataTrk;
+   TClonesArray* fBrDataDch;
+//   TClonesArray* fBrDataMpx;
+   TClonesArray* fDCHHitsMap;   
+   Geometry*     fGeometry;
+
+   Double_t      fDCA;      //distance of clesest approach
+   Double_t      fDCA2d;    //distance of clesest approach in the transverse pl.
+   TVector3      fCApoint;
+
+   ClassDef(rAPPNUWSTReadMCData,0)
+};
+
+#endif   // rAPPNUWSTReadMCData_H

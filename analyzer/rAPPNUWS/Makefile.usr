@@ -1,0 +1,59 @@
+# User editable Makefile for the rAPPNUWSAnalyzer
+#
+# Description:
+# 1) Add compile(link) options to Flags(Libraries), e.g. Flags += -g -O2 -Wall
+# 2) Add mySource.o to the list of objects, e.g. objects += mySource.o
+# 3) Add compile statment, e.g.
+#       obj/mySource.o: mySource.cpp
+#	$(CXX) -c $(Flags) $(Includes) mySource.cpp -o obj/mySource.o
+# 4) Add include paths for the rootcint, e.g. DictionaryIncludes += -ImyPath
+# 5) Add header files for the rootcint, e.g. DictionaryHeaders += myHeader.h/
+# 6) Add clean target, e.g.
+#       userclean:
+#	$(RM) your_file.h
+#
+CC  = g++
+RAPPNUWSLDFLAGS += -Wl,--start-group
+#RAPPNUWSLDFLAGS += -L${ZLIB_DIR}
+#
+ifdef GENFIT2SYS
+      RAPPNUWSLDFLAGS += -L${GENFIT2SYS}/lib64 -lgenfit2
+      RAPPNUWSSOFLAGS += -L${GENFIT2SYS}/lib64 -lgenfit2
+      Includes   += -I$(GENFIT2SYS)/include/ -I$(EIGEN3SYS)/include/eigen3
+      Flags      += -DHAVE_GENFIT -L${GENFIT2SYS}/lib64 
+endif
+#
+ifdef G4WORKDIR
+      Includes   += -I${G4INCLUDE} -I${G4WORKDIR}/include/ConfigReader -I${G4WORKDIR}/include/EXCEP -I${G4WORKDIR}/include/GEOMSRVC -I${G4WORKDIR}/include/PXSTbs -I${G4WORKDIR}/include/CSMBT -I${G4WORKDIR}/include/CSMTT -I${G4WORKDIR}/include/DCHbs -I${G4WORKDIR}/include/GENELMbs -I${RAPPNSDIR}/include
+      RAPPNUWSLDFLAGS += -L${G4WORKDIR}/lib -lSimG4ClassesDict -lSCrd -lEXCEP -lGEOMSRVC -lIOSRVC -lPXSTbs -lCSMBT -lCSMTT -lDCHbs -lGENELMbs	
+      RAPPNUWSLDFLAGS += -L${G4LIB} -lG4global 
+      RAPPNUWSLDFLAGS += -lG4Tree -lG4FR -lG4GMocren -lG4visHepRep -lG4RayTracer -lG4VRML -lG4vis_management -lG4modeling -lG4interfaces
+      RAPPNUWSLDFLAGS += -lG4persistency -lG4analysis -lG4error_propagation -lG4readout -lG4physicslists -lG4run -lG4event -lG4tracking -lG4parmodels
+      RAPPNUWSLDFLAGS += -lG4processes -lG4digits_hits -lG4track -lG4particles -lG4geometry -lG4materials -lG4graphics_reps -lG4intercoms -lG4global
+ 
+ifndef CLHEP_BASE_DIR
+      RAPPNUWSLDFLAGS += -lG4clhep
+endif
+
+      Flags      += -std=c++17 -fdiagnostics-color=always
+endif
+
+ifdef BOOST_ROOT
+   Includes   += -I${BOOST_ROOT}/include
+#   RAPPNUWSLDFLAGS += -L${BOOST_ROOT}/lib -l...
+endif
+
+ifdef CLHEP_BASE_DIR
+   Includes   += -I${CLHEP_INCLUDE_DIR}
+   RAPPNUWSLDFLAGS += -L${CLHEP_LIB_DIR} -lCLHEP
+else
+   Includes   += -I${G4INCLUDE}/Geant4
+endif
+   RAPPNUWSLDFLAGS += -L$(shell $(ROOTCONFIG) --libdir)  -lGeom
+
+RAPPNUWSLDFLAGS += -Wl,--end-group
+
+userclean:
+	@echo ''
+userdistclean:
+	@echo ''
