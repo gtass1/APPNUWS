@@ -1,4 +1,3 @@
-# $Id: CMakeLists.txt 86065 2014-11-07 08:51:15Z gcosmo $
 
 #----------------------------------------------------------------------------
 # Setup the project
@@ -44,6 +43,11 @@ endif()
 #
 include(${Geant4_USE_FILE})
 #include_directories(${PROJECT_SOURCE_DIR}/include)
+
+#----------------------------------------------------------------------------
+find_package(Boost REQUIRED)
+#include_directories(${BOOST_ROOT}/include)
+include_directories(${Boost_INCLUDE_DIRS})
 
 #----------------------------------------------------------------------------
 # Find HepMC (required package)
