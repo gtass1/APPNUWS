@@ -3,7 +3,7 @@
 
 //gSystem->Load("$PRJBASE/simulation/build/lib/libSimG4ClassesDict");
 
-void DrawHits(TString fileName="hits00001.root", bool debug=false){
+void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
 
   static const int nLayer = 3;
 
@@ -74,7 +74,13 @@ void DrawHits(TString fileName="hits00001.root", bool debug=false){
   std::vector<float> csmtthit[nLayer][3];
   std::vector<float> csmbthit[nLayer][3];
 
-  for (int i=0;i<mctrk->GetEntries();i++) {
+  Int_t fstEv=0;
+  Int_t lstEv=mctrk->GetEntries();
+  if (ev>=0) {
+      fstEv=ev;
+      lstEv=ev+1;
+  }
+  for (int i=fstEv;i<lstEv;i++) {
 
      mctrk->GetEntry(i);
 
@@ -109,7 +115,7 @@ void DrawHits(TString fileName="hits00001.root", bool debug=false){
 //       ((GMCGeantTrack*)ptrBr_trk[k])->SetfMomentum(vec_c);
      }
 
-     if (hitCSMTTIsPresent) {
+     if (false && hitCSMTTIsPresent) {
        int nhits = hitscsmtt->size();
 
        for (int k=0;k<nhits;k++) {
