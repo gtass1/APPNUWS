@@ -74,6 +74,7 @@ class APPNWG4DetectorConstruction : public G4VUserDetectorConstruction
     void DefineVolumes();
     void ConstructCosmicRayTracker();
     void ConstructTruck();
+    void ConstructCargo();
     void ConstructFloor();
 
     // data members

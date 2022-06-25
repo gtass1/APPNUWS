@@ -223,7 +223,7 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
 
 
 //  char tmpVarName[50];
-  if (_geomType==0) {
+  if (_geomType==0 || _geomType==1) {
 
     _halfLength = (_TrailerPlaneLength + _TruckShaftsLength - _TruckTrailerOverlap)/2.0;
     _halfWidth = _TrailerPlaneWidth/2.0;

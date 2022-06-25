@@ -82,7 +82,7 @@ VolumeInfo TRUCKBuilder::construct( G4LogicalVolume* mother/*, double zOff*/ ){
     G4LogicalVolume*   trlPlanelogical=0x0;
     G4LogicalVolume*   tMotherlogical=0x0;
 
-    if (trckdesc->geomType()==0) {
+    if (trckdesc->geomType()==0 || trckdesc->geomType()==1) {
 
       genelmbs::Boxkind *cntin = trckdesc->getContainerElem();
 //      VolumeInfo CntInInfo;

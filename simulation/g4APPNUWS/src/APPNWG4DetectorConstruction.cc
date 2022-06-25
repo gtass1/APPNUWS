@@ -208,8 +208,8 @@ void APPNWG4DetectorConstruction::CreateWorld() {
 void APPNWG4DetectorConstruction::DefineVolumes() {
 
   ConstructCosmicRayTracker();
-  ConstructTruck();
   ConstructFloor();
+  ConstructTruck();
 
   //export geometry in GDML file
   if (cRd->getBool("writeGDML",false)) {
@@ -217,6 +217,17 @@ void APPNWG4DetectorConstruction::DefineVolumes() {
     parser.Write(cRd->getString("GDMLFileName"), fTheWorld);
   }
   
+  ConstructCargo();
+
+  //export geometry in GDML file
+  if (cRd->getBool("writeGDML",false)) {
+    G4GDMLParser parser;
+    std::string cargoGDMLf=cRd->getString("GDMLFileName");
+    std::string postfix="_cargo.gdml";
+    cargoGDMLf.replace(cargoGDMLf.end()-5,cargoGDMLf.end(),postfix);
+    parser.Write(cargoGDMLf, fTheWorld);
+  }
+
   // Always return the physical world
   //  return TheWorld;
 }
@@ -272,7 +283,30 @@ void APPNWG4DetectorConstruction::ConstructTruck() {
 //    GeomService::Instance()->addDetector( trckm.getCSMBTabsorberPtr() );
 //    trck::TRUCKBuilder::constructAbsorber( trckvolinf.logical );
 
-    if (cRd->getBool("hasCARGO",false)) {
+//    if (cRd->getBool("hasCARGO",false)) {
+//
+//      RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::CARGOtargetRO(),"CARGOHitsStepCh");
+//
+//      crg::CARGOMaker crgm( *cRd );
+//      GeomService::Instance()->addDetector( crgm.getCARGOdescPtr() );
+//
+//      crg::CARGOBuilder::instantiateSensitiveDetectors("CARGOrackerHitsCollection");
+//      crg::CARGOBuilder::construct( trck::TRUCKBuilder::containerInVol() );
+//
+//  //    GeomService::Instance()->addDetector( crgm.getCSMBTabsorberPtr() );
+//  //    crg::CARGOBuilder::constructAbsorber( crgvolinf.logical );
+//
+//    }
+
+
+  }
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void APPNWG4DetectorConstruction::ConstructCargo() {
+
+  if (cRd->getBool("hasTRUCK",false) && cRd->getBool("hasCARGO",false)) {
 
       RootIO::GetInstance()->CreateMCStepBranches(SensitiveDetectorName::CARGOtargetRO(),"CARGOHitsStepCh");
 
@@ -284,9 +318,6 @@ void APPNWG4DetectorConstruction::ConstructTruck() {
 
   //    GeomService::Instance()->addDetector( crgm.getCSMBTabsorberPtr() );
   //    crg::CARGOBuilder::constructAbsorber( crgvolinf.logical );
-
-    }
-
 
   }
 
