@@ -30,7 +30,7 @@
     </Online>
 
     <Paths>
-      <InputFilePath>../../simulation/g4GMC/</InputFilePath>
+      <InputFilePath>./</InputFilePath>
       <OutputFilePath>./</OutputFilePath>
       <OutputFileOption>RECREATE</OutputFileOption>
       <MakeOutputDirectory>false</MakeOutputDirectory>
@@ -93,9 +93,14 @@
             <Read>true</Read>
           </Branch>
           <Branch>
-            <BranchName>MCPXStep</BranchName>
-            <Active>false</Active>
-            <Read>false</Read>
+            <BranchName>MCCSMBTStep</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
+          <Branch>
+            <BranchName>MCCSMTTStep</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
           </Branch>
         </Tree>
 
@@ -114,22 +119,27 @@
           <TreeOutputFileName></TreeOutputFileName>
           <SaveConfiguration>false</SaveConfiguration>
           <Branch>
-            <BranchName>DCHits</BranchName>
+            <BranchName>MCTracks</BranchName>
             <Active>true</Active>
             <Read>true</Read>
           </Branch>
           <Branch>
-            <BranchName>PXHits</BranchName>
-            <Active>false</Active>
-            <Read>false</Read>
+            <BranchName>CSMBTHits</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
+          <Branch>
+            <BranchName>CSMTTHits</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
           </Branch>
         </Tree>
 
         <Tree>
           <TreeName>RecoData</TreeName>
           <Read>false</Read>
-          <Write>true</Write>
-          <Fill>true</Fill>
+          <Write>false</Write>
+          <Fill>false</Fill>
           <CompressionLevel>1</CompressionLevel>
           <CompressionAlgorithm>ZLIB</CompressionAlgorithm>
           <AutoSaveSize>300000000</AutoSaveSize>
@@ -144,6 +154,16 @@
             <Active>true</Active>
             <Read>true</Read>
           </Branch>
+          <Branch>
+            <BranchName>RecoTracksTT</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
+          <Branch>
+            <BranchName>RecoTracksBT</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
         </Tree>
       </Trees>
 
@@ -151,37 +171,37 @@
         <SteeringParameterField>
           <!-- Geometry Service Type (PROTO: to load Prototypes Geometry Service, CDCH: for central geometry DCH Geometry Service) -->
           <SPName>GeomSrvType</SPName>
-          <SPValue>CDCH</SPValue>
+          <SPValue>APPN</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- additional (optional) configuration file name for Geometry Service -->
           <SPName>GSrvAddFile</SPName>
-          <SPValue>geom_02.txt</SPValue>
+          <SPValue>geom_APPNUWS.txt</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- additional (optional) folder for configuration file for Geometry Service -->
           <SPName>GSrvAddFold</SPName>
-          <SPValue>../../simulation/g4GMC/config</SPValue>
+          <SPValue>/workSpace/sw/APPNUWS/simulation/build/config</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- GDML file for G4 geometry description -->
           <SPName>GeomGDMLfile</SPName>
-          <SPValue>../../simulation/g4GMC/g4test-mu2e.gdml</SPValue>
+          <SPValue>g4-APPNUWS_reco.gdml</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- value of magnetic field (Z component) in case of constant magnetic field -->
           <SPName>Bz</SPName>
-          <SPValue>2</SPValue>
+          <SPValue>0</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- gas mixture composition -->
           <SPName>GasMixture</SPName>
-          <SPValue>90:10</SPValue>
+          <SPValue> </SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- tube radius in mm -->
           <SPName>tube_radius</SPName>
-          <SPValue>5</SPValue>
+          <SPValue>4.875</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- tube lenght in mm. -->
@@ -201,12 +221,12 @@
         <SteeringParameterField>
           <!-- Y estention for the beam in mm -->
           <SPName>yBeamSpot</SPName>
-          <SPValue>10</SPValue>
+          <SPValue>10.5</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- beam distance from the first tube in mm -->
           <SPName>zBeam</SPName>
-          <SPValue>-60</SPValue>
+          <SPValue>-200</SPValue>
         </SteeringParameterField>
         <SteeringParameterField>
           <!-- beam angular spread in rad -->
@@ -264,7 +284,7 @@
 
       <Tasks>
         <Task>
-          <TaskName>GMCMain</TaskName>
+          <TaskName>rAPPNUWSMain</TaskName>
           <Active>true</Active>
           <SteeringParameterField>
             <!-- When this is true, ODB is copied to ROOT output files. 'odb' database must be present in config XML. -->
@@ -283,117 +303,53 @@
         </Task>
 
         <Task>
-          <TaskName>ReadMCData</TaskName>
-          <Active>false</Active>
-        </Task>
-
-        <Task>
-          <TaskName>ReadMCDataCDCH</TaskName>
+          <TaskName>ReadMCDataCSMBT</TaskName>
           <Active>true</Active>
-        </Task>
-
-        <Task>
-          <TaskName>GenerateWaveforms</TaskName>
-          <Active>false</Active>
           <SteeringParameterField>
-            <!-- Resistance in input -->
-            <SPName>ResistRR</SPName>
-            <SPValue>50</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Ions mobility -->
-            <SPName>mobility</SPName>
-            <SPValue>10.4</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- time slope for signal (ns) -->
-            <SPName>tauRumpUp</SPName>
-            <SPValue>0.87</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Rise Constant Time for signal (ns) -->
-            <SPName>tauRumpDown</SPName>
-            <SPValue>0.56</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Rise Time constant 2for signal (ns) -->
-            <SPName>tauRumpDown2</SPName>
-            <SPValue>6.96</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Fraction of mixing signal (Tassielli shape)
-"
-" -->
-            <SPName>FractionMixSign</SPName>
-            <SPValue>0.45</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Resolution for time acquisition (ns) -->
-            <SPName>BinTimeWidth</SPName>
-            <SPValue>0.4</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Time acquisition window (ns) -->
-            <SPName>TimeWindow</SPName>
-            <SPValue>1000</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- High Voltage on tube -->
-            <SPName>HVTube</SPName>
-            <SPValue>1500</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Gas Gain -->
-            <SPName>GasGain</SPName>
-            <SPValue>1e+06</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- flag to switch on noise -->
-            <SPName>NoiseOn</SPName>
-            <SPValue>true</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Noise level -->
-            <SPName>SignalNoiseRatio</SPName>
-            <SPValue>7</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- flag to switch on the waveform digitization
-"
-" -->
-            <SPName>DigitizationOn</SPName>
-            <SPValue>true</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- Nr. of Bits for ADC -->
-            <SPName>ADCResolution</SPName>
-            <SPValue>12</SPValue>
-          </SteeringParameterField>
-          <SteeringParameterField>
-            <!-- ADC range in Volt -->
-            <SPName>ADCFullRange</SPName>
+            <!-- Numeber of CSMBT Layers -->
+            <SPName>NLayers</SPName>
             <SPValue>1</SPValue>
           </SteeringParameterField>
           <SteeringParameterField>
-            <!-- Electronic Front--End gain -->
-            <SPName>FrontEndGain</SPName>
-            <SPValue>10</SPValue>
+            <!-- [NLayers] Read Out Channel dead time per Layer -->
+            <SPName>RODeadTime</SPName>
+            <SPValue>0</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Minimum energy cut for hit creation -->
+            <SPName>HitEnergyCut</SPName>
+            <SPValue>0</SPValue>
           </SteeringParameterField>
         </Task>
 
         <Task>
-          <TaskName>WaveformAnalysis</TaskName>
-          <Active>false</Active>
+          <TaskName>ReadMCDataCSMTT</TaskName>
+          <Active>true</Active>
+          <SteeringParameterField>
+            <!-- Numeber of CSMTT Layers -->
+            <SPName>NLayers</SPName>
+            <SPValue>1</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- [NLayers] Read Out Channel dead time per Layer -->
+            <SPName>RODeadTime</SPName>
+            <SPValue>0</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Minimum energy cut for hit creation -->
+            <SPName>HitEnergyCut</SPName>
+            <SPValue>0</SPValue>
+          </SteeringParameterField>
         </Task>
 
         <Task>
           <TaskName>TrackFit</TaskName>
           <Active>false</Active>
-        </Task>
-
-        <Task>
-          <TaskName>TrackFitCDCH</TaskName>
-          <Active>true</Active>
+          <SteeringParameterField>
+            <!-- debug level -->
+            <SPName>DebugLevel</SPName>
+            <SPValue>0</SPValue>
+          </SteeringParameterField>
         </Task>
       </Tasks>
     </Analyzer>
