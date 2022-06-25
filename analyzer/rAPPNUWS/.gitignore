@@ -2,6 +2,6 @@
 /obj/
 /res/
 /*.root
-/gmcanalyzer.exe
-/GMCAnalyzer.html
+/*analyzer.exe
+/*Analyzer.html
 /Makefile
