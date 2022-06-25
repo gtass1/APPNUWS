@@ -6,7 +6,7 @@
   <!ENTITY DCGeantStep        SYSTEM "xml/DCGeantStep.xml">  
   <!ENTITY CSMBTGeantStep       SYSTEM "xml/CSMBTGeantStep.xml">  
   <!ENTITY CSMTTGeantStep      SYSTEM "xml/CSMTTGeantStep.xml">  
-  <!ENTITY DCHHit             SYSTEM "xml/DCHHit.xml">  
+<!--   <!ENTITY DCHHit             SYSTEM "xml/DCHHit.xml">   -->
   <!ENTITY CSMBTHit             SYSTEM "xml/CSMBTHit.xml">  
   <!ENTITY CSMTTHit            SYSTEM "xml/CSMTTHit.xml">  
   <!ENTITY MCTrack            SYSTEM "xml/MCTrack.xml"> 
@@ -14,7 +14,11 @@
 <!--   <!ENTITY Event              SYSTEM "xml/Event.xml"> -->
 <!--  <!ENTITY GenerateWaveforms  SYSTEM "xml/GenerateWaveforms.xml">  -->
 <!--  <!ENTITY TrackFitCDCH       SYSTEM "xml/TrackFitCDCH1.xml">  -->
-  <!ENTITY RecoTracks         SYSTEM "xml/RecoTracks.xml"> 
+  <!ENTITY TrackFit           SYSTEM "xml/TrackFit.xml">
+  <!ENTITY RecoTracks         SYSTEM "xml/RecoTracks.xml">
+<!--  <!ENTITY RecoTracksBT         SYSTEM "xml/RecoTracksBT.xml"> 
+  <!ENTITY RecoTracksTT         SYSTEM "xml/RecoTracksTT.xml"> -->
+  <!ENTITY RecoTracksSeg         SYSTEM "xml/RecoTracksSeg.xml"> 
   <!ENTITY rAPPNUWSMain            SYSTEM "xml/rAPPNUWSMain.xml"> 
   <!ENTITY sim                SYSTEM "xml/sim.xml">
   <!ENTITY hits               SYSTEM "xml/hits.xml">
@@ -84,7 +88,7 @@
       <Affiliation>rAPPNUWS</Affiliation>
       <FolderDescription>MC related folder.</FolderDescription>
       &MCRunHeader;  
-      &DCHHit;
+<!--       &DCHHit; -->
       &CSMBTHit;
       &CSMTTHit;
 <!--       &WaveformData; -->
@@ -94,7 +98,17 @@
       <FolderTitle>RecoData</FolderTitle>
       <Affiliation>rAPPNUWS</Affiliation>
       <FolderDescription>Reconstruction related folder.</FolderDescription>
-      &RecoTracks;
+       &RecoTracks;
+      <Folder>
+        <FolderName>RecoTracksBT</FolderName>
+        <FolderTitle>RecoTracksBT</FolderTitle>
+        &RecoTracksSeg;
+      </Folder>
+      <Folder>
+        <FolderName>RecoTracksTT</FolderName>
+        <FolderTitle>RecoTracksTT</FolderTitle>
+        &RecoTracksSeg;
+      </Folder>
     </Folder>    
   </Folders>
   
@@ -241,7 +255,7 @@
 	<HistTitle>y_pixely_trk distribution</HistTitle>
       </Histogram>
     </Task>   -->
-<!--     &TrackFitCDCH; -->
+     &TrackFit; 
 <!--     <Task>
       <TaskName>WaveformAnalysis</TaskName>    
     </Task> -->
@@ -272,9 +286,9 @@
 <!--     <Task>
       <TaskName>WaveformAnalysis</TaskName>
     </Task>     -->
-<!--     <Task>
+     <Task>
       <TaskName>TrackFit</TaskName>
-    </Task>  -->
+    </Task>
 <!--     <Task>
       <TaskName>TrackFitCDCH</TaskName>
     </Task>  -->

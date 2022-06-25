@@ -1,14 +1,14 @@
 <!--$Id:  $-->
-<Folder>
-   <FolderName>RecoTracks</FolderName>
-   <FolderTitle>RecoTracks</FolderTitle>
+<!-- <Folder>
+   <FolderName>RecoTracksBT</FolderName>
+   <FolderTitle>RecoTracksBT</FolderTitle> -->
    <Affiliation>rAPPNUWS</Affiliation>
    <ArraySize>variable</ArraySize>
    <Author>
       <AuthorName>Gianfranco Tassielli</AuthorName>
    </Author>
    <FolderVersion>2</FolderVersion>
-   <FolderDescription>Folder class for reconstructed tracks</FolderDescription>
+   <FolderDescription>Folder class for reconstructed tracks in the BT</FolderDescription>
    <NoResetByFramework>false</NoResetByFramework>
    <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
    <Include>
@@ -115,12 +115,6 @@
      <FieldComment>Index of the hit in HitRecResult folder.</FieldComment>
    </Field>
    <Field>
-     <FieldName>detid</FieldName>
-     <FieldType>Int_t</FieldType>
-     <ArraySize>vector</ArraySize>
-     <FieldComment>detector id of hit: 0 - TT, 1 - BT</FieldComment>
-   </Field>
-   <Field>
      <FieldName>Skipped</FieldName>
      <FieldType>Bool_t</FieldType>
      <ArraySize>vector</ArraySize>
@@ -172,6 +166,43 @@
    </Field>
 
    <Field>
+      <FieldName>x2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Track Vertex-2 x coord</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_x2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error On the Track Vertex-2 x coord</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>y2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Track Vertex-2 y coord</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_y2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error On the Track Vertex-2 y coord</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>z2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Track Vertex-2 z coord</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_z2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error On the Track Vertex-2 z coord</FieldComment>
+   </Field>
+
+   <Field>
      <FieldName>nhits</FieldName>
      <FieldType>Int_t</FieldType>
      <FieldInitialization>-1</FieldInitialization>  
@@ -182,30 +213,6 @@
      <FieldType>Int_t</FieldType>
      <FieldInitialization>-1</FieldInitialization>  
      <FieldComment>number of hits.</FieldComment>
-   </Field>
-   <Field>
-     <FieldName>nhitsBT</FieldName>
-     <FieldType>Int_t</FieldType>
-     <FieldInitialization>-1</FieldInitialization>  
-     <FieldComment>number of dch hits.</FieldComment>
-   </Field>
-   <Field>
-     <FieldName>ngoodhitsBT</FieldName>
-     <FieldType>Int_t</FieldType>
-     <FieldInitialization>-1</FieldInitialization>  
-     <FieldComment>number of good dch hits.</FieldComment>
-   </Field>
-   <Field>
-     <FieldName>nhitsTT</FieldName>
-     <FieldType>Int_t</FieldType>
-     <FieldInitialization>-1</FieldInitialization>  
-     <FieldComment>number of dch hits.</FieldComment>
-   </Field>
-   <Field>
-     <FieldName>ngoodhitsTT</FieldName>
-     <FieldType>Int_t</FieldType>
-     <FieldInitialization>-1</FieldInitialization>  
-     <FieldComment>number of good dch hits.</FieldComment>
    </Field>
    <Field>
      <FieldName>chi2</FieldName>
@@ -226,4 +233,4 @@
      <FieldComment>Flag indicating if the track has been already fitted.</FieldComment>
    </Field>        
 
-</Folder>
+<!-- </Folder> -->

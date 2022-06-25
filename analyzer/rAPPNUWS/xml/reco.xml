@@ -8,6 +8,14 @@
     <BranchName>RecoTracks</BranchName>
     <RelatedFolder>RecoTracks</RelatedFolder>
   </Branch>
+  <Branch>
+    <BranchName>RecoTracksTT</BranchName>
+    <RelatedFolder>RecoTracksTT</RelatedFolder>
+  </Branch>
+  <Branch>
+    <BranchName>RecoTracksBT</BranchName>
+    <RelatedFolder>RecoTracksBT</RelatedFolder>
+  </Branch>
 <!--  <Branch>
     <BranchName>RecoDCHits</BranchName>
     <RelatedFolder>RecoDCHHit</RelatedFolder>
