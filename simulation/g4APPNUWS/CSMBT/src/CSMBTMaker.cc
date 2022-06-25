@@ -66,7 +66,7 @@ CSMBTMaker::CSMBTMaker( crd::SimpleConfig const& config):
         _geomType       = config.getInt("csmbt.geomType");
 
         _distIn=1.0e+6;
-        _distOut=0.0;
+        _distOut=-1.0e+6;
         _halfLength=0.0;
         _halfWidth=0.0;
 

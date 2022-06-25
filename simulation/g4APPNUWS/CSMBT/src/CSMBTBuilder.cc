@@ -146,7 +146,7 @@ VolumeInfo CSMBTBuilder::constructTracker( G4LogicalVolume* mother/*, double zOf
                 checkOverlap);
 
             if (ild->getLadderType() == pxstbs::Ladder::pixel || ild->getLadderType() == pxstbs::Ladder::strip) {
-              G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::MPGDCSMTTrackerRO());
+              G4VSensitiveDetector *sd = G4SDManager::GetSDMpointer()->FindSensitiveDetector(SensitiveDetectorName::MPGDCSMBTrackerRO());
               if(sd) {
                 if (ild->getDetail()->nShells()>1) {
                   //for (int ishell=0; ishell<ild->getDetail()->nShells(); ++ishell){
