@@ -26,10 +26,12 @@ public:
 
   ~ReadOutDetail ();
 
-  double      firstSideDim()   const { return _firstSideDim;}
-  double      firstSideInsul()   const { return _firstSideInsul;}
-  double      secondSideDim()   const { return _secondSideDim;}
+  double      firstSideDim()      const { return _firstSideDim;}
+  double      firstSideInsul()    const { return _firstSideInsul;}
+  double      firstSidePitch()    const { return _firstSidePitch;}
+  double      secondSideDim()     const { return _secondSideDim;}
   double      secondSideInsul()   const { return _secondSideInsul;}
+  double      secondSidePitch()   const { return _secondSidePitch;}
 //  double      thickness()   const { return _thickness;}
   double      angle()   const { return _angle;}
   int         nShells()   const { return _nShells;}
@@ -76,8 +78,10 @@ private:
 
   double _firstSideDim;
   double _firstSideInsul;
+  double _firstSidePitch;
   double _secondSideDim;
   double _secondSideInsul;
+  double _secondSidePitch;
 //  double _thickness;
   double _angle;
   int    _nShells;

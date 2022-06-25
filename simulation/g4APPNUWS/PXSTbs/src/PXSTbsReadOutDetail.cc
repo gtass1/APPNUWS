@@ -12,8 +12,10 @@ namespace pxstbs {
   ReadOutDetail::ReadOutDetail():
         _firstSideDim(0.0),
         _firstSideInsul(0.0),
+        _firstSidePitch(0.0),
         _secondSideDim(0.0),
         _secondSideInsul(0.0),
+        _secondSidePitch(0.0),
 //        _thickness(0.0),
         _angle(0.0),
         _nShells(0),
@@ -36,6 +38,8 @@ namespace pxstbs {
 //    }
 //    _nShells = thicknesses.size();
     _nShells = _shellIds.size();
+    _firstSidePitch=_firstSideDim+_firstSideInsul;
+    _secondSidePitch=_secondSideDim+_secondSideInsul;
   }
 
   ReadOutDetail::~ReadOutDetail (){

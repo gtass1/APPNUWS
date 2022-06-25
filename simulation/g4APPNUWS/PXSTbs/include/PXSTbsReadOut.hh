@@ -51,10 +51,12 @@ public:
   const CLHEP::Hep3Vector& getMidPoint() const;
 //  const CLHEP::Hep3Vector& getDirection() const;
 
-  double getPitch() const { return _detail->firstSideDim();}
+  double getFstSideDim() const { return _detail->firstSideDim();}
   double getFstSideInsul()   const { return _detail->firstSideInsul();}
-  double getLength() const { return _detail->secondSideDim();}
+  double getFstSidePitch() const { return _detail->firstSidePitch();}
+  double getSndSideDim() const { return _detail->secondSideDim();}
   double getSndSideInsul()   const { return _detail->secondSideInsul();}
+  double getSndSidePitch() const { return _detail->secondSidePitch();}
 //  double getThickness() const { return _detail->thickness();}
   double getAngle() const { return _detail->angle();}
   int getSelSubShell() const { return _selSubShell; }

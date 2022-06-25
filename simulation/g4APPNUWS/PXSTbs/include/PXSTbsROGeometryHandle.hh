@@ -87,7 +87,9 @@ public:
         virtual const CLHEP::Hep3Vector GetROChanCenterGbl() const  ;
         virtual const CLHEP::Hep3Vector GetROLayerMidPoint()      ;
         virtual double GetROChanFstSdDim() const                  ;
+        virtual double GetROChanFstSdPitch() const                ;
         virtual double GetROChanSndSdDim() const                  ;
+        virtual double GetROChanSndSdPitch() const                ;
         virtual const CLHEP::Hep3Vector GetLadderMidPoint() const                  ;
         virtual const CLHEP::Hep3Vector GetLadderFstSdDir() const                  ;
         virtual const CLHEP::Hep3Vector GetLadderSndSdDir() const                  ;

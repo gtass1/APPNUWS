@@ -291,11 +291,19 @@ const CLHEP::Hep3Vector ROGeometryHandle::GetROLayerMidPoint() {
 }
 
 double ROGeometryHandle::GetROChanFstSdDim() const {
-        return _lad->getReadOut()->getPitch();
+        return _lad->getReadOut()->getFstSideDim();
+}
+
+double ROGeometryHandle::GetROChanFstSdPitch() const {
+        return _lad->getReadOut()->getFstSidePitch();
 }
 
 double ROGeometryHandle::GetROChanSndSdDim() const {
-        return _lad->getReadOut()->getLength();
+        return _lad->getReadOut()->getSndSideDim();
+}
+
+double ROGeometryHandle::GetROChanSndSdPitch() const {
+        return _lad->getReadOut()->getSndSidePitch();
 }
 
 const CLHEP::Hep3Vector ROGeometryHandle::GetLadderMidPoint() const {

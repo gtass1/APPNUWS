@@ -92,19 +92,19 @@ namespace genelmbs {
 //		  if (isWedgeType()) {
 //			  /*if(_nSndSdDltRO!=0) {
 //          unsigned long nDltROAdd=(idZ/_nSndSdDltRO);
-//          frstSdWidth += nDltROAdd*(_ros->getPitch()+_ros->getFstSideInsul());
+//          frstSdWidth += nDltROAdd*_ros->getFstSidePitch();
 //          if (_nSndSdAddDltRO!=0) {
-//            frstSdWidth += (nDltROAdd/_nSndSdAddDltRO)*(_ros->getPitch()+_ros->getFstSideInsul());
+//            frstSdWidth += (nDltROAdd/_nSndSdAddDltRO)*_ros->getFstSidePitch();
 //          }
 //        }*/
-//			  frstSdWidth += idZ*_nSndSdDltRO*(_ros->getPitch()+_ros->getFstSideInsul());
+//			  frstSdWidth += idZ*_nSndSdDltRO*_ros->getFstSidePitch();
 //			  if (_nSndSdAddDltRO!=0) {
-//				  frstSdWidth += idZ/_nSndSdAddDltRO*(_ros->getPitch()+_ros->getFstSideInsul());
+//				  frstSdWidth += idZ/_nSndSdAddDltRO*_ros->getFstSidePitch();
 //			  }
 //		  }
-//		  double chX = 0.5*frstSdWidth-( (2*idX+1)*_ros->getPitch()*0.5 + (idX+1)*_ros->getFstSideInsul() );
+//		  double chX = 0.5*frstSdWidth-( (2*idX+1)*_ros->getFstSideDim()*0.5 + (idX+1)*_ros->getFstSideInsul() );
 //		  double chY = _detail->shellYPos(_ros->getSelSubShell());//-0.5*_detail->thickness()+0.5*_detail->shellThickness(_ros->getSelSubShell());
-//		  double chZ = _detail->halfLength()-( (2*idZ+1)*_ros->getLength()*0.5 + (idZ+1)*_ros->getSndSideInsul() );
+//		  double chZ = _detail->halfLength()-( (2*idZ+1)*_ros->getSndSideDim()*0.5 + (idZ+1)*_ros->getSndSideInsul() );
 //		  if (isWedgeType()) {
 //			  //chY *= -1.0;
 //			  chZ *= -1.0;
