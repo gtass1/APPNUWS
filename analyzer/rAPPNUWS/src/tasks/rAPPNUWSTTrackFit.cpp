@@ -112,7 +112,7 @@ ClassImp(rAPPNUWSTTrackFit)
 
 using namespace std;
 
-static const float sclfac=1;
+static const float sclfac=0.1;
 //______________________________________________________________________________
 void rAPPNUWSTTrackFit::Init() {
 
@@ -121,6 +121,11 @@ void rAPPNUWSTTrackFit::Init() {
         fGeometry->makeDetectors();
 
     //init genfit
+    if (gROOT->GetVersionInt()>=62400) {
+        TGeoManager::LockDefaultUnits(kFALSE);
+        TGeoManager::SetDefaultUnits(TGeoManager::EDefaultUnits::kRootUnits);
+    }
+
     TGeoManager::Import(gAnalyzer->GetGSP()->GetGeomGDMLfile());
     FieldManager::getInstance()->init(new ConstField(0,0,gAnalyzer->GetGSP()->GetBz()*10.)); //kGs
     MaterialEffects* mateff=MaterialEffects::getInstance();
@@ -134,10 +139,11 @@ void rAPPNUWSTTrackFit::Init() {
     }
 
     //disable brems effect, as it is not correct for positron in genfit
-    mateff->setEnergyLossBrems(false);
-    mateff->setNoiseBrems(false);
+//    mateff->setEnergyLossBrems(false);
+//    mateff->setNoiseBrems(false);
 
-    MaterialEffects::getInstance()->init(new TGeoMaterialInterface());
+    mateff->init(new TGeoMaterialInterface());
+    if (GetSP()->GetDebugLevel()>2) { mateff->setDebugLvl(1); }
 
     //genfit::MaterialEffects::getInstance()->setNoEffects();
 
