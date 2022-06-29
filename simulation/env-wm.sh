@@ -36,6 +36,15 @@ else
     source ${PRJBASE}/simulation/checkG4data.sh
 fi
 
+if [ -v CRYHOME ];
+then
+	echo "CRY already set to "${CRYHOME}
+else
+    export CRYHOME=/workSpace/sw/CRY/cry_v1.7
+    export CRYDATAPATH=${CRYHOME}/data
+#    export LD_LIBRARY_PATH=${G4WORKDIR}/lib:${LD_LIBRARY_PATH}
+fi
+
 #rome
 #if [ -v ROMESYS ]
 #then

@@ -48,7 +48,7 @@ APPNWG4PrimaryGeneratorMessenger::APPNWG4PrimaryGeneratorMessenger
   fSelect= new G4UIcmdWithAString("/generator/select", this);
   fSelect-> SetGuidance("fSelect generator type");
   fSelect-> SetParameterName("generator_type", false, false);
-  fSelect-> SetCandidates("particleGun pythia hepmcAscii");
+  fSelect-> SetCandidates("particleGun pythia hepmcAscii cry");
   fSelect-> SetDefaultValue("particleGun");
 }
 

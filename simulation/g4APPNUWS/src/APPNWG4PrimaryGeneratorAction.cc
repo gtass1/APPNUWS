@@ -28,6 +28,10 @@
 #include "APPNWG4PrimaryGeneratorMessenger.hh"
 #include "HepMCG4AsciiReader.hh"
 #include "HepMCG4PythiaInterface.hh"
+#ifdef G4_USE_CRY
+#include "CRYPrimaryGenerator.hh"
+#endif
+
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
@@ -61,10 +65,18 @@ APPNWG4PrimaryGeneratorAction::APPNWG4PrimaryGeneratorAction()
 #else
   fPythiaGen = 0;
 #endif
+
+#ifdef G4_USE_CRY
+  fCRYGen = new CRYPrimaryGenerator("");
+#else
+  fCRYGen = 0;
+#endif
+
 //  fGentypeMap["particleGun"] = fParticleGun;
   fGentypeMap["gps"] = fParticleGun;
   fGentypeMap["hepmcAscii"] = fHepmcAscii;
   fGentypeMap["pythia"] = fPythiaGen;
+  fGentypeMap["cry"] = fCRYGen;
 
   fMessenger= new APPNWG4PrimaryGeneratorMessenger(this);
 
@@ -83,6 +95,7 @@ APPNWG4PrimaryGeneratorAction::~APPNWG4PrimaryGeneratorAction() {
   if (fParticleGun) delete fParticleGun;
   if (fHepmcAscii) delete fHepmcAscii;
   if (fPythiaGen) delete fPythiaGen;
+  if (fCRYGen) delete fCRYGen;
   delete fMessenger;
 }
 

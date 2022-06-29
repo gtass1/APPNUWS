@@ -45,6 +45,22 @@ include(${Geant4_USE_FILE})
 #include_directories(${PROJECT_SOURCE_DIR}/include)
 
 #----------------------------------------------------------------------------
+# Setup CRY include directories and compile definitions
+# Setup include directory for this project
+#
+option(WITH_CRY "Build with CRY" OFF)
+if (WITH_CRY)
+  add_definitions(-DG4_USE_CRY)
+  include_directories($ENV{CRYHOME}/src)
+  set(LIBCRY
+      $ENV{CRYHOME}/lib/libCRY.a
+  )
+else()
+#  add_definitions(-DG4_USE_CRY=0)
+  set(LIBCRY)
+endif()
+
+#----------------------------------------------------------------------------
 find_package(Boost REQUIRED)
 #include_directories(${BOOST_ROOT}/include)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -148,6 +164,8 @@ target_link_libraries(g4APPNUWS PUBLIC
 #		      gfortran
 #		      EDM4HEP::edm4hep
 #		      podio::podioRootIO
+#		      $ENV{CRYHOME}/lib/libCRY.a
+              ${LIBCRY}
 		      )
 
 #----------------------------------------------------------------------------

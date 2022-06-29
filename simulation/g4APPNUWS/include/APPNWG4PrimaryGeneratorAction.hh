@@ -75,6 +75,7 @@ class APPNWG4PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   G4VPrimaryGenerator* fParticleGun;
   G4VPrimaryGenerator* fHepmcAscii;
   G4VPrimaryGenerator* fPythiaGen;
+  G4VPrimaryGenerator* fCRYGen;
 
   G4VPrimaryGenerator* fCurrentGenerator;
   G4String fCurrentGeneratorName;

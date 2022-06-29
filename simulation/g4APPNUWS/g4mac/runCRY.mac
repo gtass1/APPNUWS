@@ -1,0 +1,56 @@
+# 
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute run1.mac
+#
+# Change the default number of workers (in multi-threading mode) 
+#/run/numberOfWorkers 4
+# set seeds
+/random/setSeeds 575841909 838392975 
+#
+# Initialize kernel
+/run/initialize
+
+/generator/select cry
+
+#
+# Cosmic Ray Generation using CRY: 
+/CRY/input returnNeutrons 0
+/CRY/input returnProtons 0
+/CRY/input returnGammas 0
+/CRY/input returnPions 0
+/CRY/input returnKaons 0
+/CRY/input returnElectrons 1
+/CRY/input returnMuons 1
+/CRY/input date 7-1-2012
+/CRY/input latitude 41.7
+/CRY/input altitude 0
+/CRY/input subboxLength 30
+/CRY/input nParticlesMin 1
+/CRY/input nParticlesMax 2
+#/CRY/input zoffset 10 #in m z in CRY system means y in Geatnt4
+/CRY/update
+/CRY/radialDist 10 m
+/CRY/activeArea 5 0 20 m  # Y is ignored
+#/CRY/debug true
+
+# Magnetic Field
+/field/update
+#/field/setStepperType 4
+#/field/setMinStep 0.1 mm  
+/field/setFieldZ 0.0 tesla
+#/field/setMaxRho 2050.0 mm
+#/field/setField 0.0 0.0 1.0 kG 
+
+#
+#/tracking/verbose 1
+#/run/beamOn 5
+#
+# 1 event with printing hits
+#
+#/vis/modeling/trajectories/create/generic
+#
+/tracking/verbose 0
+#/tracking/verbose 1
+/hits/verbose 0
+#/hits/verbose 2
+/run/beamOn 100
