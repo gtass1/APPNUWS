@@ -115,7 +115,7 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
 //       ((GMCGeantTrack*)ptrBr_trk[k])->SetfMomentum(vec_c);
      }
 
-     if (false && hitCSMTTIsPresent) {
+     if (/*false && */hitCSMTTIsPresent) {
        int nhits = hitscsmtt->size();
 
        for (int k=0;k<nhits;k++) {
