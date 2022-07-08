@@ -16,6 +16,10 @@
     <BranchName>RecoTracksBT</BranchName>
     <RelatedFolder>RecoTracksBT</RelatedFolder>
   </Branch>
+  <Branch>
+    <BranchName>BTTTTracksScatter</BranchName>
+    <RelatedFolder>BTTTTracksScatter</RelatedFolder>
+  </Branch>
 <!--  <Branch>
     <BranchName>RecoDCHits</BranchName>
     <RelatedFolder>RecoDCHHit</RelatedFolder>

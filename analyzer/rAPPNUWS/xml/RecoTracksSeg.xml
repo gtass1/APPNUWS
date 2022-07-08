@@ -13,6 +13,7 @@
    <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
    <Include>
      <IncludeName>TVector3.h</IncludeName>
+<!--      <IncludeName>Math/Vector3D.h</IncludeName> -->
      <IncludeType>global</IncludeType>
    </Include>
    <Include>
@@ -25,7 +26,7 @@
       <FieldComment>Track ID</FieldComment>
       <FieldInitialization>-1</FieldInitialization>  
    </Field>
-   <Field>
+<!--    <Field>
       <FieldName>x0</FieldName>
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
@@ -60,7 +61,22 @@
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
       <FieldComment>Error On the Track Vertex z coord</FieldComment>
+   </Field> -->
+   
+   <Field>
+      <FieldName>pos0</FieldName>
+      <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
+      <FieldComment>Track Vertex coord</FieldComment>
    </Field>
+      <Field>
+      <FieldName>errPos0</FieldName>
+      <FieldType>Double_t</FieldType>
+ <!--     <FieldInitialization>-999.</FieldInitialization>  -->      
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex-1 coordinates</FieldComment>
+   </Field>
+   
    <Field>
       <FieldName>theta</FieldName>
       <FieldType>Double_t</FieldType>
@@ -100,6 +116,7 @@
    <Field>
       <FieldName>mom</FieldName>
       <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
       <FieldComment>Fitted Track Momentum</FieldComment>
    </Field>
    <Field>
@@ -123,12 +140,13 @@
    <Field>
      <FieldName>StateVector</FieldName>
      <FieldType>TVector3</FieldType>
+<!--      <FieldType>ROOT::Math::XYZVector</FieldType> -->
      <ArraySize>variable</ArraySize>
      <InheritTObject>true</InheritTObject>
      <FieldComment>State vectors of the track.</FieldComment>
    </Field>
 
-   <Field>
+<!--    <Field>
       <FieldName>x1</FieldName>
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
@@ -200,7 +218,83 @@
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
       <FieldComment>Error On the Track Vertex-2 z coord</FieldComment>
+   </Field> -->
+
+   <Field>
+      <FieldName>pos1</FieldName>
+      <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
+      <FieldComment>Track Vertex-1 coord</FieldComment>
    </Field>
+      <Field>
+      <FieldName>errPos1</FieldName>
+      <FieldType>Double_t</FieldType>
+ <!--     <FieldInitialization>-999.</FieldInitialization>  -->      
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex-1 coordinates</FieldComment>
+   </Field>   
+   <Field>
+      <FieldName>theta1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>polar angle w.r.t. the beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_theta1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error on thepolar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>phi1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
+   <Field>
+      <FieldName>err_phi1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
+   
+   <Field>
+      <FieldName>pos2</FieldName>
+      <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
+      <FieldComment>Track Vertex-2 coord</FieldComment>
+   </Field>
+      <Field>
+      <FieldName>errPos2</FieldName>
+      <FieldType>Double_t</FieldType>
+ <!--     <FieldInitialization>-999.</FieldInitialization>  -->      
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex-2 coordinates</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>theta2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>polar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_theta2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error on thepolar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>phi2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
+   <Field>
+      <FieldName>err_phi2</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
 
    <Field>
      <FieldName>nhits</FieldName>

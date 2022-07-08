@@ -38,7 +38,20 @@
           <SPFieldInitialization>false</SPFieldInitialization>
           <SPFieldComment>do display</SPFieldComment>
         </SteeringParameterField>
+        <SteeringParameterField>
+          <SPFieldName>trckmatchDistCut</SPFieldName>
+          <SPFieldType>Double_t</SPFieldType>
+          <SPFieldInitialization>100.0</SPFieldInitialization>
+          <SPFieldComment>Maximum distance (in mm) cut to consider possible track segments matching</SPFieldComment>
+        </SteeringParameterField>
+        <SteeringParameterField>
+          <SPFieldName>trckmatchAngleCut</SPFieldName>
+          <SPFieldType>Double_t</SPFieldType>
+          <SPFieldInitialization>20.0</SPFieldInitialization>
+          <SPFieldComment>Maximum angle (in deg) cut to consider possible track segments matching</SPFieldComment>
+        </SteeringParameterField>
       </SteeringParameters>
+
 <!--       <Histogram>
         <HistName>HResidualUnbiased</HistName>
         <HistType>TH2D</HistType>

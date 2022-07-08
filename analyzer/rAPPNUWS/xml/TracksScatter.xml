@@ -1,0 +1,70 @@
+<!--$Id:  $-->
+<!-- <Folder>
+   <FolderName>BTTTTracksScatter</FolderName>
+   <FolderTitle>BT TT Tracks Scatter</FolderTitle> -->
+   <Affiliation>rAPPNUWS</Affiliation>
+   <ArraySize>variable</ArraySize>
+   <Author>
+      <AuthorName>Gianfranco Tassielli</AuthorName>
+   </Author>
+   <FolderVersion>2</FolderVersion>
+   <FolderDescription>Folder class for reconstructed tracks scattering data</FolderDescription>
+   <NoResetByFramework>false</NoResetByFramework>
+   <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
+   <Include>
+     <IncludeName>TVector3.h</IncludeName>
+     <IncludeType>global</IncludeType>
+   </Include>
+   <Include>
+     <IncludeName>TMatrixDSym.h</IncludeName>
+     <IncludeType>global</IncludeType>
+   </Include>
+   <Field>
+      <FieldName>Trk1ID</FieldName>
+      <FieldType>Int_t</FieldType>
+      <FieldComment>First Track segment ID</FieldComment>
+      <FieldInitialization>-1</FieldInitialization>  
+   </Field>
+   <Field>
+      <FieldName>Trk2ID</FieldName>
+      <FieldType>Int_t</FieldType>
+      <FieldComment>Second Track segment ID</FieldComment>
+      <FieldInitialization>-1</FieldInitialization>  
+   </Field>      
+   <Field>
+      <FieldName>pos</FieldName>
+      <FieldType>TVector3</FieldType>
+      <FieldComment>Scattering Vertex coord</FieldComment>
+   </Field>
+      <Field>
+      <FieldName>errPos0</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex coordinates</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>dist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>-1</FieldInitialization>  
+      <FieldComment>ditance between tracks at the matching plane</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_dist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>-1</FieldInitialization>  
+      <FieldComment>Error on ditance between tracks at the matching plane</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>angle</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>-1</FieldInitialization>  
+      <FieldComment>angle between tracks at the matching plane</FieldComment>
+   </Field> 
+   <Field>
+      <FieldName>err_angle</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>-1</FieldInitialization>  
+      <FieldComment>Error on angle between tracks at the matching plane</FieldComment>
+   </Field> 
+
+<!-- </Folder> -->

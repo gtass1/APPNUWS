@@ -54,6 +54,7 @@
 #include "generated/rAPPNUWSRecoTracksTT.h"
 #include "generated/rAPPNUWSRecoTracksBT.h"
 #include "generated/rAPPNUWSGlobalSteering.h"
+#include "generated/rAPPNUWSBTTTTracksScatter.h"
 #include "ROMEiostream.h"
 #include "TVector3.h"
 #include "TMinuit.h"
@@ -74,6 +75,9 @@
 #include "CSMBtracker.hh"
 #include "CSMTTROGeometryHandle.hh"
 #include "CSMBTROGeometryHandle.hh"
+#include "utilFunctions.hh"
+
+#include "CLHEP/Vector/ThreeVector.h"
 
 #include "ConstField.h"
 #include "FieldManager.h"
@@ -100,6 +104,8 @@
 #include <TGeoManager.h>
 #include <TROOT.h>
 #include <memory>
+#include "Math/Point3D.h"
+#include "Math/Vector3D.h"
 
 using namespace genfit;
 
@@ -113,6 +119,7 @@ ClassImp(rAPPNUWSTTrackFit)
 using namespace std;
 
 static const float sclfac=0.1;
+
 //______________________________________________________________________________
 void rAPPNUWSTTrackFit::Init() {
 
@@ -133,10 +140,10 @@ void rAPPNUWSTTrackFit::Init() {
     //mateff->setNoiseBetheBloch(true);
     //mateff->setNoiseCoulomb(true);
 
-    if ( GetSP()->GetDoDisplay() ) {
-        // init event display
-        genfit::EventDisplay* display = genfit::EventDisplay::getInstance();
-    }
+//    if ( GetSP()->GetDoDisplay() ) {
+//        // init event display
+//        genfit::EventDisplay* display = genfit::EventDisplay::getInstance();
+//    }
 
     //disable brems effect, as it is not correct for positron in genfit
 //    mateff->setEnergyLossBrems(false);
@@ -144,6 +151,9 @@ void rAPPNUWSTTrackFit::Init() {
 
     mateff->init(new TGeoMaterialInterface());
     if (GetSP()->GetDebugLevel()>2) { mateff->setDebugLvl(1); }
+
+    distCut=GetSP()->GettrckmatchDistCut();
+    angleCut=GetSP()->GettrckmatchAngleCut()*TMath::DegToRad();
 
     //genfit::MaterialEffects::getInstance()->setNoEffects();
 
@@ -156,7 +166,7 @@ void rAPPNUWSTTrackFit::BeginOfRun() {
 //______________________________________________________________________________
 void rAPPNUWSTTrackFit::Event() {
 
-    printf("\n rAPPNUWSTTrackFit::Event ***** Load event %lld ************************ \n",gAnalyzer->GetCurrentEventNumber());
+    if (gAnalyzer->GetCurrentEventNumber()%100==0) { printf("\n rAPPNUWSTTrackFit::Event ***** Load event %lld ************************ \n",gAnalyzer->GetCurrentEventNumber()); }
 
     fBrHitsCSMTT=gAnalyzer->GetCSMTTHits();
     fBrHitsCSMBT=gAnalyzer->GetCSMBTHits();
@@ -167,11 +177,24 @@ void rAPPNUWSTTrackFit::Event() {
 
     MCFinder();
 
+    for (unsigned int it=0; it<TTftracks.size(); ++it) {
+        delete TTftracks[it];
+    }
+    TTftracks.clear();
+    for (unsigned int it=0; it<BTftracks.size(); ++it) {
+        delete BTftracks[it];
+    }
+    BTftracks.clear();
+    for (unsigned int it=0; it<COMBBTftracks.size(); ++it) {
+        delete COMBBTftracks[it];
+    }
+    COMBBTftracks.clear();
+
     if ( GetSP()->GetDoDisplay() ) {
-        for (int it=0; it<ftracks.size(); ++it) {
-            delete ftracks[it];
-        }
-        ftracks.clear();;
+//        for (int it=0; it<DISPftracks.size(); ++it) {
+//            delete DISPftracks[it];
+//        }
+        DISPftracks.clear();
     }
 
 
@@ -193,8 +216,10 @@ void rAPPNUWSTTrackFit::Event() {
         Fit2(aTrk);
     }
     if ( GetSP()->GetDoDisplay() ) {
-        genfit::EventDisplay::getInstance()->addEvent(ftracks);
+        genfit::EventDisplay::getInstance()->addEvent(DISPftracks);
     }
+
+    FindScatter();
 
 
 }
@@ -260,7 +285,7 @@ void rAPPNUWSTTrackFit::MCFinder(){
         hitvec[trkid-1].push_back(std::pair<double,int >(ahit->GetfGlobalTime(),ihit+nhitsCSMTT));
     }
 
-    std::cout<</*"nhits dch "<<nhitsdch<<*/" CSMTT "<<nhitsCSMTT<<" CSMBT "<<nhitsCSMBT<<std::endl;
+    if (GetSP()->GetDebugLevel()) { std::cout<</*"nhits dch "<<nhitsdch<<*/" CSMTT "<<nhitsCSMTT<<" CSMBT "<<nhitsCSMBT<<std::endl; }
 
     //Store identified tracks
     gAnalyzer->SetRecoTracksSize(nprimary);
@@ -378,11 +403,25 @@ void rAPPNUWSTTrackFit::EndOfRun()
 }
 //______________________________________________________________________________
 void rAPPNUWSTTrackFit::Terminate() {
+
+    for (unsigned int it=0; it<TTftracks.size(); ++it) {
+        delete TTftracks[it];
+    }
+    TTftracks.clear();
+    for (unsigned int it=0; it<BTftracks.size(); ++it) {
+        delete BTftracks[it];
+    }
+    BTftracks.clear();
+    for (unsigned int it=0; it<COMBBTftracks.size(); ++it) {
+        delete COMBBTftracks[it];
+    }
+    COMBBTftracks.clear();
+
     if ( GetSP()->GetDoDisplay() ) {
-        for (int it=0; it<ftracks.size(); ++it) {
-            delete ftracks[it];
-        }
-        ftracks.clear();;
+//        for (int it=0; it<DISPftracks.size(); ++it) {
+//            delete DISPftracks[it];
+//        }
+        DISPftracks.clear();
     }
 }
 
@@ -856,7 +895,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
 
     nhits = aTrack->Getnhits();
     if (nhits < 5) {
-        printf(" ****  !!! Event not reconstructable: number of hits for TT and BT signal track less than 5!\n");
+        if (fDebug>1) printf(" ****  !!! Event %lld not reconstructable: number of hits for TT and BT signal track less than 5!\n",gAnalyzer->GetCurrentEventNumber());
         return false;
     }
 
@@ -951,13 +990,13 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
         if (aTrack->GetdetidAt(ihit)==0) {
 
             rAPPNUWSCSMTTHit *ahit = (rAPPNUWSCSMTTHit*) fBrHitsCSMTT->At(aTrack->GethitindexAt(ihit));
-            addTThit (ahit, ihit, ihit0CSMTT, nhitsCSMTT, fitTrack, nid);
+            addTThit (ahit, ihit, ihit0CSMTT, nhitsCSMTT, fitTrack/*, nid*/);
 
         } else if (aTrack->GetdetidAt(ihit)==1) {
 
             int hitInd = aTrack->GethitindexAt(ihit)-fBrHitsCSMTT->GetEntriesFast();
             rAPPNUWSCSMBTHit *ahit = (rAPPNUWSCSMBTHit*) fBrHitsCSMBT->At(hitInd);
-            addBThit (ahit, ihit, ihit0CSMBT, nhitsCSMBT, fitTrack, nid);
+            addBThit (ahit, ihit, ihit0CSMBT, nhitsCSMBT, fitTrack/*, nid*/);
 
         }
 
@@ -1122,13 +1161,13 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
                         GetHResidualBiased()->Fill(10*fabs(state.getState()(3)),ahit->GetfImpact()-10*fabs(state.getState()(3)));
                     }else*/
                     if(idetid==0){
-                        rAPPNUWSCSMTTHit *ahit = (rAPPNUWSCSMTTHit*) fBrHitsCSMTT->At(aTrack->GethitindexAt(ihit));
+//                        rAPPNUWSCSMTTHit *ahit = (rAPPNUWSCSMTTHit*) fBrHitsCSMTT->At(aTrack->GethitindexAt(ihit));
                         if(fDebug>9) {
                             cout<<idetid<<" "<<ihit<<" track aver "<<state.getState()(3)<<" "<<state.getState()(4)<<" exact mes 0 0 dy,dz not biased "<<resid(0)<<" "<<resid(1)
                             <<" trk xyz ";pos.Print();std::cout<<" mom "<<mom.Y()<<endl;
                         }
                     } else if(idetid==1){
-                        rAPPNUWSCSMBTHit *ahit = (rAPPNUWSCSMBTHit*) fBrHitsCSMBT->At(aTrack->GethitindexAt(ihit));
+//                        rAPPNUWSCSMBTHit *ahit = (rAPPNUWSCSMBTHit*) fBrHitsCSMBT->At(aTrack->GethitindexAt(ihit));
                         if(fDebug>9) {
                             cout<<idetid<<" "<<ihit<<" track aver "<<state.getState()(3)<<" "<<state.getState()(4)<<" exact mes 0 0 dy,dz not biased "<<resid(0)<<" "<<resid(1)
                             <<" trk xyz ";pos.Print();std::cout<<" mom "<<mom.Y()<<endl;
@@ -1170,7 +1209,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
         bool isUp=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMTtracker()->distOut()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isUp=false;
@@ -1197,7 +1247,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
         bool isBt=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMBtracker()->distIn()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isBt=false;
@@ -1210,12 +1271,17 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
 
     }
 
-    aTrack->Setx0(pos.X()/sclfac);
-    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
-    aTrack->Sety0(pos.Y()/sclfac);
-    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
-    aTrack->Setz0(pos.Z()/sclfac);
-    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+//    aTrack->Setx0(pos.X()/sclfac);
+//    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
+//    aTrack->Sety0(pos.Y()/sclfac);
+//    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
+//    aTrack->Setz0(pos.Z()/sclfac);
+//    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+
+    pos*=1.0/sclfac;
+    aTrack->Setpos0(pos);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos0At(ic, sqrt(cov(ic,ic))/sclfac); }
+
     aTrack->Settheta(mom.Theta());
     aTrack->Seterr_theta(0.);
     aTrack->Setphi(mom.Phi());
@@ -1223,15 +1289,24 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
     aTrack->SetMomentum(mom.Mag());
     aTrack->SetErr_Momentum(sigmap);
     aTrack->Setmom(mom);
+//    aTrack->Setmom(ROOT::Math::XYZVector(mom.X(),mom.Y(),mom.Z()) );
     aTrack->Getcov()->ResizeTo(6,6);
     aTrack->Setcov(cov);
 
-    aTrack->Setx1(pos1.X()/sclfac);
-    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
-    aTrack->Sety1(pos1.Y()/sclfac);
-    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
-    aTrack->Setz1(pos1.Z()/sclfac);
-    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
+//    aTrack->Setx1(pos1.X()/sclfac);
+//    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
+//    aTrack->Sety1(pos1.Y()/sclfac);
+//    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
+//    aTrack->Setz1(pos1.Z()/sclfac);
+//    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
+
+    pos1*=1.0/sclfac;
+    aTrack->Setpos1(pos1);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos1At(ic, sqrt(cov1(ic,ic))/sclfac); }
+    aTrack->Settheta(mom1.Theta());
+    aTrack->Seterr_theta(0.);
+    aTrack->Setphi(mom1.Phi());
+    aTrack->Seterr_phi(0.);
 
     //fill final information
     aTrack->Setnhits(nhits);
@@ -1246,8 +1321,9 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
     aTrack->SetngoodhitsTT(ngoodhitsCSMTT);
     aTrack->SetIsFitted(fitstatus);
 
+    COMBBTftracks.push_back(new genfit::Track(fitTrack) );
     if ( GetSP()->GetDoDisplay() ) {
-        ftracks.push_back(new genfit::Track(fitTrack) );
+        DISPftracks.push_back(new genfit::Track(fitTrack) );
     }
     delete fitter;
 
@@ -1257,6 +1333,9 @@ Bool_t rAPPNUWSTTrackFit::Fit2(TObject *tmpTrack) {
 
 //______________________________________________________________________________
 Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
+
+//    std::cout<<"------------ Fit2TT ------------"<<std::endl;
+
     int fDebug=GetSP()->GetDebugLevel();//1;
 
     int trkid=0;
@@ -1267,7 +1346,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
 
     nhits = aTrack->Getnhits();
     if (nhits < 2) {
-        printf(" ****  !!! Event not reconstructable: number of hits for TT signal track less than 2!\n");
+        if (fDebug>1) printf(" ****  !!! Event %lld not reconstructable: number of hits for TT signal track less than 2!\n",gAnalyzer->GetCurrentEventNumber());
         return false;
     }
 
@@ -1349,7 +1428,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
 //        rAPPNUWSRecoTracksTT *aTrack = (rAPPNUWSRecoTracksTT *)tmpTrack;
 //        std::cout<<"Inserting hit i: "<<ihit<<" with n. "<<aTrack->GethitindexAt(ihit)<<std::endl;
         rAPPNUWSCSMTTHit *ahit =(rAPPNUWSCSMTTHit*) fBrHitsCSMTT->At(aTrack->GethitindexAt(ihit));
-        addTThit (ahit, ihit, ihit0CSMTT, nhitsCSMTT, fitTrack, nid);
+        addTThit (ahit, ihit, ihit0CSMTT, nhitsCSMTT, fitTrack/*, nid*/);
 
     }
 
@@ -1549,7 +1628,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
         bool isUp=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMTtracker()->distOut()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isUp=false;
@@ -1576,7 +1666,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
         bool isBt=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isBt=false;
@@ -1585,6 +1686,11 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
         if(isBt){
 //            tof_target=state.getTime();
             state.getPosMomCov(pos1,mom1,cov1);
+//            std::cout<<" pos1 "; pos1.Print();
+//            std::cout<<" mom1 "; mom1.Print();
+//            TVector3 tmpmom=mom1;
+//            tmpmom.SetMag(1.0);
+//            std::cout<<" dir1 "; tmpmom.Print();
         }
 
         //extrapolate to Upper face of the Bottom Tracker
@@ -1592,7 +1698,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
         bool isBT=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMBtracker()->distOut()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isBT=false;
@@ -1601,16 +1718,26 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
         if(isBT){
 //            tof_target=state.getTime();
             state.getPosMomCov(pos2,mom2,cov2);
+//            std::cout<<" pos2 "; pos2.Print();
+//            std::cout<<" mom2 "; mom2.Print();
+//            TVector3 tmpmom=mom2;
+//            tmpmom.SetMag(1.0);
+//            std::cout<<" dir2 "; tmpmom.Print();
         }
 
     }
 
-    aTrack->Setx0(pos.X()/sclfac);
-    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
-    aTrack->Sety0(pos.Y()/sclfac);
-    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
-    aTrack->Setz0(pos.Z()/sclfac);
-    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+//    aTrack->Setx0(pos.X()/sclfac);
+//    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
+//    aTrack->Sety0(pos.Y()/sclfac);
+//    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
+//    aTrack->Setz0(pos.Z()/sclfac);
+//    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+
+    pos*=1.0/sclfac;
+    aTrack->Setpos0(pos);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos0At(ic, sqrt(cov(ic,ic))/sclfac); }
+
     aTrack->Settheta(mom.Theta());
     aTrack->Seterr_theta(0.);
     aTrack->Setphi(mom.Phi());
@@ -1618,22 +1745,39 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
     aTrack->SetMomentum(mom.Mag());
     aTrack->SetErr_Momentum(sigmap);
     aTrack->Setmom(mom);
+//    aTrack->Setmom(ROOT::Math::XYZVector(mom.X(),mom.Y(),mom.Z()) );
     aTrack->Getcov()->ResizeTo(6,6);
     aTrack->Setcov(cov);
 
-    aTrack->Setx1(pos1.X()/sclfac);
-    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
-    aTrack->Sety1(pos1.Y()/sclfac);
-    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
-    aTrack->Setz1(pos1.Z()/sclfac);
-    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
+//    aTrack->Setx1(pos1.X()/sclfac);
+//    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
+//    aTrack->Sety1(pos1.Y()/sclfac);
+//    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
+//    aTrack->Setz1(pos1.Z()/sclfac);
+//    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
 
-    aTrack->Setx2(pos2.X()/sclfac);
-    aTrack->Seterr_x2(sqrt(cov2(0,0))/sclfac);
-    aTrack->Sety2(pos2.Y()/sclfac);
-    aTrack->Seterr_y2(sqrt(cov2(1,1))/sclfac);
-    aTrack->Setz2(pos2.Z()/sclfac);
-    aTrack->Seterr_z2(sqrt(cov2(2,2))/sclfac);
+    pos1*=1.0/sclfac;
+    aTrack->Setpos1(pos1);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos1At(ic, sqrt(cov1(ic,ic))/sclfac); }
+    aTrack->Settheta1(mom1.Theta());
+    aTrack->Seterr_theta1(0.);
+    aTrack->Setphi1(mom1.Phi());
+    aTrack->Seterr_phi1(0.);
+
+//    aTrack->Setx2(pos2.X()/sclfac);
+//    aTrack->Seterr_x2(sqrt(cov2(0,0))/sclfac);
+//    aTrack->Sety2(pos2.Y()/sclfac);
+//    aTrack->Seterr_y2(sqrt(cov2(1,1))/sclfac);
+//    aTrack->Setz2(pos2.Z()/sclfac);
+//    aTrack->Seterr_z2(sqrt(cov2(2,2))/sclfac);
+
+    pos2*=1.0/sclfac;
+    aTrack->Setpos2(pos2);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos2At(ic, sqrt(cov2(ic,ic))/sclfac); }
+    aTrack->Settheta2(mom2.Theta());
+    aTrack->Seterr_theta2(0.);
+    aTrack->Setphi2(mom2.Phi());
+    aTrack->Seterr_phi2(0.);
 
     //fill final information
     aTrack->Setnhits(nhits);//nhitsCSMTT
@@ -1642,8 +1786,9 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
     aTrack->Setdof(fitStatus->getNdf());
     aTrack->SetIsFitted(fitstatus);
 
+    TTftracks.push_back(new genfit::Track(fitTrack) );
     if ( GetSP()->GetDoDisplay() ) {
-        ftracks.push_back(new genfit::Track(fitTrack) );
+        DISPftracks.push_back(new genfit::Track(fitTrack) );
     }
     delete fitter;
 
@@ -1652,6 +1797,9 @@ Bool_t rAPPNUWSTTrackFit::Fit2TT(TObject *tmpTrack) {
 
 //______________________________________________________________________________
 Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
+
+//    std::cout<<"------------ Fit2BT ------------"<<std::endl;
+
     int fDebug=GetSP()->GetDebugLevel();//1;
 
     int trkid=0;
@@ -1662,7 +1810,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
 
     nhits = aTrack->Getnhits();
     if (nhits < 2) {
-        printf(" ****  !!! Event not reconstructable: number of hits for BT signal track less than 2!\n");
+        if (fDebug>1) printf(" ****  !!! Event %lld not reconstructable: number of hits for BT signal track less than 2!\n",gAnalyzer->GetCurrentEventNumber());
         return false;
     }
 
@@ -1744,7 +1892,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
 //        rAPPNUWSRecoTracksBT *aTrack = (rAPPNUWSRecoTracksBT *)tmpTrack;
 //        std::cout<<"Inserting hit i: "<<ihit<<" with n. "<<aTrack->GethitindexAt(ihit)<<std::endl;
         rAPPNUWSCSMBTHit *ahit =(rAPPNUWSCSMBTHit*) fBrHitsCSMBT->At(aTrack->GethitindexAt(ihit));
-        addBThit (ahit, ihit, ihit0CSMBT, nhitsCSMBT, fitTrack, nid);
+        addBThit (ahit, ihit, ihit0CSMBT, nhitsCSMBT, fitTrack/*, nid*/);
 
     }
 
@@ -1944,7 +2092,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
         bool isUp=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distOut()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMBtracker()->distOut()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isUp=false;
@@ -1971,7 +2130,18 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
         bool isBt=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMBtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMBtracker()->distIn()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isBt=false;
@@ -1980,14 +2150,30 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
         if(isBt){
 //            tof_target=state.getTime();
             state.getPosMomCov(pos1,mom1,cov1);
-        }
+//            std::cout<<" pos1 "; pos1.Print();
+//            std::cout<<" mom1 "; mom1.Print();
+//            TVector3 tmpmom=mom1;
+//            tmpmom.SetMag(1.0);
+//            std::cout<<" dir1 "; tmpmom.Print();
+       }
 
         //extrapolate to Bottom face of the Upper Tracker
         rep->setPropDir(-1);
         bool isTT=true;
         try{
             state=fi->getFittedState(true);
-            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
         }catch(Exception& e){
             if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
             isTT=false;
@@ -1996,16 +2182,26 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
         if(isTT){
 //            tof_target=state.getTime();
             state.getPosMomCov(pos2,mom2,cov2);
+//            std::cout<<" pos2 "; pos2.Print();
+//            std::cout<<" mom2 "; mom2.Print();
+//            TVector3 tmpmom=mom2;
+//            tmpmom.SetMag(1.0);
+//            std::cout<<" dir2 "; tmpmom.Print();
         }
 
     }
 
-    aTrack->Setx0(pos.X()/sclfac);
-    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
-    aTrack->Sety0(pos.Y()/sclfac);
-    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
-    aTrack->Setz0(pos.Z()/sclfac);
-    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+//    aTrack->Setx0(pos.X()/sclfac);
+//    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
+//    aTrack->Sety0(pos.Y()/sclfac);
+//    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
+//    aTrack->Setz0(pos.Z()/sclfac);
+//    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+
+    pos*=1.0/sclfac;
+    aTrack->Setpos0(pos);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos0At(ic, sqrt(cov(ic,ic))/sclfac); }
+
     aTrack->Settheta(mom.Theta());
     aTrack->Seterr_theta(0.);
     aTrack->Setphi(mom.Phi());
@@ -2013,22 +2209,39 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
     aTrack->SetMomentum(mom.Mag());
     aTrack->SetErr_Momentum(sigmap);
     aTrack->Setmom(mom);
+//    aTrack->Setmom(ROOT::Math::XYZVector(mom.X(),mom.Y(),mom.Z()) );
     aTrack->Getcov()->ResizeTo(6,6);
     aTrack->Setcov(cov);
 
-    aTrack->Setx1(pos1.X()/sclfac);
-    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
-    aTrack->Sety1(pos1.Y()/sclfac);
-    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
-    aTrack->Setz1(pos1.Z()/sclfac);
-    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
+//    aTrack->Setx1(pos1.X()/sclfac);
+//    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
+//    aTrack->Sety1(pos1.Y()/sclfac);
+//    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
+//    aTrack->Setz1(pos1.Z()/sclfac);
+//    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
 
-    aTrack->Setx2(pos2.X()/sclfac);
-    aTrack->Seterr_x2(sqrt(cov2(0,0))/sclfac);
-    aTrack->Sety2(pos2.Y()/sclfac);
-    aTrack->Seterr_y2(sqrt(cov2(1,1))/sclfac);
-    aTrack->Setz2(pos2.Z()/sclfac);
-    aTrack->Seterr_z2(sqrt(cov2(2,2))/sclfac);
+    pos1*=1.0/sclfac;
+    aTrack->Setpos1(pos1);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos1At(ic, sqrt(cov1(ic,ic))/sclfac); }
+    aTrack->Settheta1(mom1.Theta());
+    aTrack->Seterr_theta1(0.);
+    aTrack->Setphi1(mom1.Phi());
+    aTrack->Seterr_phi1(0.);
+
+//    aTrack->Setx2(pos2.X()/sclfac);
+//    aTrack->Seterr_x2(sqrt(cov2(0,0))/sclfac);
+//    aTrack->Sety2(pos2.Y()/sclfac);
+//    aTrack->Seterr_y2(sqrt(cov2(1,1))/sclfac);
+//    aTrack->Setz2(pos2.Z()/sclfac);
+//    aTrack->Seterr_z2(sqrt(cov2(2,2))/sclfac);
+
+    pos2*=1.0/sclfac;
+    aTrack->Setpos2(pos2);
+    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos2At(ic, sqrt(cov2(ic,ic))/sclfac); }
+    aTrack->Settheta2(mom2.Theta());
+    aTrack->Seterr_theta2(0.);
+    aTrack->Setphi2(mom2.Phi());
+    aTrack->Seterr_phi2(0.);
 
     //fill final information
     aTrack->Setnhits(nhits);//nhitsCSMBT
@@ -2037,8 +2250,9 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
     aTrack->Setdof(fitStatus->getNdf());
     aTrack->SetIsFitted(fitstatus);
 
+    BTftracks.push_back(new genfit::Track(fitTrack));
     if ( GetSP()->GetDoDisplay() ) {
-        ftracks.push_back(new genfit::Track(fitTrack));
+        DISPftracks.push_back(new genfit::Track(fitTrack));
     }
 
     delete fitter;
@@ -2047,7 +2261,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
 }
 
 //______________________________________________________________________________
-void rAPPNUWSTTrackFit::addTThit (rAPPNUWSCSMTTHit *ahit, int &ihit, int &ihit0, int &nhits, Track &fitTrack, int &nid) {
+void rAPPNUWSTTrackFit::addTThit (rAPPNUWSCSMTTHit *ahit, int &ihit, int &ihit0, int &nhits, Track &fitTrack/*, int &nid*/) {
     int fDebug=GetSP()->GetDebugLevel();//1;
 
 //    rAPPNUWSRecoTracksTT *aTrack = (rAPPNUWSRecoTracksTT *)tmpTrack;
@@ -2109,7 +2323,7 @@ void rAPPNUWSTTrackFit::addTThit (rAPPNUWSCSMTTHit *ahit, int &ihit, int &ihit0,
 }
 
 //______________________________________________________________________________
-void rAPPNUWSTTrackFit::addBThit (rAPPNUWSCSMBTHit *ahit, int &ihit, int &ihit0, int &nhits, Track &fitTrack, int &nid) {
+void rAPPNUWSTTrackFit::addBThit (rAPPNUWSCSMBTHit *ahit, int &ihit, int &ihit0, int &nhits, Track &fitTrack/*, int &nid*/) {
     int fDebug=GetSP()->GetDebugLevel();//1;
 
 //    rAPPNUWSRecoTracksBT *aTrack = (rAPPNUWSRecoTracksBT *)tmpTrack;
@@ -2168,5 +2382,221 @@ void rAPPNUWSTTrackFit::addBThit (rAPPNUWSCSMBTHit *ahit, int &ihit, int &ihit0,
         cout<<std::endl;
     }
 
+
+}
+
+void rAPPNUWSTTrackFit::FindScatter() {
+
+//    printf("\n rAPPNUWSTTrackFit::FindScatter ***** event %lld ************************ \n",gAnalyzer->GetCurrentEventNumber());
+
+    std::map<int,int> trcksmatch; //Key is BT track id, second is TT track id
+    std::vector< std::pair<double,double> > trcksmatchVals;
+
+    matchTracks(trcksmatch, trcksmatchVals);
+
+    gAnalyzer->SetBTTTTracksScatterSize(trcksmatch.size());
+
+    for (std::map<int,int>::iterator it=trcksmatch.begin(); it!=trcksmatch.end(); ++it) {
+//      std::cout <<"Tracks match found between BT at TT tracks: "<< it->first << " => " << it->second << std::endl;
+
+      rAPPNUWSRecoTracksTT *aTrkTT = gAnalyzer->GetRecoTracksTTAt(it->second);
+      CLHEP::Hep3Vector posTT1 ( aTrkTT->Getpos1()->X(), aTrkTT->Getpos1()->Y(), aTrkTT->Getpos1()->Z() );
+//      Double_t *errPosTT1 = aTrkTT->GeterrPos1();
+      TVector3 tmpdirTT1;
+      tmpdirTT1.SetMagThetaPhi( 1.0, aTrkTT->Gettheta1(), aTrkTT->Getphi1() );
+      CLHEP::Hep3Vector dirTT1 ( tmpdirTT1.X(), tmpdirTT1.Y(), tmpdirTT1.Z() );
+//      dirTT1.setRhoPhiTheta( 1.0, aTrkTT->Getphi1(), aTrkTT->Gettheta1() );
+
+//      std::cout<<"TT dir1 (TVector3) ";tmpdirTT1.Print();
+//      std::cout<<"TT dir1 (Hep3Vector) "<<dirTT1<<std::endl;
+
+      rAPPNUWSRecoTracksBT *aTrkBT = gAnalyzer->GetRecoTracksBTAt(it->first);
+      CLHEP::Hep3Vector posBT0( aTrkBT->Getpos0()->X(), aTrkBT->Getpos0()->Y(), aTrkBT->Getpos0()->Z() );
+//      Double_t *errPosBT0 = aTrkBT->GeterrPos0();
+      TVector3 tmpdirBT0;
+      tmpdirBT0.SetMagThetaPhi( 1.0, aTrkBT->Gettheta(), aTrkBT->Getphi() );
+      CLHEP::Hep3Vector dirBT0 ( tmpdirBT0.X(), tmpdirBT0.Y(), tmpdirBT0.Z() );
+//      dirBT0.setRhoPhiTheta( 1.0, aTrkBT->Getphi(), aTrkBT->Gettheta() );
+
+
+      // Step is not a point. Calculate the distance between two lines.
+      TwoLinePCA pca( posTT1, dirTT1, posBT0, dirBT0);
+      if ( !pca.closeToParallel() ) {
+          CLHEP::Hep3Vector const& p2 = pca.point2();
+          //double hit_dca_l = pca.dca();
+          CLHEP::Hep3Vector const& p1 = pca.point1();
+
+//          std::cout<<"Intersection point: 1 "<<p1<<" 2 "<<p2<<std::endl;
+//          std::cout<<"match id "<<itrckm<<" match dist "<<trcksmatchVals.at(itrckm).first<<" angle "<<trcksmatchVals.at(itrckm).second<<std::endl;
+
+          int itrckm = std::distance(trcksmatch.begin(), it);
+          rAPPNUWSBTTTTracksScatter *aBTTTmtch = gAnalyzer->GetBTTTTracksScatterAt(itrckm);
+          aBTTTmtch->SetTrk1ID(it->first);
+          aBTTTmtch->SetTrk2ID(it->second);
+          aBTTTmtch->Setpos( TVector3( (p1.x()+p2.x())*0.5,  (p1.y()+p2.y())*0.5,  (p1.z()+p2.z())*0.5 ) );
+          aBTTTmtch->Setdist(trcksmatchVals.at(itrckm).first);
+          aBTTTmtch->Setangle(trcksmatchVals.at(itrckm).second);
+
+      }
+
+    }
+
+//    TVector3 *posTT[3], *posBT[3];
+//    Double_t *errPosTT[3], *errPosBT[3];
+//    TVector3 dirTT[3], dirBT[3];
+//
+//    std::cout<<"------------------- TT -------------------"<<std::endl;
+//    for( int iTT=0; iTT<gAnalyzer->GetRecoTracksTTSize(); ++iTT ){
+//
+//        rAPPNUWSRecoTracksTT *aTrkTT = gAnalyzer->GetRecoTracksTTAt(iTT);
+//
+//        if ( aTrkTT->GetIsFitted() ) {
+//
+//            double ttchi2n = aTrkTT->Getchi2()/((double)aTrkTT->Getdof());
+//            if (ttchi2n>1e-6&&ttchi2n<20) {
+//                //                    ROOT::Math::XYZPoint ttx0( aTrkTT->Getx0(), aTrkTT->Gety0(), aTrkTT->Getz0() );
+//                //                    ROOT::Math::XYZVector ttm0( aTrkTT->Getx0(), aTrkTT->Gety0(), aTrkTT->Getz0() );
+//
+//                posTT[0] = aTrkTT->Getpos0();
+//                errPosTT[0] = aTrkTT->GeterrPos0();
+//                dirTT[0].SetMagThetaPhi( 1.0, aTrkTT->Gettheta(), aTrkTT->Getphi() );
+//
+//                posTT[1] = aTrkTT->Getpos1();
+//                errPosTT[1] = aTrkTT->GeterrPos1();
+//                dirTT[1].SetMagThetaPhi( 1.0, aTrkTT->Gettheta1(), aTrkTT->Getphi1() );
+//
+//                posTT[2] = aTrkTT->Getpos2();
+//                errPosTT[2] = aTrkTT->GeterrPos2();
+//                dirTT[2].SetMagThetaPhi( 1.0, aTrkTT->Gettheta2(), aTrkTT->Getphi2() );
+//
+//                std::cout<<"Pos0 "; posTT[0]->Print();
+//                std::cout<<"Dir0 "; dirTT[0].Print();
+//                std::cout<<"Pos1 "; posTT[1]->Print();
+//                std::cout<<"Dir1 "; dirTT[1].Print();
+//                std::cout<<"Pos2 "; posTT[2]->Print();
+//                std::cout<<"Dir2 "; dirTT[2].Print();
+//            }
+//        }
+//    }
+//
+//std::cout<<"------------------- BT -------------------"<<std::endl;
+//    for(int i=0;i<gAnalyzer->GetRecoTracksBTSize();i++){
+//        rAPPNUWSRecoTracksBT *aTrkBT = gAnalyzer->GetRecoTracksBTAt(i);
+//        if ( aTrkBT->GetIsFitted() ) {
+//            double ttchi2n = aTrkBT->Getchi2()/((double)aTrkBT->Getdof());
+//            if (ttchi2n>1e-6&&ttchi2n<20) {
+//                posBT[0] = aTrkBT->Getpos0();
+//                errPosBT[0] = aTrkBT->GeterrPos0();
+//                dirBT[0].SetMagThetaPhi( 1.0, aTrkBT->Gettheta(), aTrkBT->Getphi() );
+//
+//                posBT[1] = aTrkBT->Getpos1();
+//                errPosBT[1] = aTrkBT->GeterrPos1();
+//                dirBT[1].SetMagThetaPhi( 1.0, aTrkBT->Gettheta1(), aTrkBT->Getphi1() );
+//
+//                posBT[2] = aTrkBT->Getpos2();
+//                errPosBT[2] = aTrkBT->GeterrPos2();
+//                dirBT[2].SetMagThetaPhi( 1.0, aTrkBT->Gettheta2(), aTrkBT->Getphi2() );
+//
+//                std::cout<<"Pos0 "; posBT[0]->Print();
+//                std::cout<<"Dir0 "; dirBT[0].Print();
+//                std::cout<<"Pos1 "; posBT[1]->Print();
+//                std::cout<<"Dir1 "; dirBT[1].Print();
+//                std::cout<<"Pos2 "; posBT[2]->Print();
+//                std::cout<<"Dir2 "; dirBT[2].Print();
+//
+//            }
+//        }
+//    }
+//
+//    for(int i=0;i<gAnalyzer->GetRecoTracksSize();i++){
+//        rAPPNUWSRecoTracks *aTrk = gAnalyzer->GetRecoTracksAt(i);
+//    }
+
+
+}
+
+void rAPPNUWSTTrackFit::matchTracks( std::map<int,int> &trckmatch, std::vector< std::pair<double,double> > &trckmatchVals ) {
+
+    TVector3 *posTT[3], *posBT[3];
+    Double_t *errPosTT[3], *errPosBT[3];
+    TVector3 dirTT[3], dirBT[3];
+
+    for( int iTT=0; iTT<gAnalyzer->GetRecoTracksTTSize(); ++iTT ){
+
+//        trckmatch[iTT]=-1;
+
+        rAPPNUWSRecoTracksTT *aTrkTT = gAnalyzer->GetRecoTracksTTAt(iTT);
+
+        if ( aTrkTT->GetIsFitted() ) {
+
+            double ttchi2n = aTrkTT->Getchi2()/((double)aTrkTT->Getdof());
+            if (ttchi2n>1e-6&&ttchi2n<20) {
+                //                    ROOT::Math::XYZPoint ttx0( aTrkTT->Getx0(), aTrkTT->Gety0(), aTrkTT->Getz0() );
+                //                    ROOT::Math::XYZVector ttm0( aTrkTT->Getx0(), aTrkTT->Gety0(), aTrkTT->Getz0() );
+
+//                posTT[0] = aTrkTT->Getpos0();
+//                errPosTT[0] = aTrkTT->GeterrPos0();
+//                dirTT[0].SetMagThetaPhi( 1.0, aTrkTT->Gettheta(), aTrkTT->Getphi() );
+//
+//                posTT[1] = aTrkTT->Getpos1();
+//                errPosTT[1] = aTrkTT->GeterrPos1();
+//                dirTT[1].SetMagThetaPhi( 1.0, aTrkTT->Gettheta1(), aTrkTT->Getphi1() );
+
+                posTT[2] = aTrkTT->Getpos2();
+                errPosTT[2] = aTrkTT->GeterrPos2();
+                dirTT[2].SetMagThetaPhi( 1.0, aTrkTT->Gettheta2(), aTrkTT->Getphi2() );
+
+                double distMatch=1e10, angleMatch=0.0;
+                int iBTmatch=-1;
+                for(int iBT=0; iBT<gAnalyzer->GetRecoTracksBTSize(); ++iBT){
+
+//                    if (trckmatch[iTT]==iBT) { continue; }
+                    if ( trckmatch.find(iBT) != trckmatch.end() ) { continue; }
+
+                    rAPPNUWSRecoTracksBT *aTrkBT = gAnalyzer->GetRecoTracksBTAt(iBT);
+                    if ( aTrkBT->GetIsFitted() ) {
+                        double ttchi2n = aTrkBT->Getchi2()/((double)aTrkBT->Getdof());
+                        if (ttchi2n>1e-6&&ttchi2n<20) {
+                            posBT[0] = aTrkBT->Getpos0();
+                            errPosBT[0] = aTrkBT->GeterrPos0();
+                            dirBT[0].SetMagThetaPhi( 1.0, aTrkBT->Gettheta(), aTrkBT->Getphi() );
+
+//                            posBT[1] = aTrkBT->Getpos1();
+//                            errPosBT[1] = aTrkBT->GeterrPos1();
+//                            dirBT[1].SetMagThetaPhi( 1.0, aTrkBT->Gettheta1(), aTrkBT->Getphi1() );
+//
+//                            posBT[2] = aTrkBT->Getpos2();
+//                            errPosBT[2] = aTrkBT->GeterrPos2();
+//                            dirBT[2].SetMagThetaPhi( 1.0, aTrkBT->Gettheta2(), aTrkBT->Getphi2() );
+
+                            double distTmp=(*posTT[2]-*posBT[0]).Mag();
+                            double angleTmp=dirTT[2].Angle(dirBT[0]);
+
+                            if (GetSP()->GetDebugLevel()>1) {
+                                std::cout<<"Track segments match checking: dist "<<distTmp<<" angle "<<angleTmp<<std::endl;
+                            }
+
+                            if ( angleTmp<angleCut && distTmp<distCut ) {
+                                if ( distTmp<distMatch ) {
+                                    distMatch=distTmp;
+                                    angleMatch=angleTmp;
+//                                    trckmatch[iTT]=iBT;
+                                    iBTmatch=iBT;
+                                }
+                            }
+
+                        }
+                    }
+                }
+                if ( iBTmatch>-1 ) {
+                    trckmatch[iBTmatch]=iTT;
+                    trckmatchVals.push_back( std::pair<double,double>(distMatch,angleMatch) );
+                }
+
+            }
+        }
+
+//        if (trckmatch[iTT]==-1) { trckmatch.erase(iTT); }
+    }
 
 }

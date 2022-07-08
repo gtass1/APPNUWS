@@ -164,6 +164,11 @@
             <Active>true</Active>
             <Read>true</Read>
           </Branch>
+          <Branch>
+            <BranchName>BTTTTracksScatter</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
         </Tree>
       </Trees>
 
@@ -354,6 +359,16 @@
             <!-- do display -->
             <SPName>DoDisplay</SPName>
             <SPValue>false</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Maximum distance (in mm) cut to consider possible track segments matching -->
+            <SPName>trckmatchDistCut</SPName>
+            <SPValue>100</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Maximum angle (in deg) cut to consider possible track segments matching -->
+            <SPName>trckmatchAngleCut</SPName>
+            <SPValue>20</SPValue>
           </SteeringParameterField>
         </Task>
       </Tasks>

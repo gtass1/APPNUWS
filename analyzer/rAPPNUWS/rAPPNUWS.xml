@@ -19,6 +19,7 @@
 <!--  <!ENTITY RecoTracksBT         SYSTEM "xml/RecoTracksBT.xml"> 
   <!ENTITY RecoTracksTT         SYSTEM "xml/RecoTracksTT.xml"> -->
   <!ENTITY RecoTracksSeg         SYSTEM "xml/RecoTracksSeg.xml"> 
+  <!ENTITY TracksScatter         SYSTEM "xml/TracksScatter.xml"> 
   <!ENTITY rAPPNUWSMain            SYSTEM "xml/rAPPNUWSMain.xml"> 
   <!ENTITY sim                SYSTEM "xml/sim.xml">
   <!ENTITY hits               SYSTEM "xml/hits.xml">
@@ -108,6 +109,11 @@
         <FolderName>RecoTracksTT</FolderName>
         <FolderTitle>RecoTracksTT</FolderTitle>
         &RecoTracksSeg;
+      </Folder>
+      <Folder>
+        <FolderName>BTTTTracksScatter</FolderName>
+        <FolderTitle>BT TT Tracks Scatter</FolderTitle>
+        &TracksScatter;
       </Folder>
     </Folder>    
   </Folders>

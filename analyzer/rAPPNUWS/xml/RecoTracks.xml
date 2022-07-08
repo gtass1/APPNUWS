@@ -25,7 +25,7 @@
       <FieldComment>Track ID</FieldComment>
       <FieldInitialization>-1</FieldInitialization>  
    </Field>
-   <Field>
+<!--    <Field>
       <FieldName>x0</FieldName>
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
@@ -60,7 +60,22 @@
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
       <FieldComment>Error On the Track Vertex z coord</FieldComment>
+   </Field> -->
+      
+   <Field>
+      <FieldName>pos0</FieldName>
+      <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
+      <FieldComment>Track Vertex coord</FieldComment>
    </Field>
+      <Field>
+      <FieldName>errPos0</FieldName>
+      <FieldType>Double_t</FieldType>
+ <!--     <FieldInitialization>-999.</FieldInitialization>  -->      
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex coordinates</FieldComment>
+   </Field>
+   
    <Field>
       <FieldName>theta</FieldName>
       <FieldType>Double_t</FieldType>
@@ -134,7 +149,7 @@
      <FieldComment>State vectors of the track.</FieldComment>
    </Field>
 
-   <Field>
+<!--    <Field>
       <FieldName>x1</FieldName>
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
@@ -169,7 +184,46 @@
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
       <FieldComment>Error On the Track Vertex-1 z coord</FieldComment>
+   </Field> -->
+
+   
+   <Field>
+      <FieldName>pos1</FieldName>
+      <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
+      <FieldComment>Track Vertex-1 coord</FieldComment>
    </Field>
+      <Field>
+      <FieldName>errPos1</FieldName>
+      <FieldType>Double_t</FieldType>
+ <!--     <FieldInitialization>-999.</FieldInitialization>  -->      
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex-1 coordinates</FieldComment>
+   </Field>   
+   <Field>
+      <FieldName>theta1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>polar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_theta1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error on thepolar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>phi1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
+   <Field>
+      <FieldName>err_phi1</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
 
    <Field>
      <FieldName>nhits</FieldName>
