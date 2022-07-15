@@ -37,7 +37,7 @@
       <FieldComment>Scattering Vertex coord</FieldComment>
    </Field>
       <Field>
-      <FieldName>errPos0</FieldName>
+      <FieldName>errPos</FieldName>
       <FieldType>Double_t</FieldType>
       <ArraySize>3</ArraySize>
       <FieldComment>Error On the Track Vertex coordinates</FieldComment>

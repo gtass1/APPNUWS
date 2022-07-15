@@ -1,0 +1,60 @@
+<!--$Id:  $-->
+<Folder>
+   <FolderName>PreTomography</FolderName>
+   <FolderTitle>Pre Tomography data</FolderTitle>
+   <Affiliation>rAPPNUWS</Affiliation>
+   <ArraySize>variable</ArraySize>
+   <Author>
+      <AuthorName>Gianfranco Tassielli</AuthorName>
+   </Author>
+   <FolderVersion>2</FolderVersion>
+   <FolderDescription>Folder class for rough tonmography data</FolderDescription>
+   <NoResetByFramework>false</NoResetByFramework>
+   <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
+<!--    <Include>
+     <IncludeName>TVector3.h</IncludeName>
+     <IncludeType>global</IncludeType>
+   </Include>
+   <Include>
+     <IncludeName>TMatrixDSym.h</IncludeName>
+     <IncludeType>global</IncludeType>
+   </Include> -->
+      
+<!--    <Field>
+      <FieldName>hitId</FieldName>
+      <FieldType>Int_t</FieldType>
+      <ArraySize>3</ArraySize>
+      <FieldComment>Tomography map coordinates Ids </FieldComment>
+   </Field> -->
+   <Field>
+      <FieldName>hitId</FieldName>
+      <FieldType>ULong_t</FieldType>
+      <FieldInitialization>0</FieldInitialization>  
+      <FieldComment>Tomography map coordinates Ids </FieldComment>
+   </Field>
+   <Field>
+      <FieldName>hitPerVoxel</FieldName>
+      <FieldType>Int_t</FieldType>
+      <FieldInitialization>0</FieldInitialization>  
+      <FieldComment>hit map numtiplicity</FieldComment>
+   </Field>   
+   <Field>
+      <FieldName>meantheta</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>mean scattering angle related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>sigmatheta</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>sigma of the scattering angles related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>alltheta</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>vector</ArraySize>
+      <FieldComment>[hitPerVoxel] all scattering angles related to the voxel</FieldComment>
+   </Field>
+
+</Folder>

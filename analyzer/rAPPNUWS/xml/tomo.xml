@@ -1,0 +1,13 @@
+<!-- $Id$ -->
+<Tree>
+
+  <TreeName>TomoData</TreeName>
+  <TreeTitle>TomoData</TreeTitle>
+  <TreeDescription>Container for Tomography Data</TreeDescription>
+
+  <Branch>
+    <BranchName>PreTomography</BranchName>
+    <RelatedFolder>PreTomography</RelatedFolder>
+  </Branch>
+
+</Tree>

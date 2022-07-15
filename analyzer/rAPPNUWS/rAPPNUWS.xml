@@ -19,11 +19,14 @@
 <!--  <!ENTITY RecoTracksBT         SYSTEM "xml/RecoTracksBT.xml"> 
   <!ENTITY RecoTracksTT         SYSTEM "xml/RecoTracksTT.xml"> -->
   <!ENTITY RecoTracksSeg         SYSTEM "xml/RecoTracksSeg.xml"> 
-  <!ENTITY TracksScatter         SYSTEM "xml/TracksScatter.xml"> 
+  <!ENTITY TracksScatter         SYSTEM "xml/TracksScatter.xml">
+  <!ENTITY RecoTomography           SYSTEM "xml/RecoTomography.xml">
+  <!ENTITY PreTomography           SYSTEM "xml/PreTomography.xml">
   <!ENTITY rAPPNUWSMain            SYSTEM "xml/rAPPNUWSMain.xml"> 
   <!ENTITY sim                SYSTEM "xml/sim.xml">
   <!ENTITY hits               SYSTEM "xml/hits.xml">
   <!ENTITY reco               SYSTEM "xml/reco.xml">
+  <!ENTITY tomo               SYSTEM "xml/tomo.xml">
 <!--   <!ENTITY raws               SYSTEM "xml/raws.xml">  -->
   <!--User Makefile-->
   <!ENTITY DictionaryHeaders  SYSTEM "xml/DictionaryHeaders.xml">
@@ -115,7 +118,14 @@
         <FolderTitle>BT TT Tracks Scatter</FolderTitle>
         &TracksScatter;
       </Folder>
-    </Folder>    
+    </Folder>
+    <Folder>
+      <FolderName>TomoData</FolderName>
+      <FolderTitle>TomoData</FolderTitle>
+      <Affiliation>rAPPNUWS</Affiliation>
+      <FolderDescription>Tomography related folder.</FolderDescription>
+      &PreTomography;
+    </Folder>
   </Folders>
   
   <!--TASKS-->
@@ -261,7 +271,8 @@
 	<HistTitle>y_pixely_trk distribution</HistTitle>
       </Histogram>
     </Task>   -->
-     &TrackFit; 
+     &TrackFit;
+     &RecoTomography;
 <!--     <Task>
       <TaskName>WaveformAnalysis</TaskName>    
     </Task> -->
@@ -292,8 +303,11 @@
 <!--     <Task>
       <TaskName>WaveformAnalysis</TaskName>
     </Task>     -->
-     <Task>
+    <Task>
       <TaskName>TrackFit</TaskName>
+    </Task>
+    <Task>
+      <TaskName>RecoTomography</TaskName>
     </Task>
 <!--     <Task>
       <TaskName>TrackFitCDCH</TaskName>
@@ -306,6 +320,7 @@
     &hits;
 <!--     &raws; -->
     &reco;
+    &tomo;
   </Trees>
 
 <Tabs>

@@ -19,6 +19,7 @@
 //     RecoTracks                                                             //
 //     RecoTracksBT                                                           //
 //     RecoTracksTT                                                           //
+//     BTTTTracksScatter                                                      //
 //                                                                            //
 // This task contains the following histgrams :                               //
 //    HMomentum                                                               //

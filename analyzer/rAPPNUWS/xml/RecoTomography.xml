@@ -1,0 +1,36 @@
+    <Task>
+      <TaskName>RecoTomography</TaskName>
+      <!--________________Parameters ____________________ -->
+      <SteeringParameters>
+        <SteeringParameterField>
+          <SPFieldName>DebugLevel</SPFieldName>
+          <SPFieldType>Int_t</SPFieldType>
+          <SPFieldInitialization>0</SPFieldInitialization>
+          <SPFieldComment>debug level</SPFieldComment>
+        </SteeringParameterField>
+        <SteeringParameterField>
+          <SPFieldName>DoDisplay</SPFieldName>
+          <SPFieldType>Bool_t</SPFieldType>
+          <SPFieldInitialization>false</SPFieldInitialization>
+          <SPFieldComment>do display</SPFieldComment>
+        </SteeringParameterField>
+        <SteeringParameterField>
+          <SPFieldName>VoxelSizeX</SPFieldName>
+          <SPFieldType>Double_t</SPFieldType>
+          <SPFieldInitialization>10.0</SPFieldInitialization>
+          <SPFieldComment>Tomography Voxel size X</SPFieldComment>
+        </SteeringParameterField>
+        <SteeringParameterField>
+          <SPFieldName>VoxelSizeY</SPFieldName>
+          <SPFieldType>Double_t</SPFieldType>
+          <SPFieldInitialization>10.0</SPFieldInitialization>
+          <SPFieldComment>Tomography Voxel size Y</SPFieldComment>
+        </SteeringParameterField>
+        <SteeringParameterField>
+          <SPFieldName>VoxelSizeZ</SPFieldName>
+          <SPFieldType>Double_t</SPFieldType>
+          <SPFieldInitialization>10.0</SPFieldInitialization>
+          <SPFieldComment>Tomography Voxel size Z</SPFieldComment>
+        </SteeringParameterField>
+      </SteeringParameters>
+    </Task>  
