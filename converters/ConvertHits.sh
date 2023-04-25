@@ -14,7 +14,7 @@ while [ $nl -lt $nRuns ]; do
     printf -v hitsFlNum "%05d" $iRun
 #    echo "hitsFlNum ${hitsFlNum}"
    
-    nohup ${PRJBASE}/simulation/g4GMC/bin/Linux-g++/readHits hits${hitsFlNum}.root >& rdhits_${iRun}.log &
+    nohup ${PRJBASE}/converters/build/readHits hits${hitsFlNum}.root >& rdhits_${iRun}.log &
 
 done
 
