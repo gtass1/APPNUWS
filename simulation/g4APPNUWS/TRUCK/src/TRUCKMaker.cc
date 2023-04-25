@@ -134,6 +134,7 @@ void TRUCKMaker::loadTruck( crd::SimpleConfig const& config ){
   _ContainerLength                  = config.getDouble("trck.ContainerLength",0.0);
   _ContainerWidth                   = config.getDouble("trck.ContainerWidth",0.0);
   _ContainerHeight                  = config.getDouble("trck.ContainerHeight",0.0);
+  _ContainerInFillMaterial          = config.getString("trck.ContainerInFillMaterial","G4_AIR");
   _ContainerWallThicknes            = config.getDouble("trck.ContainerWallThicknes");
   _ContainerRibsThicknes            = config.getDouble("trck.ContainerRibsThicknes",0.0);
   _ContainerBasementThicknes        = config.getDouble("trck.ContainerBasementThicknes");
@@ -308,7 +309,7 @@ void TRUCKMaker::Build(){
     cntInBx->_elmName="cntIn";
     cntInBx->_id = genelmbs::BoxkindId(0);
     cntInBx->_shapeType = genelmbs::Boxkind::full;
-    cntInBx->_detail.reset( new genelmbs::BoxkindDetail(_ContainerInLength/2.0,_ContainerInWidth/2.0,_ContainerInHeight/2.0,"G4_AIR") );
+    cntInBx->_detail.reset( new genelmbs::BoxkindDetail(_ContainerInLength/2.0,_ContainerInWidth/2.0,_ContainerInHeight/2.0,_ContainerInFillMaterial.c_str()) );
     HepGeom::Translate3D cntInpos (_ContainerInRelCenter.x(),
         _ContainerInRelCenter.y()-_halfHeight,
         _ContainerInRelCenter.z() );

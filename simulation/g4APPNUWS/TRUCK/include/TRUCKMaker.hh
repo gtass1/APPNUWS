@@ -107,6 +107,7 @@ private:
   double _ContainerLength;
   double _ContainerWidth;
   double _ContainerHeight;
+  std::string _ContainerInFillMaterial;
   double _ContainerWallThicknes;
   double _ContainerRibsThicknes;
   double _ContainerBasementThicknes;
