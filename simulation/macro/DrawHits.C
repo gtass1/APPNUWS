@@ -1,7 +1,22 @@
 #include <algorithm>
 #include <vector>
+#include "TCanvas.h"
+#include "TH2F.h"
 
 //gSystem->Load("$PRJBASE/simulation/build/lib/libSimG4ClassesDict");
+
+  TCanvas *cvView = 0x0;
+  TCanvas *cvViewAll = 0x0;
+  TH2F *tmpHxy = 0x0;
+  TH2F *tmpHzy = 0x0;
+  TGraph *xyView    = 0x0;
+  TGraph *zyView    = 0x0;
+  TGraph *xyViewSec = 0x0;
+  TGraph *zyViewSec = 0x0;
+  
+  void DoPlot( std::vector<float> hit[], std::vector<float> hitSec[], int ev=-1 );
+
+bool first=true;
 
 void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
 
@@ -12,6 +27,17 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
 ////  gSystem->Load("$PRJBASE/simulation/build/lib/libSimG4ClassesDict");
 //  ts->Load("$PRJBASE/simulation/build/lib/libSimG4ClassesDict");
 
+  if (first) {
+  gStyle->SetOptStat(0);
+  cvView = new TCanvas();
+  cvViewAll = new TCanvas();
+  cvView->Divide(1,2);
+  cvViewAll->Divide(1,2);
+  tmpHxy = new TH2F("tmpHxy","XY hits view;X [mm]; Y [mm]",100,-2000,2000,100,-2000,7000);
+  tmpHzy = new TH2F("tmpHzy","ZY hits view;Z [mm]; Y [mm]",100,-1000,1000,100,-2000,7000);
+  first = false;
+  }
+  
   TFile *fIn= TFile::Open(fileName.Data());
 
   TString br1("MCStep");
@@ -70,6 +96,7 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
   }
 
   std::vector<float> hit[3];
+  std::vector<float> hitSec[3];
 //  std::vector<float> hitLy[nLayer][3];
   std::vector<float> csmtthit[nLayer][3];
   std::vector<float> csmbthit[nLayer][3];
@@ -114,9 +141,12 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
 //       ((GMCGeantTrack*)ptrBr_trk[k])->SetfPosEnd(vec_b);
 //       ((GMCGeantTrack*)ptrBr_trk[k])->SetfMomentum(vec_c);
      }
+	 
+	 bool allPresent=false;
 
      if (/*false && */hitCSMTTIsPresent) {
        int nhits = hitscsmtt->size();
+	   if (nhits>0) { allPresent=true; }
 
        for (int k=0;k<nhits;k++) {
 
@@ -153,7 +183,12 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
            hit[2].push_back(spos->GetPos().z());
 //           if (debug) { cout<<"CSMTT hit: "<<hit[0].back()<<" "<<hit[1].back()<<" "<<hit[2].back()<<endl; }
            if (debug) { cout<<"CSMTT hit: "<<spos->GetPos().x()<<" "<<spos->GetPos().y()<<" "<<spos->GetPos().z()<<endl; }
-         }
+         } else {
+			 
+           hitSec[0].push_back(spos->GetPos().x());
+           hitSec[1].push_back(spos->GetPos().y());
+           hitSec[2].push_back(spos->GetPos().z());
+		 }
 
        }
 
@@ -161,6 +196,7 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
 
      if (hitCSMBTIsPresent) {
        int nhits = hitscsmbt->size();
+	   allPresent &= (nhits>0);
 
        for (int k=0;k<nhits;k++) {
 
@@ -197,35 +233,99 @@ void DrawHits(TString fileName="hits00001.root", Int_t ev=-1, bool debug=false){
            hit[2].push_back(spos->GetPos().z());
 //           if (debug) { cout<<"CSMBT hit: "<<hit[0].back()<<" "<<hit[1].back()<<" "<<hit[2].back()<<endl; }
            if (debug) { cout<<"CSMTT hit: "<<spos->GetPos().x()<<" "<<spos->GetPos().y()<<" "<<spos->GetPos().z()<<endl; }
-         }
+         } else {
+			 
+           hitSec[0].push_back(spos->GetPos().x());
+           hitSec[1].push_back(spos->GetPos().y());
+           hitSec[2].push_back(spos->GetPos().z());
+		 }
+
 
        }
 
      }
 
+     if (ev!=-1 && hit[0].size()>0 ) {
+		 if (ev==-2 || ev==-3) { std::cout<<"Current ev: "<< i <<std::endl; }
+		 if (xyView != 0x0) { xyView->Delete(); xyView = 0x0; }
+		 if (zyView != 0x0) { zyView->Delete(); zyView = 0x0; }
+		 if (xyViewSec != 0x0) { xyViewSec->Delete(); xyViewSec = 0x0; }
+		 if (zyViewSec != 0x0) { zyViewSec->Delete(); zyViewSec = 0x0; }
+		 if ( ev!=-3 || allPresent ) { DoPlot( hit, hitSec, ev ); }
+		 hit[0].clear(); hit[1].clear(); hit[2].clear(); 
+		 hitSec[0].clear(); hitSec[1].clear(); hitSec[2].clear(); 
+     }
 
   }
+  
+  if (ev==-1) { DoPlot( hit, hitSec, ev ); }
 
-  TCanvas *cvView = new TCanvas();
-  cvView->Divide(1,2);
+}
 
-  TGraph *xyView = new TGraph(hit[0].size(),hit[0].data(),hit[1].data());
+
+void DoPlot( std::vector<float> hit[], std::vector<float> hitSec[], int ev ) {
+//  TCanvas *cvView = new TCanvas();
+//  cvView->Divide(1,2);
+
+  /*TGraph */xyView = new TGraph(hit[0].size(),hit[0].data(),hit[1].data());
   xyView->SetTitle("XY view;X [mm]; Y [mm]");
   xyView->SetMarkerStyle(8);
 //  xyView->SetMarkerSize(5);
 
   cvView->cd(1);
-  xyView->Draw("AP");
+//  TH2F *tmpHxy = new TH2F("tmpHxy","XY hits view;X [mm]; Y [mm]",100,-2000,2000,100,-2000,7000);
+  tmpHxy->Draw();  
+  xyView->Draw("Psame");
 
-
-  TGraph *zyView = new TGraph(hit[2].size(),hit[2].data(),hit[1].data());
+  /*TGraph */zyView = new TGraph(hit[2].size(),hit[2].data(),hit[1].data());
   zyView->SetTitle("ZY view;Z [mm]; Y [mm]");
   zyView->SetMarkerStyle(8);
 //  zyView->SetMarkerSize(5);
 
   cvView->cd(2);
-  zyView->Draw("AP");
+//  TH2F *tmpHzy = new TH2F("tmpHzy","ZY hits view;Z [mm]; Y [mm]",100,-1000,1000,100,-2000,7000);
+  tmpHzy->Draw();  
+  zyView->Draw("Psame");
+  cvView->Update();
+  if (ev<=-2 && hitSec[0].size()==0 && hitSec[2].size()==0) {
+	cvView->cd();
+	cvView->WaitPrimitive();
+  }
 
+if (hitSec[0].size()>0 || hitSec[2].size()>0) {
+//  TCanvas *cvViewAll = new TCanvas();
+//  cvViewAll->Divide(1,2);
+
+if (hitSec[0].size()>0) {
+  /*TGraph */xyViewSec = new TGraph(hitSec[0].size(),hitSec[0].data(),hitSec[1].data());
+  xyViewSec->SetTitle("XY view;X [mm]; Y [mm]");
+  xyViewSec->SetMarkerStyle(8);
+  xyViewSec->SetMarkerColor(kRed);
+
+  cvViewAll->cd(1);
+//  TH2F *tmpHxy = new TH2F("tmpHxy","XY hits view;X [mm]; Y [mm]",100,-2000,2000,100,-2000,7000);
+  tmpHxy->Draw();  
+  xyView->Draw("Psame");
+  xyViewSec->Draw("Psame");
 }
 
+if (hitSec[2].size()>0) {
+  /*TGraph */zyViewSec = new TGraph(hitSec[2].size(),hitSec[2].data(),hitSec[1].data());
+  zyViewSec->SetTitle("ZY view;Z [mm]; Y [mm]");
+  zyViewSec->SetMarkerStyle(8);
+  zyViewSec->SetMarkerColor(kRed);
 
+  cvViewAll->cd(2);
+//  TH2F *tmpHzy = new TH2F("tmpHzy","ZY hits view;Z [mm]; Y [mm]",100,-1000,1000,100,-2000,7000);
+  tmpHzy->Draw();  
+  zyView->Draw("Psame");
+  zyViewSec->Draw("Psame");
+}
+cvViewAll->Update();
+  if (ev<=-2) {
+    cvViewAll->cd();
+	cvViewAll->WaitPrimitive();
+  }
+}
+
+}
