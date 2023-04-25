@@ -21,8 +21,8 @@
 /gps/pos/type Plane
 /gps/pos/shape Rectangle
 /gps/pos/centre 0 700 0 cm
-/gps/pos/halfx 100 cm
-/gps/pos/halfy 700 cm
+/gps/pos/halfx 1 cm
+/gps/pos/halfy 1 cm
 /gps/pos/rot1 1 0 0
 /gps/pos/rot2 0 0 -1
 #/gps/pos/rot1 0 0 1
@@ -33,10 +33,10 @@
 #/gps/pos/sigma_x 50 cm
 #/gps/pos/sigma_yx 50 um
 /gps/ang/type iso
-/gps/ang/mintheta -1.67 rad
-/gps/ang/maxtheta -1.47 rad
-/gps/ang/minphi 1.47 rad
-/gps/ang/maxphi 1.67 rad
+/gps/ang/mintheta -1.57 rad
+/gps/ang/maxtheta -1.57 rad
+/gps/ang/minphi 1.57 rad
+/gps/ang/maxphi 1.57 rad
 /gps/ang/user_coor true
 #/gps/ang/surfnorm true
 /gps/ene/type Lin

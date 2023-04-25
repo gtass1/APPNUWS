@@ -12,15 +12,15 @@
 // Write geometry into a GDML file
 bool   writeGDML        = false;
 
-string GDMLFileName     = "g4-APPNUWS.gdml";
+string GDMLFileName     = "g4-APPNUWS_notruck.gdml";
 
 // Uncomment exactly one central tracker.
 #include "csmtt_v00.txt"
 #include "csmbt_v00.txt"
 #include "floor_v01.txt"
-#include "truck_v01.txt"
+//#include "truck_v01.txt"
 //#include "cargo_v00.txt"
-#include "cargo_v03.txt"
+//#include "cargo_v03.txt"
 
 // Uncomment to enable debug printout on a per event or per track basis.
 //vector<int> g4.steppingActionEventList = { 0, 1 };

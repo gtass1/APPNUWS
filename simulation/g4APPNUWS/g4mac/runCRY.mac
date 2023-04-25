@@ -53,4 +53,4 @@
 #/tracking/verbose 1
 /hits/verbose 0
 #/hits/verbose 2
-/run/beamOn 100
+/run/beamOn 2000
