@@ -65,6 +65,12 @@
       <FieldType>Double_t</FieldType>
       <FieldInitialization>-1</FieldInitialization>  
       <FieldComment>Error on angle between tracks at the matching plane</FieldComment>
-   </Field> 
+   </Field>
+   <Field>
+      <FieldName>OneTrackMatch</FieldName>
+      <FieldType>Bool_t</FieldType>
+      <FieldInitialization>-1</FieldInitialization>  
+      <FieldComment>the two tracks segments are potentialy matching a single track</FieldComment>
+   </Field>
 
 <!-- </Folder> -->

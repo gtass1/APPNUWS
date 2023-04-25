@@ -1,0 +1,32 @@
+<!--$Id:  $-->
+<Folder>
+   <FolderName>PreTomographyInfo</FolderName>
+   <FolderTitle>Pre Tomography Info</FolderTitle>
+   <Affiliation>rAPPNUWS</Affiliation>
+   <ArraySize>variable</ArraySize>
+   <Author>
+      <AuthorName>Gianfranco Tassielli</AuthorName>
+   </Author>
+   <FolderVersion>1</FolderVersion>
+   <FolderDescription>Folder class for rough tonmography general information</FolderDescription>
+   <NoResetByFramework>false</NoResetByFramework>
+   <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
+   <Field>
+      <FieldName>minVolexPos</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>3</ArraySize>
+      <FieldComment>minimum of the Volexs for each axess</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>maxVolexPos</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>3</ArraySize>
+      <FieldComment>maximum of the Volexs for each axess</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>nVolex</FieldName>
+      <FieldType>Int_t</FieldType>
+      <ArraySize>3</ArraySize>
+      <FieldComment>number of Volexs for each axess</FieldComment>
+   </Field>
+</Folder>

@@ -14,6 +14,7 @@
 //                                                                            //
 // This task accesses the following folders :                                 //
 //     BTTTTracksScatter                                                      //
+//     PreTomographyInfo                                                      //
 //     PreTomography                                                          //
 //                                                                            //
 //                                                                            //
@@ -40,12 +41,14 @@
 #include "CSMTTROGeometryHandle.hh"
 #include "CSMBTROGeometryHandle.hh"
 #include "utilFunctions.hh"
+#include "TomoUtils.h"
 
 #include "CLHEP/Vector/ThreeVector.h"
 
 #include <cmath>
 #include <unordered_map>
 #include <vector>
+#include <utility>
 
 
 ClassImp(rAPPNUWSTRecoTomography)
@@ -96,6 +99,13 @@ void rAPPNUWSTRecoTomography::Event()
 
 //    fBrDataScatt = gAnalyzer->GetBTTTTracksScatters();
 
+    gAnalyzer->SetPreTomographyInfoSize(1);
+
+    rAPPNUWSPreTomographyInfo *tomInfo = gAnalyzer->GetPreTomographyInfoAt(0);
+    tomInfo->SetminVolexPosCopy(3, minVoxPos);
+    tomInfo->SetmaxVolexPosCopy(3, maxVoxPos);
+    tomInfo->SetnVolexCopy(3, nVox);
+
     doPreTomography();
 
 }
@@ -114,11 +124,12 @@ void rAPPNUWSTRecoTomography::doPreTomography() {
 
     int fDebug=GetSP()->GetDebugLevel();
 //    int nGoodVertex=0;
-    std::unordered_map< unsigned long, std::vector<double> > voxHitMap;
+    std::unordered_map< unsigned long, std::pair<std::vector<double>,std::vector<double> > > voxHitMap;
     //    std::vector<int *>
 
     for (int isp=0; isp<gAnalyzer->GetBTTTTracksScatterSize(); ++isp) {
         rAPPNUWSBTTTTracksScatter* tmpScPnt = gAnalyzer->GetBTTTTracksScatterAt(isp);
+//        if ( tmpScPnt->GetOneTrackMatch() ) { continue; }
         TVector3 *scpos = tmpScPnt->Getpos();
         Double_t scposArr[3];
         scpos->GetXYZ(scposArr);
@@ -138,7 +149,8 @@ void rAPPNUWSTRecoTomography::doPreTomography() {
                 Id[isd] = floor( (scposArr[isd] - minVoxPos[isd])/stepVox[isd] );
             }
             unsigned long uid=IDdoUID(Id);
-            voxHitMap[uid].push_back(tmpScPnt->Getangle());
+            voxHitMap[uid].first.push_back( tmpScPnt->Getangle() );
+            voxHitMap[uid].second.push_back( tmpScPnt->Getdist() );
             if (fDebug>1) {
                 std::cout<<" map Ids "<<Id[0]<<" "<<Id[1]<<" "<<Id[2]<<std::endl;
                 int tmpId[3] = {-1,-1,-1};
@@ -158,18 +170,31 @@ void rAPPNUWSTRecoTomography::doPreTomography() {
 //        UIDtoID(voxHit.first, tmpId);
 //        iVxHit->SethitIdCopy(3, tmpId);
         iVxHit->SethitId(voxHit.first);
-        iVxHit->SethitPerVoxel(voxHit.second.size());
-        double mtheta=0;
-        double mtheta2=0;
-        for ( auto& itheta : voxHit.second ) {
-            mtheta+=itheta;
-            mtheta2+=itheta*itheta;
+        iVxHit->SethitPerVoxel(voxHit.second.first.size());
+        double mAngle=0;
+        double mAngle2=0;
+        for ( auto& iAngle : voxHit.second.first ) {
+            mAngle+=iAngle;
+            mAngle2+=iAngle*iAngle;
         }
-        mtheta/=(double) voxHit.second.size();
-        mtheta2/=(double) voxHit.second.size();
-        iVxHit->Setmeantheta(mtheta);
-        iVxHit->Setsigmatheta( sqrt( mtheta2-mtheta*mtheta ) );
-        iVxHit->Setalltheta(voxHit.second);
+        mAngle/=(double) voxHit.second.first.size();
+        mAngle2/=(double) voxHit.second.first.size();
+        iVxHit->SetmeanAngle(mAngle);
+        iVxHit->SetsigmaAngle( sqrt( mAngle2-mAngle*mAngle ) );
+        iVxHit->SetallAngle(voxHit.second.first);
+
+        double mDist=0;
+        double mDist2=0;
+        for ( auto& iDist : voxHit.second.second ) {
+            mDist+=iDist;
+            mDist2+=iDist*iDist;
+        }
+        mDist/=(double) voxHit.second.second.size();
+        mDist2/=(double) voxHit.second.second.size();
+        iVxHit->SetmeanDist(mDist);
+        iVxHit->SetsigmaDist( sqrt( mDist2-mDist*mDist ) );
+        iVxHit->SetallDist(voxHit.second.second);
+
         ++iHit;
     }
 

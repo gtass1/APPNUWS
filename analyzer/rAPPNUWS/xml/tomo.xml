@@ -6,6 +6,10 @@
   <TreeDescription>Container for Tomography Data</TreeDescription>
 
   <Branch>
+    <BranchName>PreTomographyInfo</BranchName>
+    <RelatedFolder>PreTomographyInfo</RelatedFolder>
+  </Branch>
+  <Branch>
     <BranchName>PreTomography</BranchName>
     <RelatedFolder>PreTomography</RelatedFolder>
   </Branch>

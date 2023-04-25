@@ -296,6 +296,51 @@
       <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
    </Field> 
 
+   
+   <Field>
+      <FieldName>posCnt</FieldName>
+      <FieldType>TVector3</FieldType>
+<!--       <FieldType>ROOT::Math::XYZVector</FieldType> -->
+      <FieldComment>Track Vertex-Cnt coord</FieldComment>
+   </Field>
+      <Field>
+      <FieldName>errPosCnt</FieldName>
+      <FieldType>Double_t</FieldType>
+ <!--     <FieldInitialization>-999.</FieldInitialization>  -->      
+      <ArraySize>3</ArraySize>
+      <FieldComment>Error On the Track Vertex-Cnt coordinates</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>thetaCnt</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>polar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>err_thetaCnt</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>Error on thepolar angle w.r.t. the  beam direction</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>phiCnt</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
+   <Field>
+      <FieldName>err_phiCnt</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>azimuthal angle in the X-Y plane</FieldComment>
+   </Field> 
+   
+<!--    <Field>
+      <FieldName>posCnt1</FieldName>
+      <FieldType>TVector3</FieldType>
+      <FieldComment>Track Vertex-Cnt1 coord</FieldComment>
+   </Field> -->
+
    <Field>
      <FieldName>nhits</FieldName>
      <FieldType>Int_t</FieldType>

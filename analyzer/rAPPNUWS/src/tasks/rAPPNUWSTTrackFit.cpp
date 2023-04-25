@@ -120,6 +120,12 @@ ClassImp(rAPPNUWSTTrackFit)
 using namespace std;
 
 static const float sclfac=0.1;
+static const float tomgCent=300.0; //tomographer center y, in cm
+
+//double sgmAngle(TVector3 &mom, TMatrixDSym &cov, int id=0); //id: 0 -> Theta, 1 -> Phi
+double sgmTheta(TVector3 &mom, TMatrixDSym &cov);
+double sgmPhi(TVector3 &mom, TMatrixDSym &cov);
+double sgmTheta1(TVector3 &mom, TMatrixDSym &cov);
 
 //______________________________________________________________________________
 void rAPPNUWSTTrackFit::Init() {
@@ -1947,13 +1953,19 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
     bool fitstatus=fitStatus->isFitConverged()&&(fitStatus->getNFailedPoints()==0);
     if(fDebug) fitStatus->Print();
 
-
+    bool fndpos=false;
     TVector3 pos,mom;
     TMatrixDSym cov(6);
+    bool fndpos1=false;
     TVector3 pos1,mom1;
     TMatrixDSym cov1(6);
+    bool fndpos2=false;
     TVector3 pos2,mom2;
     TMatrixDSym cov2(6);
+    bool fndposCnt=false;
+    TVector3 posCnt,momCnt;
+    TMatrixDSym covCnt(6);
+//    TVector3 posCnt1;
     double pmom=0;
     double tof=0;
     double sigmap=0.;
@@ -2089,7 +2101,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
         KalmanFitterInfo* fi = static_cast<KalmanFitterInfo*>(tp->getFitterInfo(rep));
         MeasuredStateOnPlane state;
 
-        //extrapolate to Upper face of the Top Tracker
+        //extrapolate to Upper face of the Bottom Tracker
         bool isUp=true;
         try{
             state=fi->getFittedState(true);
@@ -2106,11 +2118,12 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
                                     );
 
         }catch(Exception& e){
-            if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
+            if(fDebug) std::cout<<" on extrapolation of BT track to Upper face of the Bottom Tracker "<<e.what()<<std::endl;
             isUp=false;
         }
 //        double tof_target=1e9;
         if(isUp){
+            fndpos=true;
 //            tof_target=state.getTime();
             state.getPosMomCov(pos,mom,cov);
             double momrec=mom.Mag();
@@ -2126,7 +2139,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
             //std::cout<<std::endl;
         }
 
-        //extrapolate to Bottom face of the Top Tracker
+        //extrapolate to Bottom face of the Bottom Tracker
         rep->setPropDir(1);
         bool isBt=true;
         try{
@@ -2144,11 +2157,12 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
                                     );
 
         }catch(Exception& e){
-            if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
+            if(fDebug) std::cout<<"on extrapolation of BT track to Bottom face of the Bottom Tracker "<<e.what()<<std::endl;
             isBt=false;
         }
 //        double tof_target=1e9;
         if(isBt){
+            fndpos1=true;
 //            tof_target=state.getTime();
             state.getPosMomCov(pos1,mom1,cov1);
 //            std::cout<<" pos1 "; pos1.Print();
@@ -2158,7 +2172,7 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
 //            std::cout<<" dir1 "; tmpmom.Print();
        }
 
-        //extrapolate to Bottom face of the Upper Tracker
+        //extrapolate to Bottom face of the Top Tracker
         rep->setPropDir(-1);
         bool isTT=true;
         try{
@@ -2176,11 +2190,12 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
                                     );
 
         }catch(Exception& e){
-            if(fDebug) std::cout<<"on extrapolation to center line "<<e.what()<<std::endl;
+            if(fDebug) std::cout<<"on extrapolation of BT track to Bottom face of the Top Tracker "<<e.what()<<std::endl;
             isTT=false;
         }
 //        double tof_target=1e9;
         if(isTT){
+            fndpos2=true;
 //            tof_target=state.getTime();
             state.getPosMomCov(pos2,mom2,cov2);
 //            std::cout<<" pos2 "; pos2.Print();
@@ -2190,59 +2205,117 @@ Bool_t rAPPNUWSTTrackFit::Fit2BT(TObject *tmpTrack) {
 //            std::cout<<" dir2 "; tmpmom.Print();
         }
 
+        //extrapolate to the center of the tomographer (y)
+        rep->setPropDir(-1);
+        bool isCnt=true;
+        try{
+            state=fi->getFittedState(true);
+//            rep->extrapolateToLine(state,TVector3(0,fGeometry->GetCSMTtracker()->distIn()*sclfac,0),TVector3(0,0,1));
+
+            rep->extrapolateToPlane ( state, genfit::SharedPlanePtrCreator::getPlanePtr(
+                                                             new genfit::DetPlane(
+                                                                   TVector3(0,tomgCent,0),
+                                                                   TVector3(0,1,0)
+                                                             )
+                                             )
+                                     ,false
+                                     ,true
+                                    );
+
+        }catch(Exception& e){
+            if(fDebug) std::cout<<"on extrapolation of BT track to the center of the tomographer (y) "<<e.what()<<std::endl;
+            isCnt=false;
+        }
+//        double tof_target=1e9;
+        if(isCnt){
+            fndposCnt=true;
+//            tof_target=state.getTime();
+            state.getPosMomCov(posCnt,momCnt,covCnt);
+//            std::cout<<" posCnt "; posCnt.Print();
+//            std::cout<<" momCnt "; momCnt.Print();
+//            TVector3 tmpmom=momCnt;
+//            tmpmom.SetMag(1.0);
+//            std::cout<<" dirCnt "; tmpmom.Print();
+
+//            // Extrapolation test
+//            TVector3 tmpdir, yax(0,-1,0);
+//            tmpdir.SetMagThetaPhi( 1.0, mom.Theta(), mom.Phi() );
+//            double distY = 300 - pos.Y();
+//            double dist = distY/TMath::Cos(TMath::Abs(tmpdir.Angle(yax)));
+//            posCnt1 = pos-dist*tmpdir;
+
+//            std::cout<<"------------------------ state cov ------------------------"<<std::endl;
+//            state.getCov().Print();
+//            std::cout<<"------------------------ posmom cov ------------------------"<<std::endl;
+//            posCnt.Print();
+//            momCnt.Print();
+//            covCnt.Print();
+//            std::cout<<"------------------------ 6D state cov ------------------------"<<std::endl;
+//            TVectorD tmpStateVec;
+//            TMatrixDSym tmpCov;
+//            state.get6DStateCov(tmpStateVec, tmpCov);
+//            tmpStateVec.Print();
+//            tmpCov.Print();
+
+        }
     }
 
-//    aTrack->Setx0(pos.X()/sclfac);
-//    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
-//    aTrack->Sety0(pos.Y()/sclfac);
-//    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
-//    aTrack->Setz0(pos.Z()/sclfac);
-//    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
+    if (fndpos) {
+        //    aTrack->Setx0(pos.X()/sclfac);
+        //    aTrack->Seterr_x0(sqrt(cov(0,0))/sclfac);
+        //    aTrack->Sety0(pos.Y()/sclfac);
+        //    aTrack->Seterr_y0(sqrt(cov(1,1))/sclfac);
+        //    aTrack->Setz0(pos.Z()/sclfac);
+        //    aTrack->Seterr_z0(sqrt(cov(2,2))/sclfac);
 
-    pos*=1.0/sclfac;
-    aTrack->Setpos0(pos);
-    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos0At(ic, sqrt(cov(ic,ic))/sclfac); }
+        pos*=1.0/sclfac;
+        aTrack->Setpos0(pos);
+        for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos0At(ic, sqrt(cov(ic,ic))/sclfac); }
 
-    aTrack->Settheta(mom.Theta());
-    aTrack->Seterr_theta(0.);
-    aTrack->Setphi(mom.Phi());
-    aTrack->Seterr_phi(0.);
-    aTrack->SetMomentum(mom.Mag());
-    aTrack->SetErr_Momentum(sigmap);
-    aTrack->Setmom(mom);
-//    aTrack->Setmom(ROOT::Math::XYZVector(mom.X(),mom.Y(),mom.Z()) );
-    aTrack->Getcov()->ResizeTo(6,6);
-    aTrack->Setcov(cov);
+        aTrack->Settheta(mom.Theta());
+        aTrack->Seterr_theta(0.);
+        aTrack->Setphi(mom.Phi());
+        aTrack->Seterr_phi(0.);
+        aTrack->SetMomentum(mom.Mag());
+        aTrack->SetErr_Momentum(sigmap);
+        aTrack->Setmom(mom);
+        //    aTrack->Setmom(ROOT::Math::XYZVector(mom.X(),mom.Y(),mom.Z()) );
+        aTrack->Getcov()->ResizeTo(6,6);
+        aTrack->Setcov(cov);
+    }
 
-//    aTrack->Setx1(pos1.X()/sclfac);
-//    aTrack->Seterr_x1(sqrt(cov1(0,0))/sclfac);
-//    aTrack->Sety1(pos1.Y()/sclfac);
-//    aTrack->Seterr_y1(sqrt(cov1(1,1))/sclfac);
-//    aTrack->Setz1(pos1.Z()/sclfac);
-//    aTrack->Seterr_z1(sqrt(cov1(2,2))/sclfac);
+    if (fndpos1) {
+        pos1*=1.0/sclfac;
+        aTrack->Setpos1(pos1);
+        for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos1At(ic, sqrt(cov1(ic,ic))/sclfac); }
+        aTrack->Settheta1(mom1.Theta());
+        aTrack->Seterr_theta1(0.);
+        aTrack->Setphi1(mom1.Phi());
+        aTrack->Seterr_phi1(0.);
+    }
 
-    pos1*=1.0/sclfac;
-    aTrack->Setpos1(pos1);
-    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos1At(ic, sqrt(cov1(ic,ic))/sclfac); }
-    aTrack->Settheta1(mom1.Theta());
-    aTrack->Seterr_theta1(0.);
-    aTrack->Setphi1(mom1.Phi());
-    aTrack->Seterr_phi1(0.);
+    if (fndpos2) {
+        pos2*=1.0/sclfac;
+        aTrack->Setpos2(pos2);
+        for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos2At(ic, sqrt(cov2(ic,ic))/sclfac); }
+        aTrack->Settheta2(mom2.Theta());
+        aTrack->Seterr_theta2(0.);
+        aTrack->Setphi2(mom2.Phi());
+        aTrack->Seterr_phi2(0.);
+    }
 
-//    aTrack->Setx2(pos2.X()/sclfac);
-//    aTrack->Seterr_x2(sqrt(cov2(0,0))/sclfac);
-//    aTrack->Sety2(pos2.Y()/sclfac);
-//    aTrack->Seterr_y2(sqrt(cov2(1,1))/sclfac);
-//    aTrack->Setz2(pos2.Z()/sclfac);
-//    aTrack->Seterr_z2(sqrt(cov2(2,2))/sclfac);
+    if (fndposCnt) {
+        posCnt*=1.0/sclfac;
+        aTrack->SetposCnt(posCnt);
+        for (int ic=0; ic<3; ++ic) { aTrack->SeterrPosCntAt(ic, sqrt(covCnt(ic,ic))/sclfac); }
+        aTrack->SetthetaCnt(momCnt.Theta());
+        aTrack->Seterr_thetaCnt(sgmTheta1(momCnt, covCnt));
+        aTrack->SetphiCnt(momCnt.Phi());
+        aTrack->Seterr_phiCnt(sgmPhi(momCnt, covCnt));
 
-    pos2*=1.0/sclfac;
-    aTrack->Setpos2(pos2);
-    for (int ic=0; ic<3; ++ic) { aTrack->SeterrPos2At(ic, sqrt(cov2(ic,ic))/sclfac); }
-    aTrack->Settheta2(mom2.Theta());
-    aTrack->Seterr_theta2(0.);
-    aTrack->Setphi2(mom2.Phi());
-    aTrack->Seterr_phi2(0.);
+//        posCnt1*=1.0/sclfac;
+//        aTrack->SetposCnt1(posCnt1);
+    }
 
     //fill final information
     aTrack->Setnhits(nhits);//nhitsCSMBT
@@ -2402,6 +2475,8 @@ void rAPPNUWSTTrackFit::FindScatter() {
 
       rAPPNUWSRecoTracksTT *aTrkTT = gAnalyzer->GetRecoTracksTTAt(it->second);
       CLHEP::Hep3Vector posTT1 ( aTrkTT->Getpos1()->X(), aTrkTT->Getpos1()->Y(), aTrkTT->Getpos1()->Z() );
+      TVector3 *posTT0 = aTrkTT->Getpos0();
+      Double_t *errPosTT0 = aTrkTT->GeterrPos0();
 //      Double_t *errPosTT1 = aTrkTT->GeterrPos1();
       TVector3 tmpdirTT1;
       tmpdirTT1.SetMagThetaPhi( 1.0, aTrkTT->Gettheta1(), aTrkTT->Getphi1() );
@@ -2413,7 +2488,9 @@ void rAPPNUWSTTrackFit::FindScatter() {
 
       rAPPNUWSRecoTracksBT *aTrkBT = gAnalyzer->GetRecoTracksBTAt(it->first);
       CLHEP::Hep3Vector posBT0( aTrkBT->Getpos0()->X(), aTrkBT->Getpos0()->Y(), aTrkBT->Getpos0()->Z() );
+      TVector3 *posBT1 = aTrkBT->Getpos1();
 //      Double_t *errPosBT0 = aTrkBT->GeterrPos0();
+      Double_t *errPosBT1 = aTrkBT->GeterrPos1();
       TVector3 tmpdirBT0;
       tmpdirBT0.SetMagThetaPhi( 1.0, aTrkBT->Gettheta(), aTrkBT->Getphi() );
       CLHEP::Hep3Vector dirBT0 ( tmpdirBT0.X(), tmpdirBT0.Y(), tmpdirBT0.Z() );
@@ -2437,6 +2514,39 @@ void rAPPNUWSTTrackFit::FindScatter() {
           aBTTTmtch->Setpos( TVector3( (p1.x()+p2.x())*0.5,  (p1.y()+p2.y())*0.5,  (p1.z()+p2.z())*0.5 ) );
           aBTTTmtch->Setdist(trcksmatchVals.at(itrckm).first);
           aBTTTmtch->Setangle(trcksmatchVals.at(itrckm).second);
+
+          bool potOneTrk=false; //compatible with one track fit
+
+          for( int iT=0; iT<gAnalyzer->GetRecoTracksSize(); ++iT ){
+
+      //        trckmatch[iTT]=-1;
+              TVector3 *posT[2];
+              Double_t *errPosT[2];
+              rAPPNUWSRecoTracks *aTrk = gAnalyzer->GetRecoTracksAt(iT);
+
+              if ( aTrk->GetIsFitted() ) {
+
+                  double tchi2n = aTrk->Getchi2()/((double)aTrk->Getdof());
+                  if ( (aTrk->GetngoodhitsTT()>2 && aTrk->GetngoodhitsBT()>2) && tchi2n>1e-6&&tchi2n<20) {
+                      posT[0] = aTrk->Getpos0();
+                      errPosT[0] = aTrk->GeterrPos0();
+      //                dirTT[0].SetMagThetaPhi( 1.0, aTrkTT->Gettheta(), aTrkTT->Getphi() );
+
+                      posT[1] = aTrk->Getpos1();
+                      errPosT[1] = aTrk->GeterrPos1();
+      //                dirTT[1].SetMagThetaPhi( 1.0, aTrkTT->Gettheta1(), aTrkTT->Getphi1() );
+
+                      double errDist0 = sqrt( errPosT[0][0]*errPosT[0][0] + errPosT[0][2]*errPosT[0][2] + errPosTT0[0]*errPosTT0[0] + errPosTT0[2]*errPosTT0[2] );
+                      double errDist1 = sqrt( errPosT[1][0]*errPosT[1][0] + errPosT[1][2]*errPosT[1][2] + errPosBT1[0]*errPosBT1[0] + errPosBT1[2]*errPosBT1[2] );
+                      if ( (*posT[0] - *posTT0).Mag()<5.0*errDist0 &&
+                           (*posT[1] - *posBT1).Mag()<5.0*errDist1  ) {
+                          potOneTrk=true;
+                          break;
+                      }
+                  }
+              }
+          }
+          aBTTTmtch->SetOneTrackMatch(potOneTrk);
 
       }
 
@@ -2600,4 +2710,159 @@ void rAPPNUWSTTrackFit::matchTracks( std::map<int,int> &trckmatch, std::vector< 
 //        if (trckmatch[iTT]==-1) { trckmatch.erase(iTT); }
     }
 
+}
+
+double sgmTheta(TVector3 &mom, TMatrixDSym &cov) {
+    double sgTh=0.0;
+    double sgpx2 = 0.0, sgpy2 = 0.0, sgpz2 = 0.0;
+    double sgpxy = 0.0, sgpxz = 0.0, sgpyz = 0.0;
+    double px = 0.0, py = 0.0, pz = 0.0;
+    double px2 = 0.0, py2 = 0.0, pz2 = 0.0, pt2 = 0.0;
+    px = fabs(mom[0]);
+//    px = mom[0];
+    px2 = px*px;
+    py = fabs(mom[1]);
+//    py = mom[1];
+    py2 = py*py;
+    pz = fabs(mom[2]);
+//    pz = mom[2];
+    pz2 = pz*pz;
+    sgpx2 = cov[3][3];
+    sgpy2 = cov[4][4];
+    sgpz2 = cov[5][5];
+
+    pt2 = px2 + py2;
+    sgpxy = cov[3][4];
+    sgpxz = cov[3][5];
+    sgpyz = cov[4][5];
+//    if (mom.Theta()>TMath::PiOver2()) {
+//        sgpxy *= -1.0;
+//        sgpxz *= -1.0;
+//        sgpyz *= -1.0;
+//    }
+
+    mom.Print();
+    cov.Print();
+//    std::cout<<"px "<<px<<" py "<<py<<" pz "<<pz<<" sgpx2 "<<sgpx2<<" sgpz2 "<<sgpz2<<std::endl;
+
+    sgTh = fabs(pz)/pt2 * sqrt ( px2/pt2*sgpx2 + py2/pt2*sgpy2 + pt2/pz2*sgpz2 + 2*px*py/pt2*sgpxy + 2*px/pz*sgpxz + 2*py/pz*sgpyz );
+//    sgTh = fmod(sgTh,TMath::Pi());
+
+    std::cout<<"sgTh "<<sgTh<<std::endl;
+    std::cout<<"sgTh1 "<<fabs(pz)/pt2 * sqrt ( px2/pt2*sgpx2 )<<std::endl;
+    std::cout<<"sgTh2 "<<fabs(pz)/pt2 * sqrt ( px2/pt2*sgpx2 + py2/pt2*sgpy2 )<<std::endl;
+    std::cout<<"sgTh3 "<<fabs(pz)/pt2 * sqrt ( px2/pt2*sgpx2 + py2/pt2*sgpy2 + pt2/pz2*sgpz2 )<<std::endl;
+    std::cout<<"sgTh4 "<<fabs(pz)/pt2 * sqrt ( px2/pt2*sgpx2 + py2/pt2*sgpy2 + pt2/pz2*sgpz2 + 2*px*py/pt2*sgpxy )<<std::endl;
+    std::cout<<"sgTh5 "<<fabs(pz)/pt2 * sqrt ( px2/pt2*sgpx2 + py2/pt2*sgpy2 + pt2/pz2*sgpz2 + 2*px*py/pt2*sgpxy + 2*px/pz*sgpxz )<<std::endl;
+
+    return sgTh;
+}
+
+double sgmPhi(TVector3 &mom, TMatrixDSym &cov) {
+    double sgPh=0.0;
+    double sgpx2 = 0.0, sgpy2 = 0.0;
+    double sgpxy = 0.0;
+    double px = 0.0, py = 0.0;
+    double px2 = 0.0, py2 = 0.0;
+    px = fabs(mom[0]);
+    px2 = px*px;
+    py = fabs(mom[1]);
+    py2 = py*py;
+    sgpx2 = cov[3][3];
+    sgpy2 = cov[4][4];
+
+    sgpxy = cov[3][4];
+
+    mom.Print();
+    cov.Print();
+//    std::cout<<"id "<<id<<" px "<<px<<" pz "<<pz<<" sgpx2 "<<sgpx2<<" sgpz2 "<<sgpz2<<std::endl;
+
+    sgPh = fabs(px)/(px2+py2) * sqrt ( py2/px2*sgpx2 + sgpy2 + 2*py/px*sgpxy );
+    sgPh = fmod(sgPh,TMath::Pi());
+
+    std::cout<<"sgPh "<<sgPh<<std::endl;
+    std::cout<<"sgPh1 "<<fabs(px)/(px2+py2) * sqrt ( py2/px2*sgpx2 )<<std::endl;
+    std::cout<<"sgPh2 "<<fabs(px)/(px2+py2) * sqrt ( py2/px2*sgpx2 + sgpy2 )<<std::endl;
+
+    return sgPh;
+}
+
+//double sgmAngle(TVector3 &mom, TMatrixDSym &cov, int id) {
+//    double sgAng=0.0;
+//    double sgpc1_2 = 0.0, sgpc2_2 = 0.0;
+//    double pc1 = 0.0, pc2 = 0.0;
+//    double pc1_2 = 0.0, pc2_2 = 0.0;
+//    if (id==0) {
+//        pc1_2 = mom[0]*mom[0] + mom[1]*mom[1];
+//        pc1 = sqrt(pc1_2);
+//        pc2 = fabs(mom[2]);
+//        pc2_2 = pc2*pc2;
+//        sgpc1_2 = cov[3][3] + cov[4][4];
+//        sgpc2_2 = cov[5][5];
+//    } else {
+//        pc1_2 = mom[1]*mom[1];
+//        pc1 = fabs(mom[1]);
+//        pc2 = fabs(mom[0]);
+//        pc2_2 = pc2*pc2;
+//        sgpc1_2 = cov[4][4];
+//        sgpc2_2 = cov[3][3];
+//    }
+//
+//    mom.Print();
+//    cov.Print();
+//    std::cout<<"id "<<id<<" pc1 "<<pc1<<" pc2 "<<pc2<<" sgpc1_2 "<<sgpc1_2<<" sgpc2_2 "<<sgpc2_2<<std::endl;
+//
+//    sgAng = pc2 / (pc1_2 + pc2_2) * sqrt ( sgpc1_2 + pc1_2/pc2_2 * sgpc2_2 );
+//
+//    std::cout<<"sgAng "<<sgAng<<std::endl;
+//    std::cout<<"sgAng1 "<<pc2 / (pc1_2 + pc2_2) * sqrt ( sgpc1_2 )<<std::endl;
+//    std::cout<<"sgAng2 "<<pc2 / (pc1_2 + pc2_2) * sqrt ( pc1_2/pc2_2 * sgpc2_2 )<<std::endl;
+//
+//    return sgAng;
+//}
+
+double sgmTheta1(TVector3 &mom, TMatrixDSym &cov) {
+    double sgTh=0.0;
+    double sgpx2 = 0.0, sgpy2 = 0.0, sgpz2 = 0.0;
+    double sgpxy = 0.0, sgpxz = 0.0, sgpyz = 0.0;
+    double px = 0.0, py = 0.0, pz = 0.0;
+    double px2 = 0.0, py2 = 0.0, pz2 = 0.0, pt2 = 0.0, p2 = 0.0;
+//    px = fabs(mom[0]);
+    px = mom[0];
+    px2 = px*px;
+//    py = fabs(mom[1]);
+    py = mom[1];
+    py2 = py*py;
+//    pz = fabs(mom[2]);
+    pz = mom[2];
+    pz2 = pz*pz;
+    sgpx2 = cov[3][3];
+    sgpy2 = cov[4][4];
+    sgpz2 = cov[5][5];
+
+    pt2 = px2 + py2;
+    p2 = pt2 + pz2;
+    sgpxy = cov[3][4];
+    sgpxz = cov[3][5];
+    sgpyz = cov[4][5];
+//    if (mom.Theta()>TMath::PiOver2()) {
+//        sgpxy *= -1.0;
+//        sgpxz *= -1.0;
+//        sgpyz *= -1.0;
+//    }
+
+    mom.Print();
+    cov.Print();
+//    std::cout<<"px "<<px<<" py "<<py<<" pz "<<pz<<" sgpx2 "<<sgpx2<<" sgpz2 "<<sgpz2<<std::endl;
+
+    double sgp2 = (px2*sgpx2 + py2*sgpy2 + pz2*sgpz2 +
+                           2.0*px*py*sgpxy + 2.0*px*pz*sgpxz + 2.0*py*pz*sgpyz ) / p2;
+
+    sgTh = sqrt ( (sgpz2 + px2/p2 * sgp2) / pt2 );
+//    sgTh = fmod(sgTh,TMath::Pi());
+
+    std::cout<<"sgTh "<<sgTh<<std::endl;
+    std::cout<<"sgTh1 "<<sqrt ( (sgpz2 ) / pt2 )<<std::endl;
+
+    return sgTh;
 }

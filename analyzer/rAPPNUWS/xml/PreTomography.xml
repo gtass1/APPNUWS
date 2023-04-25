@@ -7,7 +7,7 @@
    <Author>
       <AuthorName>Gianfranco Tassielli</AuthorName>
    </Author>
-   <FolderVersion>2</FolderVersion>
+   <FolderVersion>3</FolderVersion>
    <FolderDescription>Folder class for rough tonmography data</FolderDescription>
    <NoResetByFramework>false</NoResetByFramework>
    <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
@@ -39,22 +39,40 @@
       <FieldComment>hit map numtiplicity</FieldComment>
    </Field>   
    <Field>
-      <FieldName>meantheta</FieldName>
+      <FieldName>meanAngle</FieldName>
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
       <FieldComment>mean scattering angle related to the voxel</FieldComment>
    </Field>
    <Field>
-      <FieldName>sigmatheta</FieldName>
+      <FieldName>sigmaAngle</FieldName>
       <FieldType>Double_t</FieldType>
       <FieldInitialization>1e10</FieldInitialization>  
       <FieldComment>sigma of the scattering angles related to the voxel</FieldComment>
    </Field>
    <Field>
-      <FieldName>alltheta</FieldName>
+      <FieldName>allAngle</FieldName>
       <FieldType>Double_t</FieldType>
       <ArraySize>vector</ArraySize>
       <FieldComment>[hitPerVoxel] all scattering angles related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>meanDist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>mean scattering angle related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>sigmaDist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>sigma of the scattering angles related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>allDist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>vector</ArraySize>
+      <FieldComment>[hitPerVoxel] all impact point (on tracker stations) distance of the scattered tracks related to the voxel</FieldComment>
    </Field>
 
 </Folder>

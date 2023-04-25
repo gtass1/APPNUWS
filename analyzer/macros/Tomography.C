@@ -4,9 +4,14 @@
 //
 //#include "generated/rAPPNUWSPreTomography.h"
 
-#include "util/TomoUtils.h"
+#include <utility>
 
-void Tomography(TString runList="0;1", TString foldBase=".", double thetaCut=0.0) {
+#include "util/TomoUtils.h"
+#include "TomoFCut.C"
+
+void Tomography(TString runList="0;1", TString foldBase=".", bool useCut=true/*, int fcBin=1*/) {
+
+    //    gROOT->LoadMacro("$RAPPNSDIR/../macros/TomoFCut.C");
 
     gStyle->SetOptStat(1110);
     gStyle->SetOptFit(1111);
@@ -43,14 +48,22 @@ void Tomography(TString runList="0;1", TString foldBase=".", double thetaCut=0.0
       }
     }
 
+    TClonesArray *pretomoinfo = new TClonesArray("rAPPNUWSPreTomographyInfo");
+    tr->SetBranchAddress("PreTomographyInfo",&pretomoinfo);
+
     TClonesArray *pretomo = new TClonesArray("rAPPNUWSPreTomography");
     tr->SetBranchAddress("PreTomography",&pretomo);
 
-    std::unordered_map< unsigned long, std::vector<double> > voxHitMap;
+    std::unordered_map< unsigned long, std::vector< std::pair<double,double> > > voxHitMap;
 
     Int_t nEvents = tr->GetEntries();
     cout<<"Number of events Stored --> "<<nEvents<<endl;
 
+    TF1 *ftmcut = new TF1("ftmcut",TomoFCut,0,500,4);
+    ftmcut->SetParameters(0.0061,0.000465,150,20);
+
+    double maxAngle=0.0;
+    double maxDist=0.0;
     for (int ie=0; ie</*10*/nEvents; ++ie) {
 
       tr->GetEntry(ie);  //load ie event
@@ -58,10 +71,22 @@ void Tomography(TString runList="0;1", TString foldBase=".", double thetaCut=0.0
       for (int iptd=0; iptd<pretomo->GetEntries(); ++iptd) {
 
           rAPPNUWSPreTomography *iVxHit = (rAPPNUWSPreTomography *)pretomo->At(iptd);
-          std::vector<Double_t> &iVxAllTh = iVxHit->Getalltheta();
-          for ( auto &itheta : iVxAllTh ) {
-              if (itheta>thetaCut) {
-                  voxHitMap[iVxHit->GethitId()].push_back(itheta);
+          std::vector<Double_t> &iVxAllAngle = iVxHit->GetallAngle();
+          std::vector<Double_t> &iVxAllDist = iVxHit->GetallDist();
+//          for ( auto &iAngle : iVxAllAngle ) {
+          for ( int ih=0; ih< iVxHit->GetallAngleSize(); ++ih ) {
+              double iAngle=iVxAllAngle.at(ih);
+              double iDist=iVxAllDist.at(ih);
+              if (useCut) {
+                  if( iAngle<ftmcut->Eval(iDist) ) {
+                      voxHitMap[iVxHit->GethitId()].push_back(make_pair(iAngle,iDist));
+                      if (iAngle>maxAngle) {maxAngle=iAngle;}
+                      if (iDist>maxDist) {maxDist=iDist;}
+                  }
+              } else {
+                  voxHitMap[iVxHit->GethitId()].push_back(make_pair(iAngle,iDist));
+                  if (iAngle>maxAngle) {maxAngle=iAngle;}
+                  if (iDist>maxDist) {maxDist=iDist;}
               }
           }
 
@@ -75,29 +100,58 @@ void Tomography(TString runList="0;1", TString foldBase=".", double thetaCut=0.0
 
     std::cout<<"Vox Hit Map size "<<voxHitMap.size()<<std::endl;
 
-    TH2F *htomoZX = new TH2F("htomoZX","Tomoraghy progection on orizontal plane",5000,0,5000,1000,0,1000);
-    TH2F *htomoZY = new TH2F("htomoZY","Tomoraghy progection on vertical plane",5000,0,5000,1000,0,1000);
+    rAPPNUWSPreTomographyInfo *tminfo = (rAPPNUWSPreTomographyInfo *)pretomoinfo->At(0);
+
+//    TH2F *htomoZX = new TH2F("htomoZX","Tomoraghy progection on orizontal plane",5000/fcBin,0,5000/fcBin,1000/fcBin,0,1000/fcBin);
+//    TH2F *htomoZY = new TH2F("htomoZY","Tomoraghy progection on vertical plane",5000/fcBin,0,5000/fcBin,1000/fcBin,0,1000/fcBin);
+//
+//    TH2F *htomoZX_th = new TH2F("htomoZX_th","Tomoraghy progection on orizontal plane",5000/fcBin,0,5000/fcBin,1000/fcBin,0,1000/fcBin);
+//    TH2F *htomoZY_th = new TH2F("htomoZY_th","Tomoraghy progection on vertical plane",5000/fcBin,0,5000/fcBin,1000/fcBin,0,1000/fcBin);
+    TH2F *htomoZX = new TH2F("htomoZX","Tomoraghy progection on orizontal plane",tminfo->GetnVolexAt(2),tminfo->GetminVolexPosAt(2),tminfo->GetmaxVolexPosAt(2),tminfo->GetnVolexAt(0),tminfo->GetminVolexPosAt(0),tminfo->GetmaxVolexPosAt(0));
+    TH2F *htomoZY = new TH2F("htomoZY","Tomoraghy progection on vertical plane",tminfo->GetnVolexAt(2),tminfo->GetminVolexPosAt(2),tminfo->GetmaxVolexPosAt(2),tminfo->GetnVolexAt(1),tminfo->GetminVolexPosAt(1),tminfo->GetmaxVolexPosAt(1));
+
+    TH2F *htomoZX_th = new TH2F("htomoZX_th","Tomoraghy progection on orizontal plane",tminfo->GetnVolexAt(2),tminfo->GetminVolexPosAt(2),tminfo->GetmaxVolexPosAt(2),tminfo->GetnVolexAt(0),tminfo->GetminVolexPosAt(0),tminfo->GetmaxVolexPosAt(0));
+    TH2F *htomoZY_th = new TH2F("htomoZY_th","Tomoraghy progection on vertical plane",tminfo->GetnVolexAt(2),tminfo->GetminVolexPosAt(2),tminfo->GetmaxVolexPosAt(2),tminfo->GetnVolexAt(1),tminfo->GetminVolexPosAt(1),tminfo->GetmaxVolexPosAt(1));
 
     for ( auto& voxHit : voxHitMap)  {
         int tmpId[3] = {-1,-1,-1};
         UIDtoID(voxHit.first, tmpId);
-        double mtheta=0;
-        double sgmtheta=0;
-        for ( auto& itheta : voxHit.second ) {
-            mtheta+=itheta;
-            sgmtheta+=itheta*itheta;
+        double iAngle=0;
+        double mAngle=0;
+        double sgmAngle=0;
+        double iDist=0;
+        double mDist=0;
+        double sgmDist=0;
+
+        for ( auto& iAngDist : voxHit.second ) {
+            iAngle = iAngDist.first;
+            mAngle+= iAngle;
+            sgmAngle+=iAngle*iAngle;
+
+            iDist = iAngDist.second;
+            mDist+= iDist;
+            sgmDist+=iDist*iDist;
         }
-        mtheta/=(double) voxHit.second.size();
-        sgmtheta/=(double) voxHit.second.size();
-        sgmtheta=sqrt( sgmtheta-mtheta*mtheta );
+
+        mAngle/=(double) voxHit.second.size();
+        sgmAngle/=(double) voxHit.second.size();
+        sgmAngle=sqrt( sgmAngle-mAngle*mAngle );
+
+        mDist/=(double) voxHit.second.size();
+        sgmDist/=(double) voxHit.second.size();
+        sgmDist=sqrt( sgmDist-mDist*mDist );
 
         if (voxHit.second.size()>1) {
         std::cout<<"preTomoHit Id "<<voxHit.first<<" back to ID "<<tmpId[0]<<" "<<tmpId[1]<<" "<<tmpId[2]<<std::endl;
-        std::cout<<"n Hits "<<voxHit.second.size()<<" meanTheta "<<mtheta<<" sigmaTheta "<<sgmtheta<<std::endl;
+        std::cout<<"n Hits "<<voxHit.second.size()<<" meanAngle "<<mAngle<<" sigmaAngle "<<sgmAngle<<std::endl;
         }
 
         htomoZX->SetBinContent(tmpId[2],tmpId[0],voxHit.second.size());
         htomoZY->SetBinContent(tmpId[2],tmpId[1],voxHit.second.size());
+        if (voxHit.second.size()>1) {
+            htomoZX_th->SetBinContent(tmpId[2],tmpId[0],mAngle/maxAngle);
+            htomoZY_th->SetBinContent(tmpId[2],tmpId[1],mAngle/maxAngle);
+        }
     }
 
 
@@ -107,5 +161,12 @@ void Tomography(TString runList="0;1", TString foldBase=".", double thetaCut=0.0
     htomoZX->Draw("colz");
     tomoCv->cd(2);
     htomoZY->Draw("colz");
+
+    TCanvas *tomoThCv= new TCanvas();
+    tomoThCv->Divide(1,2);
+    tomoThCv->cd(1);
+    htomoZX_th->Draw("colz");
+    tomoThCv->cd(2);
+    htomoZY_th->Draw("colz");
     
 }
