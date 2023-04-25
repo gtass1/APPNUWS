@@ -1,0 +1,63 @@
+<!--$Id:  $-->
+<Folder>
+   <FolderName>PreExtMuonTomography</FolderName>
+   <FolderTitle>Pre Tomography data for the External Muon Tomography algorithms</FolderTitle>
+   <Affiliation>rAPPNUWS</Affiliation>
+   <ArraySize>variable</ArraySize>
+   <Author>
+      <AuthorName>Gianfranco Tassielli</AuthorName>
+   </Author>
+   <FolderVersion>3</FolderVersion>
+   <FolderDescription>Folder class for rough tonmography data</FolderDescription>
+   <NoResetByFramework>false</NoResetByFramework>
+   <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
+   <Field>
+      <FieldName>hitId</FieldName>
+      <FieldType>ULong_t</FieldType>
+      <FieldInitialization>0</FieldInitialization>  
+      <FieldComment>Tomography map coordinates Ids </FieldComment>
+   </Field>
+<!--    <Field>
+      <FieldName>hitPerVoxel</FieldName>
+      <FieldType>Int_t</FieldType>
+      <FieldInitialization>0</FieldInitialization>  
+      <FieldComment>hit map numtiplicity</FieldComment>
+   </Field>    -->
+   <Field>
+      <FieldName>linDens</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>scattering linear density related to the voxel</FieldComment>
+   </Field>
+<!--    <Field>
+      <FieldName>sigmaAngle</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>sigma of the scattering angles related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>allAngle</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>vector</ArraySize>
+      <FieldComment>[hitPerVoxel] all scattering angles related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>meanDist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>mean scattering angle related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>sigmaDist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldInitialization>1e10</FieldInitialization>  
+      <FieldComment>sigma of the scattering angles related to the voxel</FieldComment>
+   </Field>
+   <Field>
+      <FieldName>allDist</FieldName>
+      <FieldType>Double_t</FieldType>
+      <ArraySize>vector</ArraySize>
+      <FieldComment>[hitPerVoxel] all impact point (on tracker stations) distance of the scattered tracks related to the voxel</FieldComment>
+   </Field> -->
+
+</Folder>

@@ -13,7 +13,7 @@ while [ $nl -lt $nRuns ]; do
     let iRun=$nFrstRun+$nl
     let nl+=1
    
-    nohup ${PRJBASE}/analyzer/GMC/gmcanalyzer.exe -b -q -i ${xmlScript} -r ${iRun} >& out-${fix}_${iRun}.log &
+    nohup ${PRJBASE}/analyzer/rAPPNUWS/rappnuwsanalyzer.exe -b -q -i ${xmlScript} -r ${iRun} >& out-${fix}_${iRun}.log &
 
 done
 

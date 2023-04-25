@@ -1,4 +1,5 @@
   <IncludeDirectories>
     <IncludeDirectory>include/util</IncludeDirectory>
     <IncludeDirectory>$(GENFIT2SYS)/include</IncludeDirectory>
+    <IncludeDirectory>include/extMuonTomography</IncludeDirectory>
   </IncludeDirectories>

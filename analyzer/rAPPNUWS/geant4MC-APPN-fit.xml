@@ -186,6 +186,11 @@
           <TreeOutputFileName></TreeOutputFileName>
           <SaveConfiguration>false</SaveConfiguration>
           <Branch>
+            <BranchName>PreTomographyInfo</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
+          <Branch>
             <BranchName>PreTomography</BranchName>
             <Active>true</Active>
             <Read>true</Read>
@@ -384,12 +389,12 @@
           <SteeringParameterField>
             <!-- Maximum distance (in mm) cut to consider possible track segments matching -->
             <SPName>trckmatchDistCut</SPName>
-            <SPValue>100</SPValue>
+            <SPValue>500</SPValue>
           </SteeringParameterField>
           <SteeringParameterField>
             <!-- Maximum angle (in deg) cut to consider possible track segments matching -->
             <SPName>trckmatchAngleCut</SPName>
-            <SPValue>20</SPValue>
+            <SPValue>60</SPValue>
           </SteeringParameterField>
         </Task>
 
@@ -399,7 +404,7 @@
           <SteeringParameterField>
             <!-- debug level -->
             <SPName>DebugLevel</SPName>
-            <SPValue>2</SPValue>
+            <SPValue>0</SPValue>
           </SteeringParameterField>
           <SteeringParameterField>
             <!-- do display -->

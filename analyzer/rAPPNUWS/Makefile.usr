@@ -16,10 +16,16 @@ CC  = g++
 RAPPNUWSLDFLAGS += -Wl,--start-group
 #RAPPNUWSLDFLAGS += -L${ZLIB_DIR}
 #
+
+ifdef EIGEN3SYS
+      Includes   += -I$(EIGEN3SYS)/include/eigen3
+endif
+
 ifdef GENFIT2SYS
       RAPPNUWSLDFLAGS += -L${GENFIT2SYS}/lib64 -lgenfit2
       RAPPNUWSSOFLAGS += -L${GENFIT2SYS}/lib64 -lgenfit2
-      Includes   += -I$(GENFIT2SYS)/include/ -I$(EIGEN3SYS)/include/eigen3
+      Includes   += -I$(GENFIT2SYS)/include
+#      Includes   += -I$(GENFIT2SYS)/include/ -I$(EIGEN3SYS)/include/eigen3
       Flags      += -DHAVE_GENFIT -L${GENFIT2SYS}/lib64 
 endif
 #

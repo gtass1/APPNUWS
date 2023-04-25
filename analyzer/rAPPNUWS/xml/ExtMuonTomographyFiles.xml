@@ -1,0 +1,17 @@
+  <AdditionalFiles>
+    <File>
+      <SourceFile>src/extMuonTomography/MutoSiddon</SourceFile>
+      <HeaderFile>include/extMuonTomography/MutoSiddon</HeaderFile>
+    </File>
+    <File>
+      <SourceFile>src/extMuonTomography/MutoPoCA</SourceFile>
+      <HeaderFile>include/extMuonTomography/MutoPoCA</HeaderFile>
+    </File>
+<!--     <File>
+      <HeaderFile>include/extMuonTomography/MutoTypes</HeaderFile>
+    </File>
+    <File>
+      <HeaderFile>include/extMuonTomography/MutoVReconstruction</HeaderFile>
+    </File> -->
+  </AdditionalFiles>
+

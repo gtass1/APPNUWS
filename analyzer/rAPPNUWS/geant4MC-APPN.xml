@@ -164,6 +164,37 @@
             <Active>true</Active>
             <Read>true</Read>
           </Branch>
+          <Branch>
+            <BranchName>BTTTTracksScatter</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
+        </Tree>
+
+        <Tree>
+          <TreeName>TomoData</TreeName>
+          <Read>false</Read>
+          <Write>false</Write>
+          <Fill>false</Fill>
+          <CompressionLevel>1</CompressionLevel>
+          <CompressionAlgorithm>ZLIB</CompressionAlgorithm>
+          <AutoSaveSize>300000000</AutoSaveSize>
+          <AutoFlushSize>-30000000</AutoFlushSize>
+          <CacheSize>-1</CacheSize>
+          <MaxNumberOfEntries>0</MaxNumberOfEntries>
+          <TreeInputFileName></TreeInputFileName>
+          <TreeOutputFileName></TreeOutputFileName>
+          <SaveConfiguration>false</SaveConfiguration>
+          <Branch>
+            <BranchName>PreTomographyInfo</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
+          <Branch>
+            <BranchName>PreTomography</BranchName>
+            <Active>true</Active>
+            <Read>true</Read>
+          </Branch>
         </Tree>
       </Trees>
 
@@ -349,6 +380,51 @@
             <!-- debug level -->
             <SPName>DebugLevel</SPName>
             <SPValue>0</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- do display -->
+            <SPName>DoDisplay</SPName>
+            <SPValue>false</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Maximum distance (in mm) cut to consider possible track segments matching -->
+            <SPName>trckmatchDistCut</SPName>
+            <SPValue>100</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Maximum angle (in deg) cut to consider possible track segments matching -->
+            <SPName>trckmatchAngleCut</SPName>
+            <SPValue>20</SPValue>
+          </SteeringParameterField>
+        </Task>
+
+        <Task>
+          <TaskName>RecoTomography</TaskName>
+          <Active>false</Active>
+          <SteeringParameterField>
+            <!-- debug level -->
+            <SPName>DebugLevel</SPName>
+            <SPValue>0</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- do display -->
+            <SPName>DoDisplay</SPName>
+            <SPValue>false</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Tomography Voxel size X -->
+            <SPName>VoxelSizeX</SPName>
+            <SPValue>10</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Tomography Voxel size Y -->
+            <SPName>VoxelSizeY</SPName>
+            <SPValue>10</SPValue>
+          </SteeringParameterField>
+          <SteeringParameterField>
+            <!-- Tomography Voxel size Z -->
+            <SPName>VoxelSizeZ</SPName>
+            <SPValue>10</SPValue>
           </SteeringParameterField>
         </Task>
       </Tasks>

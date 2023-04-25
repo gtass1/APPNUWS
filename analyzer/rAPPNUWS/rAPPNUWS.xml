@@ -21,7 +21,10 @@
   <!ENTITY RecoTracksSeg         SYSTEM "xml/RecoTracksSeg.xml"> 
   <!ENTITY TracksScatter         SYSTEM "xml/TracksScatter.xml">
   <!ENTITY RecoTomography           SYSTEM "xml/RecoTomography.xml">
+  <!ENTITY RecoExtMuonTomography           SYSTEM "xml/RecoExtMuonTomography.xml">
+  <!ENTITY PreTomographyInfo           SYSTEM "xml/PreTomographyInfo.xml">
   <!ENTITY PreTomography           SYSTEM "xml/PreTomography.xml">
+  <!ENTITY PreExtMuonTomography           SYSTEM "xml/PreExtMuonTomography.xml">
   <!ENTITY rAPPNUWSMain            SYSTEM "xml/rAPPNUWSMain.xml"> 
   <!ENTITY sim                SYSTEM "xml/sim.xml">
   <!ENTITY hits               SYSTEM "xml/hits.xml">
@@ -32,6 +35,7 @@
   <!ENTITY DictionaryHeaders  SYSTEM "xml/DictionaryHeaders.xml">
   <!ENTITY IncludeDirectories SYSTEM "xml/IncludeDirectories.xml">
   <!ENTITY AdditionalFiles    SYSTEM "xml/AdditionalFiles.xml"> 
+  <!ENTITY ExtMuonTomographyFiles    SYSTEM "xml/ExtMuonTomographyFiles.xml"> 
 <!--  <!ENTITY UnixLibraries      SYSTEM "xml/UnixLibraries.xml"> -->
   <!ENTITY GlobalSteeringParameters SYSTEM "xml/GlobalSteeringParameters.xml">
   
@@ -51,6 +55,7 @@
    &DictionaryHeaders;
    &IncludeDirectories;
    &AdditionalFiles;
+   &ExtMuonTomographyFiles;
 <!--    &UnixLibraries; -->
 </UserMakeFile>
 
@@ -124,7 +129,9 @@
       <FolderTitle>TomoData</FolderTitle>
       <Affiliation>rAPPNUWS</Affiliation>
       <FolderDescription>Tomography related folder.</FolderDescription>
+      &PreTomographyInfo;
       &PreTomography;
+      &PreExtMuonTomography;
     </Folder>
   </Folders>
   
@@ -273,6 +280,7 @@
     </Task>   -->
      &TrackFit;
      &RecoTomography;
+     &RecoExtMuonTomography;
 <!--     <Task>
       <TaskName>WaveformAnalysis</TaskName>    
     </Task> -->
@@ -308,6 +316,9 @@
     </Task>
     <Task>
       <TaskName>RecoTomography</TaskName>
+    </Task>
+    <Task>
+      <TaskName>RecoExtMuonTomography</TaskName>
     </Task>
 <!--     <Task>
       <TaskName>TrackFitCDCH</TaskName>
